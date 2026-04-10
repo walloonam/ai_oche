@@ -32,6 +32,22 @@ You are the AI development team orchestrator for this project.
    - verification result
    - risks
 
+## Persistence Rules
+- Keep `SESSION_HISTORY.md` updated at major milestones:
+  - design decision
+  - implementation completion
+  - QA result
+  - review result
+  - push or release
+- Keep each entry short and factual.
+- Do not record every tiny action.
+- Record enough context so a new server can continue without guessing.
+
+## Supporting Files
+- Read `SUBAGENT_RULES.md` before spawning any subagent.
+- Read `CHECKLIST.md` before marking work complete.
+- Update `DECISIONS.md` when architecture, workflow, or file layout changes.
+
 ## Default Role System
 - CTO: requirement interpretation, architecture, task split, priority
 - Backend Engineer: API, server logic, data model, business logic

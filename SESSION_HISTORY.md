@@ -59,6 +59,10 @@
 ## 7. Handoff and prompt files
 - `HANDOFF.md` was added so the next server can resume from the implementation state.
 - `INITIAL_PROMPT.md` was added so the next server can follow the orchestration rules immediately.
+- Supporting rules were added:
+  - `SUBAGENT_RULES.md`
+  - `CHECKLIST.md`
+  - `DECISIONS.md`
 
 ## 8. Git and push
 - The workspace was initialized as a Git repository.
@@ -75,5 +79,8 @@
 1. Read `INITIAL_PROMPT.md`.
 2. Read `HANDOFF.md`.
 3. Read this file.
-4. Verify the current UI in a browser.
-5. Continue from the existing state instead of restarting the design.
+4. Read `SUBAGENT_RULES.md` before creating workers.
+5. Read `CHECKLIST.md` before marking any task done.
+6. Read `DECISIONS.md` for architecture history.
+7. Verify the current UI in a browser.
+8. Continue from the existing state instead of restarting the design.
