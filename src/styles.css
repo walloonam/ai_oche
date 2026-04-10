@@ -1,0 +1,417 @@
+:root {
+  --bg: #f4efe2;
+  --bg-accent: #e7d6b8;
+  --panel: rgba(255, 250, 242, 0.84);
+  --panel-strong: #fffaf2;
+  --ink: #1f2421;
+  --muted: #5d625b;
+  --line: rgba(56, 48, 31, 0.16);
+  --shadow: 0 20px 50px rgba(74, 57, 28, 0.12);
+  --todo: #7d8f87;
+  --progress: #d67d31;
+  --review: #2a7f62;
+  --blocked: #bc4c31;
+  --done: #5f6ad4;
+  --pending: #f0b44f;
+  --approved: #6eaf7e;
+  --changes: #bf654d;
+  --risk: #6b5ecf;
+  --font-display: "Trebuchet MS", "Segoe UI", sans-serif;
+  --font-body: "Aptos", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.75), transparent 28%),
+    linear-gradient(180deg, #ead9b8 0%, #f6f2e8 50%, #efe7d6 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(73, 57, 29, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(73, 57, 29, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 32px 20px 40px;
+}
+
+.hero,
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
+  gap: 20px;
+  padding: 28px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(255, 244, 228, 0.84)),
+    linear-gradient(135deg, rgba(215, 179, 93, 0.1), rgba(57, 110, 92, 0.1));
+  animation: rise-in 500ms ease-out;
+}
+
+.eyebrow,
+.panel__eyebrow,
+.detail-card__eyebrow {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.hero h1,
+.panel h2,
+.detail-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.02;
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 3vw, 4.3rem);
+  max-width: 11ch;
+}
+
+.hero__summary {
+  max-width: 60ch;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-content: start;
+}
+
+.summary-card,
+.panel,
+.role-card,
+.work-card,
+.detail-card,
+.detail-item {
+  background: var(--panel);
+}
+
+.summary-card {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 16px;
+}
+
+.summary-card__label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.summary-card__value {
+  display: block;
+  margin-top: 8px;
+  font-size: 2rem;
+  font-family: var(--font-display);
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(280px, 320px) minmax(0, 1fr) minmax(300px, 360px);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.panel {
+  padding: 20px;
+}
+
+.panel__heading {
+  margin-bottom: 18px;
+}
+
+.panel__heading h2 {
+  font-size: 1.6rem;
+}
+
+.role-grid,
+.board-grid,
+.detail-card__list {
+  display: grid;
+  gap: 14px;
+}
+
+.role-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.role-card:hover,
+.role-card:focus-visible,
+.role-card.is-active {
+  transform: translateY(-2px);
+  border-color: rgba(73, 57, 29, 0.3);
+  background: var(--panel-strong);
+}
+
+.role-card__avatar,
+.detail-card__avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background:
+    linear-gradient(160deg, rgba(255, 221, 155, 0.92), rgba(255, 255, 255, 0.95)),
+    linear-gradient(180deg, rgba(119, 81, 21, 0.1), rgba(28, 44, 37, 0.14));
+  border: 1px solid rgba(73, 57, 29, 0.14);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.role-card__avatar {
+  width: 56px;
+  height: 56px;
+}
+
+.detail-card__avatar {
+  width: 72px;
+  height: 72px;
+  font-size: 1.2rem;
+}
+
+.role-card__name,
+.detail-item__title {
+  display: block;
+  font-weight: 700;
+}
+
+.role-card__specialty,
+.detail-card__specialty,
+.detail-item__owner,
+.detail-item__reason,
+.detail-item__blocker,
+.detail-item__outputs,
+.detail-item__next,
+.work-card__owner,
+.work-card__risk,
+.work-card__blocker {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.role-card__meta,
+.detail-item__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.role-card__count {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.board-grid {
+  grid-template-columns: repeat(5, minmax(180px, 1fr));
+  align-items: start;
+}
+
+.board-column {
+  min-height: 100%;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(255, 252, 247, 0.75);
+  border: 1px solid var(--line);
+}
+
+.board-column__header,
+.work-card__header,
+.detail-item__header,
+.detail-card__intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.board-column__label,
+.work-card__header p,
+.detail-item__title {
+  margin: 0;
+}
+
+.board-column__count {
+  font-size: 1.8rem;
+  font-family: var(--font-display);
+}
+
+.board-column__items {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.work-card,
+.detail-item {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.work-card--empty {
+  color: var(--muted);
+  text-align: center;
+}
+
+.status-pill,
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.status--todo {
+  color: #3d4742;
+  background: rgba(125, 143, 135, 0.16);
+}
+
+.status--progress {
+  color: #834a19;
+  background: rgba(214, 125, 49, 0.18);
+}
+
+.status--review {
+  color: #17523f;
+  background: rgba(42, 127, 98, 0.18);
+}
+
+.status--blocked {
+  color: #822c17;
+  background: rgba(188, 76, 49, 0.18);
+}
+
+.status--done {
+  color: #3944a5;
+  background: rgba(95, 106, 212, 0.16);
+}
+
+.chip--pending {
+  background: rgba(240, 180, 79, 0.2);
+  color: #7e5710;
+}
+
+.chip--approved {
+  background: rgba(110, 175, 126, 0.2);
+  color: #2e5b3a;
+}
+
+.chip--changes {
+  background: rgba(191, 101, 77, 0.18);
+  color: #7f3422;
+}
+
+.chip--risk {
+  background: rgba(107, 94, 207, 0.14);
+  color: #473f88;
+}
+
+.detail-card__directive {
+  margin: 18px 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 245, 225, 0.86);
+  border: 1px solid rgba(115, 86, 29, 0.12);
+  line-height: 1.55;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1180px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .board-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 18px 14px 28px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+
+  .hero__stats,
+  .board-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    max-width: none;
+    font-size: 2.3rem;
+  }
+
+  .role-card,
+  .board-column,
+  .detail-card,
+  .detail-item {
+    border-radius: 18px;
+  }
+}
