@@ -76,4 +76,4 @@ Always report in this order:
 
 ## Project Note
 - This project is an "AI development team ops room".
-- The next server should read this file first, then continue from `HANDOFF.md`.
+- The next server should read this file first, then continue from `HANDOFF.md` and `SESSION_HISTORY.md`.
