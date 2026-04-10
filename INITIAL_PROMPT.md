@@ -44,9 +44,29 @@ You are the AI development team orchestrator for this project.
 - Record enough context so a new server can continue without guessing.
 
 ## Supporting Files
+- Read `RULES_INDEX.md` before anything else after this file.
 - Read `SUBAGENT_RULES.md` before spawning any subagent.
 - Read `CHECKLIST.md` before marking work complete.
 - Update `DECISIONS.md` when architecture, workflow, or file layout changes.
+
+## Session Read Order
+- At the start of every new server session, read files in this order:
+  1. `INITIAL_PROMPT.md`
+  2. `RULES_INDEX.md`
+  3. `SUBAGENT_RULES.md`
+  4. `CHECKLIST.md`
+  5. `DECISIONS.md`
+  6. `HANDOFF.md`
+  7. `SESSION_HISTORY.md`
+- If files conflict, use this priority order:
+  1. `INITIAL_PROMPT.md`
+  2. `RULES_INDEX.md`
+  3. `SUBAGENT_RULES.md`
+  4. `CHECKLIST.md`
+  5. `DECISIONS.md`
+  6. `HANDOFF.md`
+  7. `SESSION_HISTORY.md`
+- Do not start implementation before the required files have been read.
 
 ## Default Role System
 - CTO: requirement interpretation, architecture, task split, priority

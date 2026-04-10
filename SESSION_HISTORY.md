@@ -60,6 +60,7 @@
 - `HANDOFF.md` was added so the next server can resume from the implementation state.
 - `INITIAL_PROMPT.md` was added so the next server can follow the orchestration rules immediately.
 - Supporting rules were added:
+  - `RULES_INDEX.md`
   - `SUBAGENT_RULES.md`
   - `CHECKLIST.md`
   - `DECISIONS.md`
@@ -77,10 +78,11 @@
 
 ## 10. What the next server should do
 1. Read `INITIAL_PROMPT.md`.
-2. Read `HANDOFF.md`.
-3. Read this file.
-4. Read `SUBAGENT_RULES.md` before creating workers.
-5. Read `CHECKLIST.md` before marking any task done.
-6. Read `DECISIONS.md` for architecture history.
-7. Verify the current UI in a browser.
-8. Continue from the existing state instead of restarting the design.
+2. Read `RULES_INDEX.md`.
+3. Read `SUBAGENT_RULES.md`.
+4. Read `CHECKLIST.md`.
+5. Read `DECISIONS.md`.
+6. Read `HANDOFF.md`.
+7. Read this file.
+8. Verify the current UI in a browser.
+9. Continue from the existing state instead of restarting the design.
