@@ -88,6 +88,18 @@ body {
   opacity: 0.5;
 }
 
+.office-desk-handle {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 26%;
+  height: 16%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(120, 90, 60, 0.15);
+}
+
 .office-keyboard {
   position: absolute;
   left: 34%;

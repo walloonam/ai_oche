@@ -125,6 +125,7 @@ function OfficeScene({ role, size = "sm" }) {
       <div className="office-desk">
         <div className="office-desk-edge" />
         <div className="office-desk-surface" />
+        <div className="office-desk-handle" />
         <div className="office-keyboard" />
       </div>
       <div className="office-chair" />
