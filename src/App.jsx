@@ -147,6 +147,8 @@ function OfficeScene({ role, size = "sm" }) {
           <div className="office-lamp" />
           <div className="office-console" />
           <div className="office-cto-note" />
+          <div className="office-cto-arm" />
+          <div className="office-cto-arm office-cto-arm-secondary" />
         </>
       ) : null}
       {role.key === "pm" ? (
