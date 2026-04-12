@@ -39,7 +39,7 @@ const officeStyles = {
     wallDeco: "command",
     monitorView: "overview",
     propPrimary: "tablet",
-    propSecondary: "badge",
+    propSecondary: "notebook",
   },
   pm: {
     wall: "#f7efe8",
@@ -135,18 +135,6 @@ function OfficeScene({ role, size = "sm" }) {
       </div>
       {role.key === "cto" ? (
         <>
-          <div className="office-monitor office-monitor-secondary">
-            <span className="office-screen-glow" />
-            <span className="office-cursor" />
-            <span className="office-monitor-content" data-monitor="overview" />
-          </div>
-          <div className="office-monitor office-monitor-wide">
-            <span className="office-screen-glow" />
-            <span className="office-monitor-content" data-monitor="flow" />
-          </div>
-          <div className="office-lamp" />
-          <div className="office-console" />
-          <div className="office-cto-note" />
           <div className="office-cto-arm" />
           <div className="office-cto-arm office-cto-arm-secondary" />
         </>
