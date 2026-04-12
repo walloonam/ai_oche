@@ -721,6 +721,72 @@ body {
   border-radius: 50%;
 }
 
+.office-scene[data-role="designer"] .office-monitor {
+  background: linear-gradient(135deg, rgba(255, 225, 215, 0.95), rgba(235, 210, 235, 0.95));
+}
+
+.office-scene[data-role="designer"] .office-monitor-content[data-monitor="canvas"] {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 230, 210, 0.95),
+    rgba(255, 230, 210, 0.95) 8px,
+    rgba(240, 210, 235, 0.95) 8px,
+    rgba(240, 210, 235, 0.95) 14px
+  );
+}
+
+.office-designer-board {
+  position: absolute;
+  top: 12%;
+  right: 12%;
+  width: 30%;
+  height: 20%;
+  border-radius: 10px;
+  border: 2px solid rgba(90, 70, 55, 0.2);
+  background: linear-gradient(135deg, rgba(255, 230, 215, 0.95), rgba(240, 210, 235, 0.95));
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.45);
+}
+
+.office-tablet {
+  position: absolute;
+  left: 18%;
+  bottom: 50%;
+  width: 16%;
+  height: 12%;
+  border-radius: 6px;
+  border: 2px solid rgba(90, 70, 55, 0.2);
+  background: linear-gradient(135deg, rgba(255, 245, 235, 0.95), rgba(225, 205, 225, 0.95));
+}
+
+.office-stylus {
+  position: absolute;
+  left: 36%;
+  bottom: 52%;
+  width: 10%;
+  height: 4%;
+  border-radius: 6px;
+  border: 2px solid rgba(90, 70, 55, 0.2);
+  background: linear-gradient(90deg, rgba(230, 170, 180, 0.95), rgba(200, 140, 160, 0.95));
+}
+
+.office-swatch-strip {
+  position: absolute;
+  left: 46%;
+  bottom: 52%;
+  width: 12%;
+  height: 8%;
+  border-radius: 6px;
+  border: 2px solid rgba(90, 70, 55, 0.2);
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 210, 190, 0.95),
+    rgba(255, 210, 190, 0.95) 4px,
+    rgba(240, 205, 235, 0.95) 4px,
+    rgba(240, 205, 235, 0.95) 8px,
+    rgba(255, 235, 210, 0.95) 8px,
+    rgba(255, 235, 210, 0.95) 12px
+  );
+}
 .office-monitor-content[data-monitor="overview"] {
   background: linear-gradient(135deg, rgba(230, 240, 255, 0.9), rgba(190, 210, 245, 0.9));
 }
