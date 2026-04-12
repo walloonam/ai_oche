@@ -490,7 +490,7 @@ body {
   width: 22%;
   height: 18%;
   right: 10%;
-  bottom: 46%;
+  bottom: 34%;
   z-index: 5;
   border-radius: 6px;
 }
@@ -626,14 +626,14 @@ body {
 
 .office-scene[data-role="cto"] .office-monitor {
   right: 4%;
-  bottom: 44%;
+  bottom: 34%;
 }
 
 .office-scene[data-role="cto"] .office-monitor::before {
   content: "";
   position: absolute;
   left: 44%;
-  bottom: -22%;
+  bottom: -12%;
   width: 12%;
   height: 18%;
   border-radius: 4px;
@@ -644,7 +644,7 @@ body {
   content: "";
   position: absolute;
   left: 30%;
-  bottom: -38%;
+  bottom: -24%;
   width: 40%;
   height: 16%;
   border-radius: 6px;
