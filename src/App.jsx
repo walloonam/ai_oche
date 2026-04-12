@@ -28,6 +28,90 @@ const officeStats = [
   { label: "Blocked", value: "1" },
 ];
 
+const officeStyles = {
+  cto: {
+    wall: "#f8f1e6",
+    floor: "#f2dcc8",
+    desk: "#e4b185",
+    monitor: "#c7d5f2",
+    accent: "#d49b6f",
+    prop: "dashboard",
+  },
+  pm: {
+    wall: "#f7efe8",
+    floor: "#f0d8c6",
+    desk: "#e0a97c",
+    monitor: "#d7e6c4",
+    accent: "#f2c377",
+    prop: "notes",
+  },
+  frontend: {
+    wall: "#f6f0f4",
+    floor: "#e9d6e2",
+    desk: "#e1a1b6",
+    monitor: "#cde8f6",
+    accent: "#f2b6d0",
+    prop: "ui",
+  },
+  backend: {
+    wall: "#efeef3",
+    floor: "#d8d4e6",
+    desk: "#9ba1c7",
+    monitor: "#bcd0e6",
+    accent: "#7580b8",
+    prop: "server",
+  },
+  qa: {
+    wall: "#f5f2ea",
+    floor: "#e7dbc8",
+    desk: "#d2a56c",
+    monitor: "#d6e8d3",
+    accent: "#d7a05c",
+    prop: "check",
+  },
+  designer: {
+    wall: "#f7efe9",
+    floor: "#edd8cf",
+    desk: "#caa07a",
+    monitor: "#f0d7e5",
+    accent: "#e7b98c",
+    prop: "palette",
+  },
+};
+
+function OfficeScene({ role, size = "sm" }) {
+  const style = officeStyles[role.key] ?? officeStyles.cto;
+  return (
+    <div
+      className={`office-scene ${size === "lg" ? "office-scene-lg" : "office-scene-sm"}`}
+      style={{
+        "--scene-wall": style.wall,
+        "--scene-floor": style.floor,
+        "--scene-desk": style.desk,
+        "--scene-monitor": style.monitor,
+        "--scene-accent": style.accent,
+      }}
+    >
+      <div className="office-wall" />
+      <div className="office-floor" />
+      <div className="office-shadow" />
+      <div className="office-desk">
+        <div className="office-desk-edge" />
+        <div className="office-keyboard" />
+      </div>
+      <div className="office-chair" />
+      <div className="office-monitor">
+        <span className="office-screen-glow" />
+        <span className="office-cursor" />
+      </div>
+      <div className="office-prop" data-prop={style.prop} />
+      <div className="office-character">
+        <img src={role.file} alt={role.label} className="pixel" />
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [scale, setScale] = useState(2);
   const [bg, setBg] = useState(backgroundOptions[0]);
@@ -137,15 +221,8 @@ export default function App() {
                 </div>
 
                 <div className="mt-6 flex flex-col gap-6 md:flex-row md:items-center">
-                  <div
-                    className="pixel rounded-2xl border border-cocoa/10 bg-white/80 p-4"
-                    style={{ width: spriteSize + 16, height: spriteSize + 16 }}
-                  >
-                    <img
-                      src={activeRole.file}
-                      alt={activeRole.label}
-                      className="pixel h-full w-full"
-                    />
+                  <div className="w-full md:max-w-[320px]">
+                    <OfficeScene role={activeRole} size="lg" />
                   </div>
                   <div>
                     <p className="text-sm uppercase tracking-[0.3em] text-cocoa/60">
@@ -210,9 +287,7 @@ export default function App() {
                       key={role.key}
                       className="rounded-2xl border border-cocoa/10 bg-white/80 p-3 text-left"
                     >
-                      <div className="pixel rounded-xl bg-white/80 p-2">
-                        <img src={role.file} alt={role.label} className="pixel h-full w-full" />
-                      </div>
+                      <OfficeScene role={role} />
                       <p className="mt-2 text-xs font-semibold text-cocoa">{role.label}</p>
                     </div>
                   ))}
