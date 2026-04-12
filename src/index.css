@@ -500,13 +500,13 @@ body {
 
 .office-scene[data-role="cto"] .office-monitor {
   width: 24%;
-  height: 18%;
+  height: 19%;
   right: 12%;
-  bottom: 38%;
+  bottom: 37%;
   z-index: 8;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #d9e6fb 0%, #bfd0f0 100%);
-  border: 2px solid rgba(70, 80, 110, 0.3);
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(64, 72, 90, 0.98), rgba(34, 40, 52, 0.98));
+  border: 2px solid rgba(18, 22, 30, 0.9);
   box-shadow: 0 8px 0 rgba(40, 30, 35, 0.16);
 }
 
@@ -624,6 +624,15 @@ body {
   height: 46%;
 }
 
+.office-scene[data-role="cto"] .office-desk-handle {
+  bottom: 11%;
+  width: 18%;
+  height: 5%;
+  border-radius: 4px;
+  background: rgba(247, 232, 214, 0.78);
+  box-shadow: inset 0 0 0 2px rgba(120, 90, 60, 0.2);
+}
+
 .office-scene[data-role="cto"] .office-chair {
   background: linear-gradient(180deg, rgba(70, 75, 105, 0.95), rgba(45, 50, 75, 0.95));
 }
@@ -647,23 +656,23 @@ body {
 .office-scene[data-role="cto"] .office-monitor::before {
   content: "";
   position: absolute;
-  left: 44%;
+  left: 46%;
   bottom: -14%;
-  width: 10%;
-  height: 20%;
-  border-radius: 3px;
-  background: rgba(60, 55, 70, 0.9);
+  width: 8%;
+  height: 16%;
+  border-radius: 2px;
+  background: rgba(55, 60, 75, 0.96);
 }
 
 .office-scene[data-role="cto"] .office-monitor::after {
   content: "";
   position: absolute;
-  left: 30%;
+  left: 34%;
   bottom: -22%;
-  width: 40%;
-  height: 10%;
-  border-radius: 6px;
-  background: rgba(50, 45, 60, 0.9);
+  width: 32%;
+  height: 8%;
+  border-radius: 4px;
+  background: rgba(50, 45, 60, 0.96);
 }
 
 .office-scene[data-role="cto"] .office-monitor-secondary,
@@ -678,20 +687,26 @@ body {
   height: 12%;
 }
 
+.office-scene[data-role="cto"] .office-monitor-content {
+  inset: 11% 10% 20% 10%;
+  border: 2px solid rgba(166, 180, 210, 0.7);
+  border-radius: 2px;
+}
+
 .office-scene[data-role="cto"] .office-prop-primary {
-  left: 26%;
+  left: 22%;
   bottom: 42%;
   z-index: 7;
 }
 
 .office-scene[data-role="cto"] .office-prop-secondary {
-  left: 40%;
+  left: 36%;
   bottom: 42%;
   z-index: 7;
 }
 
 .office-scene[data-role="cto"] .office-mug {
-  right: 52%;
+  right: 56%;
   bottom: 42%;
   z-index: 7;
 }
@@ -715,7 +730,7 @@ body {
 .office-cto-arm {
   position: absolute;
   left: 50%;
-  bottom: 40%;
+  bottom: 39%;
   width: 20%;
   height: 6%;
   border-radius: 8px;
@@ -739,7 +754,7 @@ body {
 
 .office-cto-arm-secondary {
   left: 38%;
-  bottom: 40%;
+  bottom: 39%;
   width: 16%;
   height: 6%;
   transform: rotate(8deg);
@@ -763,11 +778,12 @@ body {
 
 .office-scene[data-role="cto"] .office-monitor-content[data-monitor="overview"] {
   background:
-    linear-gradient(180deg, rgba(95, 110, 145, 0.95) 0 14%, rgba(0, 0, 0, 0) 14%),
+    linear-gradient(180deg, rgba(85, 98, 128, 0.98) 0 18%, rgba(0, 0, 0, 0) 18%),
+    linear-gradient(90deg, transparent 0 10%, rgba(202, 216, 244, 0.95) 10% 28%, transparent 28% 34%, rgba(202, 216, 244, 0.95) 34% 58%, transparent 58% 64%, rgba(202, 216, 244, 0.95) 64% 88%, transparent 88% 100%),
     repeating-linear-gradient(
       90deg,
-      rgba(200, 215, 245, 0.95),
-      rgba(200, 215, 245, 0.95) 8px,
+      rgba(202, 216, 244, 0.95),
+      rgba(202, 216, 244, 0.95) 8px,
       rgba(160, 180, 220, 0.95) 8px,
       rgba(160, 180, 220, 0.95) 14px
     );
