@@ -174,6 +174,14 @@ function OfficeScene({ role, size = "sm" }) {
           <div className="office-api-chip" />
         </>
       ) : null}
+      {role.key === "qa" ? (
+        <>
+          <div className="office-qa-board" />
+          <div className="office-qa-clipboard" />
+          <div className="office-qa-magnifier" />
+          <div className="office-qa-badge" />
+        </>
+      ) : null}
       <div className="office-prop office-prop-primary" data-prop={style.propPrimary} />
       <div className="office-prop office-prop-secondary" data-prop={style.propSecondary} />
       <div className="office-mug" />
