@@ -84,6 +84,7 @@ function OfficeScene({ role, size = "sm" }) {
   return (
     <div
       className={`office-scene ${size === "lg" ? "office-scene-lg" : "office-scene-sm"}`}
+      data-role={role.key}
       style={{
         "--scene-wall": style.wall,
         "--scene-floor": style.floor,
@@ -93,6 +94,7 @@ function OfficeScene({ role, size = "sm" }) {
       }}
     >
       <div className="office-wall" />
+      <div className="office-wall-deco" data-prop={style.prop} />
       <div className="office-floor" />
       <div className="office-shadow" />
       <div className="office-desk">
@@ -104,7 +106,9 @@ function OfficeScene({ role, size = "sm" }) {
         <span className="office-screen-glow" />
         <span className="office-cursor" />
       </div>
-      <div className="office-prop" data-prop={style.prop} />
+      <div className="office-prop office-prop-primary" data-prop={style.prop} />
+      <div className="office-prop office-prop-secondary" data-prop={style.prop} />
+      <div className="office-mug" />
       <div className="office-character">
         <img src={role.file} alt={role.label} className="pixel" />
       </div>

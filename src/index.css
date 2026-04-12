@@ -30,11 +30,11 @@ body {
 }
 
 .office-scene-lg {
-  height: 280px;
+  height: 300px;
 }
 
 .office-scene-sm {
-  height: 170px;
+  height: 190px;
 }
 
 .office-wall {
@@ -48,17 +48,17 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 36%;
-  background: var(--scene-floor);
+  height: 40%;
+  background: linear-gradient(180deg, var(--scene-floor), rgba(0, 0, 0, 0.03));
   border-top: 2px solid rgba(90, 70, 55, 0.18);
 }
 
 .office-shadow {
   position: absolute;
-  bottom: 16%;
-  left: 20%;
-  width: 60%;
-  height: 18%;
+  bottom: 14%;
+  left: 18%;
+  width: 64%;
+  height: 20%;
   background: rgba(50, 40, 30, 0.08);
   filter: blur(10px);
   border-radius: 50%;
@@ -66,10 +66,10 @@ body {
 
 .office-desk {
   position: absolute;
-  left: 14%;
-  bottom: 22%;
-  width: 72%;
-  height: 22%;
+  left: 12%;
+  bottom: 20%;
+  width: 76%;
+  height: 26%;
   background: var(--scene-desk);
   border: 2px solid rgba(60, 45, 35, 0.2);
   border-radius: 16px 16px 10px 10px;
@@ -81,7 +81,7 @@ body {
   bottom: 0;
   left: 6%;
   width: 88%;
-  height: 18%;
+  height: 22%;
   background: var(--scene-accent);
   border-radius: 10px;
   opacity: 0.5;
@@ -89,10 +89,10 @@ body {
 
 .office-keyboard {
   position: absolute;
-  left: 35%;
-  bottom: 16%;
-  width: 30%;
-  height: 22%;
+  left: 34%;
+  bottom: 12%;
+  width: 32%;
+  height: 24%;
   background: rgba(255, 255, 255, 0.65);
   border: 2px solid rgba(60, 45, 35, 0.2);
   border-radius: 6px;
@@ -100,10 +100,10 @@ body {
 
 .office-chair {
   position: absolute;
-  left: 20%;
-  bottom: 22%;
-  width: 18%;
-  height: 24%;
+  left: 18%;
+  bottom: 20%;
+  width: 20%;
+  height: 28%;
   background: rgba(60, 55, 80, 0.22);
   border: 2px solid rgba(40, 30, 35, 0.25);
   border-radius: 10px;
@@ -111,10 +111,10 @@ body {
 
 .office-monitor {
   position: absolute;
-  right: 22%;
-  bottom: 40%;
-  width: 18%;
-  height: 18%;
+  right: 20%;
+  bottom: 44%;
+  width: 20%;
+  height: 20%;
   background: var(--scene-monitor);
   border: 2px solid rgba(60, 45, 35, 0.25);
   border-radius: 8px;
@@ -142,13 +142,47 @@ body {
 
 .office-prop {
   position: absolute;
-  left: 18%;
-  bottom: 50%;
   width: 14%;
   height: 12%;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.6);
   border: 2px solid rgba(60, 45, 35, 0.2);
+}
+
+.office-prop-primary {
+  left: 18%;
+  bottom: 52%;
+}
+
+.office-prop-secondary {
+  left: 32%;
+  bottom: 54%;
+  width: 10%;
+  height: 10%;
+  opacity: 0.9;
+}
+
+.office-mug {
+  position: absolute;
+  right: 34%;
+  bottom: 52%;
+  width: 8%;
+  height: 10%;
+  border-radius: 4px 4px 6px 6px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid rgba(60, 45, 35, 0.2);
+}
+
+.office-wall-deco {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  width: 24%;
+  height: 18%;
+  border-radius: 10px;
+  border: 2px solid rgba(60, 45, 35, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.4);
 }
 
 .office-prop[data-prop="notes"] {
@@ -175,11 +209,47 @@ body {
   background: linear-gradient(135deg, rgba(210, 230, 255, 0.9), rgba(240, 230, 210, 0.9));
 }
 
+.office-wall-deco[data-prop="notes"] {
+  background: linear-gradient(135deg, rgba(255, 240, 200, 0.9), rgba(255, 225, 170, 0.9));
+}
+
+.office-wall-deco[data-prop="ui"] {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(210, 235, 255, 0.9),
+    rgba(210, 235, 255, 0.9) 10px,
+    rgba(255, 220, 240, 0.9) 10px,
+    rgba(255, 220, 240, 0.9) 18px
+  );
+}
+
+.office-wall-deco[data-prop="server"] {
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(160, 170, 210, 0.9),
+    rgba(160, 170, 210, 0.9) 8px,
+    rgba(120, 130, 170, 0.9) 8px,
+    rgba(120, 130, 170, 0.9) 14px
+  );
+}
+
+.office-wall-deco[data-prop="check"] {
+  background: linear-gradient(135deg, rgba(210, 245, 215, 0.9), rgba(255, 240, 210, 0.9));
+}
+
+.office-wall-deco[data-prop="palette"] {
+  background: linear-gradient(135deg, rgba(255, 220, 190, 0.9), rgba(240, 205, 235, 0.9));
+}
+
+.office-wall-deco[data-prop="dashboard"] {
+  background: linear-gradient(135deg, rgba(210, 230, 255, 0.9), rgba(230, 240, 255, 0.9));
+}
+
 .office-character {
   position: absolute;
-  bottom: 28%;
+  bottom: 30%;
   left: 40%;
-  width: 26%;
+  width: 32%;
   transform: translateX(-50%);
 }
 
@@ -190,19 +260,44 @@ body {
 }
 
 .office-scene-sm .office-desk {
-  left: 10%;
-  width: 80%;
+  left: 8%;
+  width: 84%;
 }
 
 .office-scene-sm .office-monitor {
-  right: 18%;
-  width: 20%;
-  height: 20%;
+  right: 16%;
+  width: 22%;
+  height: 22%;
 }
 
 .office-scene-sm .office-character {
+  width: 36%;
+  bottom: 32%;
+}
+
+.office-scene[data-role="cto"] .office-monitor {
+  width: 24%;
+  height: 24%;
+  right: 16%;
+}
+
+.office-scene[data-role="cto"] .office-wall-deco {
   width: 30%;
-  bottom: 30%;
+  height: 22%;
+}
+
+.office-scene[data-role="backend"] .office-monitor {
+  background: linear-gradient(135deg, var(--scene-monitor), rgba(90, 100, 140, 0.9));
+}
+
+.office-scene[data-role="qa"] .office-prop-secondary {
+  border-radius: 50%;
+}
+
+.office-scene[data-role="designer"] .office-prop-secondary {
+  width: 12%;
+  height: 12%;
+  border-radius: 50%;
 }
 
 @keyframes screenPulse {
