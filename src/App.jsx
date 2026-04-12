@@ -147,6 +147,14 @@ function OfficeScene({ role, size = "sm" }) {
           <div className="office-console" />
         </>
       ) : null}
+      {role.key === "pm" ? (
+        <>
+          <div className="office-planner-board" />
+          <div className="office-notebook" />
+          <div className="office-pen" />
+          <div className="office-doc-stack" />
+        </>
+      ) : null}
       <div className="office-prop office-prop-primary" data-prop={style.propPrimary} />
       <div className="office-prop office-prop-secondary" data-prop={style.propSecondary} />
       <div className="office-mug" />
