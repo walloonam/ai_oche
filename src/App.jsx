@@ -35,7 +35,11 @@ const officeStyles = {
     desk: "#e4b185",
     monitor: "#c7d5f2",
     accent: "#d49b6f",
-    prop: "dashboard",
+    chair: "#b7a2c7",
+    wallDeco: "command",
+    monitorView: "overview",
+    propPrimary: "tablet",
+    propSecondary: "badge",
   },
   pm: {
     wall: "#f7efe8",
@@ -43,7 +47,11 @@ const officeStyles = {
     desk: "#e0a97c",
     monitor: "#d7e6c4",
     accent: "#f2c377",
-    prop: "notes",
+    chair: "#c9a07d",
+    wallDeco: "planning",
+    monitorView: "timeline",
+    propPrimary: "notes",
+    propSecondary: "calendar",
   },
   frontend: {
     wall: "#f6f0f4",
@@ -51,7 +59,11 @@ const officeStyles = {
     desk: "#e1a1b6",
     monitor: "#cde8f6",
     accent: "#f2b6d0",
-    prop: "ui",
+    chair: "#e2a1c4",
+    wallDeco: "grid",
+    monitorView: "ui",
+    propPrimary: "components",
+    propSecondary: "palette",
   },
   backend: {
     wall: "#efeef3",
@@ -59,7 +71,11 @@ const officeStyles = {
     desk: "#9ba1c7",
     monitor: "#bcd0e6",
     accent: "#7580b8",
-    prop: "server",
+    chair: "#7e86a8",
+    wallDeco: "infrastructure",
+    monitorView: "terminal",
+    propPrimary: "server",
+    propSecondary: "cables",
   },
   qa: {
     wall: "#f5f2ea",
@@ -67,7 +83,11 @@ const officeStyles = {
     desk: "#d2a56c",
     monitor: "#d6e8d3",
     accent: "#d7a05c",
-    prop: "check",
+    chair: "#c79a69",
+    wallDeco: "checklist",
+    monitorView: "bugs",
+    propPrimary: "check",
+    propSecondary: "warning",
   },
   designer: {
     wall: "#f7efe9",
@@ -75,7 +95,11 @@ const officeStyles = {
     desk: "#caa07a",
     monitor: "#f0d7e5",
     accent: "#e7b98c",
-    prop: "palette",
+    chair: "#c08a6c",
+    wallDeco: "moodboard",
+    monitorView: "canvas",
+    propPrimary: "pen",
+    propSecondary: "swatches",
   },
 };
 
@@ -91,10 +115,11 @@ function OfficeScene({ role, size = "sm" }) {
         "--scene-desk": style.desk,
         "--scene-monitor": style.monitor,
         "--scene-accent": style.accent,
+        "--scene-chair": style.chair,
       }}
     >
       <div className="office-wall" />
-      <div className="office-wall-deco" data-prop={style.prop} />
+      <div className="office-wall-deco" data-wall={style.wallDeco} />
       <div className="office-floor" />
       <div className="office-shadow" />
       <div className="office-desk">
@@ -105,9 +130,10 @@ function OfficeScene({ role, size = "sm" }) {
       <div className="office-monitor">
         <span className="office-screen-glow" />
         <span className="office-cursor" />
+        <span className="office-monitor-content" data-monitor={style.monitorView} />
       </div>
-      <div className="office-prop office-prop-primary" data-prop={style.prop} />
-      <div className="office-prop office-prop-secondary" data-prop={style.prop} />
+      <div className="office-prop office-prop-primary" data-prop={style.propPrimary} />
+      <div className="office-prop office-prop-secondary" data-prop={style.propSecondary} />
       <div className="office-mug" />
       <div className="office-character">
         <img src={role.file} alt={role.label} className="pixel" />

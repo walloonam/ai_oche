@@ -104,9 +104,20 @@ body {
   bottom: 20%;
   width: 20%;
   height: 28%;
-  background: rgba(60, 55, 80, 0.22);
+  background: var(--scene-chair);
   border: 2px solid rgba(40, 30, 35, 0.25);
   border-radius: 10px;
+}
+
+.office-chair::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  height: 18%;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .office-monitor {
@@ -138,6 +149,13 @@ body {
   height: 30%;
   background: rgba(40, 35, 30, 0.45);
   animation: cursorBlink 1.4s steps(2, start) infinite;
+}
+
+.office-monitor-content {
+  position: absolute;
+  inset: 16%;
+  border-radius: 6px;
+  opacity: 0.9;
 }
 
 .office-prop {
@@ -189,7 +207,7 @@ body {
   background: linear-gradient(135deg, rgba(255, 231, 160, 0.9), rgba(255, 245, 210, 0.9));
 }
 
-.office-prop[data-prop="ui"] {
+.office-prop[data-prop="components"] {
   background: linear-gradient(135deg, rgba(210, 235, 255, 0.9), rgba(255, 210, 235, 0.9));
 }
 
@@ -205,15 +223,51 @@ body {
   background: linear-gradient(135deg, rgba(255, 214, 176, 0.9), rgba(240, 205, 235, 0.9));
 }
 
-.office-prop[data-prop="dashboard"] {
-  background: linear-gradient(135deg, rgba(210, 230, 255, 0.9), rgba(240, 230, 210, 0.9));
+.office-prop[data-prop="tablet"] {
+  background: linear-gradient(135deg, rgba(200, 220, 250, 0.9), rgba(240, 230, 210, 0.9));
 }
 
-.office-wall-deco[data-prop="notes"] {
+.office-prop[data-prop="badge"] {
+  background: radial-gradient(circle, rgba(255, 210, 150, 0.9), rgba(220, 160, 90, 0.9));
+}
+
+.office-prop[data-prop="calendar"] {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 245, 210, 0.95),
+    rgba(255, 245, 210, 0.95) 6px,
+    rgba(235, 210, 170, 0.95) 6px,
+    rgba(235, 210, 170, 0.95) 10px
+  );
+}
+
+.office-prop[data-prop="cables"] {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(140, 150, 200, 0.9),
+    rgba(140, 150, 200, 0.9) 4px,
+    rgba(100, 110, 160, 0.9) 4px,
+    rgba(100, 110, 160, 0.9) 8px
+  );
+}
+
+.office-prop[data-prop="warning"] {
+  background: linear-gradient(135deg, rgba(255, 200, 120, 0.95), rgba(255, 235, 180, 0.95));
+}
+
+.office-prop[data-prop="pen"] {
+  background: linear-gradient(135deg, rgba(200, 120, 90, 0.9), rgba(255, 210, 170, 0.9));
+}
+
+.office-prop[data-prop="swatches"] {
+  background: linear-gradient(135deg, rgba(255, 210, 170, 0.9), rgba(240, 205, 235, 0.9));
+}
+
+.office-wall-deco[data-wall="planning"] {
   background: linear-gradient(135deg, rgba(255, 240, 200, 0.9), rgba(255, 225, 170, 0.9));
 }
 
-.office-wall-deco[data-prop="ui"] {
+.office-wall-deco[data-wall="grid"] {
   background: repeating-linear-gradient(
     90deg,
     rgba(210, 235, 255, 0.9),
@@ -223,7 +277,7 @@ body {
   );
 }
 
-.office-wall-deco[data-prop="server"] {
+.office-wall-deco[data-wall="infrastructure"] {
   background: repeating-linear-gradient(
     180deg,
     rgba(160, 170, 210, 0.9),
@@ -233,15 +287,15 @@ body {
   );
 }
 
-.office-wall-deco[data-prop="check"] {
+.office-wall-deco[data-wall="checklist"] {
   background: linear-gradient(135deg, rgba(210, 245, 215, 0.9), rgba(255, 240, 210, 0.9));
 }
 
-.office-wall-deco[data-prop="palette"] {
+.office-wall-deco[data-wall="moodboard"] {
   background: linear-gradient(135deg, rgba(255, 220, 190, 0.9), rgba(240, 205, 235, 0.9));
 }
 
-.office-wall-deco[data-prop="dashboard"] {
+.office-wall-deco[data-wall="command"] {
   background: linear-gradient(135deg, rgba(210, 230, 255, 0.9), rgba(230, 240, 255, 0.9));
 }
 
@@ -275,6 +329,30 @@ body {
   bottom: 32%;
 }
 
+.office-scene[data-role="cto"] .office-character {
+  left: 42%;
+}
+
+.office-scene[data-role="pm"] .office-character {
+  left: 38%;
+}
+
+.office-scene[data-role="frontend"] .office-character {
+  left: 44%;
+}
+
+.office-scene[data-role="backend"] .office-character {
+  left: 36%;
+}
+
+.office-scene[data-role="qa"] .office-character {
+  left: 40%;
+}
+
+.office-scene[data-role="designer"] .office-character {
+  left: 46%;
+}
+
 .office-scene[data-role="cto"] .office-monitor {
   width: 24%;
   height: 24%;
@@ -298,6 +376,42 @@ body {
   width: 12%;
   height: 12%;
   border-radius: 50%;
+}
+
+.office-monitor-content[data-monitor="overview"] {
+  background: linear-gradient(135deg, rgba(230, 240, 255, 0.9), rgba(190, 210, 245, 0.9));
+}
+
+.office-monitor-content[data-monitor="timeline"] {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(210, 230, 210, 0.9),
+    rgba(210, 230, 210, 0.9) 6px,
+    rgba(190, 210, 190, 0.9) 6px,
+    rgba(190, 210, 190, 0.9) 12px
+  );
+}
+
+.office-monitor-content[data-monitor="ui"] {
+  background: linear-gradient(135deg, rgba(220, 240, 255, 0.9), rgba(255, 210, 235, 0.9));
+}
+
+.office-monitor-content[data-monitor="terminal"] {
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(130, 150, 190, 0.9),
+    rgba(130, 150, 190, 0.9) 4px,
+    rgba(100, 120, 160, 0.9) 4px,
+    rgba(100, 120, 160, 0.9) 8px
+  );
+}
+
+.office-monitor-content[data-monitor="bugs"] {
+  background: linear-gradient(135deg, rgba(210, 245, 210, 0.9), rgba(255, 220, 180, 0.9));
+}
+
+.office-monitor-content[data-monitor="canvas"] {
+  background: linear-gradient(135deg, rgba(255, 230, 210, 0.9), rgba(240, 210, 235, 0.9));
 }
 
 @keyframes screenPulse {
