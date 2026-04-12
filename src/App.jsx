@@ -132,6 +132,21 @@ function OfficeScene({ role, size = "sm" }) {
         <span className="office-cursor" />
         <span className="office-monitor-content" data-monitor={style.monitorView} />
       </div>
+      {role.key === "cto" ? (
+        <>
+          <div className="office-monitor office-monitor-secondary">
+            <span className="office-screen-glow" />
+            <span className="office-cursor" />
+            <span className="office-monitor-content" data-monitor="overview" />
+          </div>
+          <div className="office-monitor office-monitor-wide">
+            <span className="office-screen-glow" />
+            <span className="office-monitor-content" data-monitor="flow" />
+          </div>
+          <div className="office-lamp" />
+          <div className="office-console" />
+        </>
+      ) : null}
       <div className="office-prop office-prop-primary" data-prop={style.propPrimary} />
       <div className="office-prop office-prop-secondary" data-prop={style.propSecondary} />
       <div className="office-mug" />
