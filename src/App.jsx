@@ -33,9 +33,9 @@ const officeStyles = {
     wall: "#f8f1e6",
     floor: "#f2dcc8",
     desk: "#e4b185",
-    monitor: "#c7d5f2",
-    accent: "#d49b6f",
-    chair: "#b7a2c7",
+    monitor: "#ccd8f0",
+    accent: "#b28a5f",
+    chair: "#5a5d78",
     wallDeco: "command",
     monitorView: "overview",
     propPrimary: "tablet",
@@ -124,6 +124,7 @@ function OfficeScene({ role, size = "sm" }) {
       <div className="office-shadow" />
       <div className="office-desk">
         <div className="office-desk-edge" />
+        <div className="office-desk-surface" />
         <div className="office-keyboard" />
       </div>
       <div className="office-chair" />
@@ -145,6 +146,7 @@ function OfficeScene({ role, size = "sm" }) {
           </div>
           <div className="office-lamp" />
           <div className="office-console" />
+          <div className="office-cto-note" />
         </>
       ) : null}
       {role.key === "pm" ? (

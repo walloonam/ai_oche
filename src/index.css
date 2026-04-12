@@ -483,9 +483,9 @@ body {
 }
 
 .office-scene[data-role="cto"] .office-monitor {
-  width: 26%;
+  width: 28%;
   height: 24%;
-  right: 12%;
+  right: 10%;
 }
 
 .office-scene[data-role="cto"] .office-wall-deco {
@@ -494,43 +494,43 @@ body {
 }
 
 .office-scene[data-role="cto"] .office-desk {
-  left: 8%;
-  width: 84%;
-  height: 28%;
-}
-
-.office-scene[data-role="cto"] .office-chair {
-  left: 14%;
-  width: 22%;
+  left: 6%;
+  width: 88%;
   height: 30%;
 }
 
+.office-scene[data-role="cto"] .office-chair {
+  left: 20%;
+  width: 22%;
+  height: 32%;
+}
+
 .office-scene[data-role="cto"] .office-character {
-  bottom: 32%;
-  left: 44%;
-  width: 34%;
+  bottom: 26%;
+  left: 46%;
+  width: 36%;
 }
 
 .office-monitor-secondary {
   position: absolute;
-  right: 44%;
-  bottom: 46%;
-  width: 18%;
+  right: 40%;
+  bottom: 48%;
+  width: 20%;
   height: 18%;
 }
 
 .office-monitor-wide {
   position: absolute;
-  left: 18%;
-  bottom: 46%;
-  width: 38%;
+  left: 12%;
+  bottom: 50%;
+  width: 44%;
   height: 16%;
 }
 
 .office-lamp {
   position: absolute;
-  right: 14%;
-  bottom: 52%;
+  right: 12%;
+  bottom: 54%;
   width: 6%;
   height: 18%;
   border-radius: 6px;
@@ -552,13 +552,84 @@ body {
 
 .office-console {
   position: absolute;
-  left: 22%;
-  bottom: 24%;
-  width: 16%;
+  left: 18%;
+  bottom: 28%;
+  width: 20%;
   height: 10%;
   border-radius: 6px;
   background: linear-gradient(135deg, rgba(120, 130, 160, 0.9), rgba(80, 90, 120, 0.9));
   border: 2px solid rgba(60, 45, 35, 0.25);
+}
+
+.office-desk-surface {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 12%;
+  height: 40%;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 2px solid rgba(60, 45, 35, 0.15);
+}
+
+.office-scene[data-role="cto"] .office-desk-surface {
+  height: 46%;
+}
+
+.office-scene[data-role="cto"] .office-keyboard {
+  left: 44%;
+  bottom: 18%;
+  width: 24%;
+  height: 24%;
+}
+
+.office-scene[data-role="cto"] .office-chair {
+  background: linear-gradient(180deg, rgba(70, 75, 105, 0.95), rgba(45, 50, 75, 0.95));
+}
+
+.office-scene[data-role="cto"] .office-prop-primary {
+  left: 50%;
+  bottom: 50%;
+  width: 16%;
+  height: 12%;
+}
+
+.office-scene[data-role="cto"] .office-prop-secondary {
+  left: 68%;
+  bottom: 52%;
+  width: 10%;
+  height: 10%;
+}
+
+.office-scene[data-role="cto"] .office-shadow {
+  width: 70%;
+  left: 14%;
+}
+
+.office-scene[data-role="cto"] .office-mug {
+  right: 30%;
+  bottom: 54%;
+}
+
+.office-cto-note {
+  position: absolute;
+  left: 40%;
+  bottom: 52%;
+  width: 12%;
+  height: 10%;
+  border-radius: 6px;
+  border: 2px solid rgba(60, 45, 35, 0.25);
+  background: linear-gradient(135deg, rgba(245, 230, 200, 0.95), rgba(215, 195, 150, 0.95));
+}
+
+.office-scene[data-role="cto"] .office-monitor-content[data-monitor="overview"] {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(200, 215, 245, 0.9),
+    rgba(200, 215, 245, 0.9) 8px,
+    rgba(160, 180, 220, 0.9) 8px,
+    rgba(160, 180, 220, 0.9) 14px
+  );
 }
 
 .office-monitor-content[data-monitor="flow"] {
