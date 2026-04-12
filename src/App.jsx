@@ -167,6 +167,13 @@ function OfficeScene({ role, size = "sm" }) {
           <div className="office-browser-bar" />
         </>
       ) : null}
+      {role.key === "backend" ? (
+        <>
+          <div className="office-server-tower" />
+          <div className="office-log-panel" />
+          <div className="office-api-chip" />
+        </>
+      ) : null}
       <div className="office-prop office-prop-primary" data-prop={style.propPrimary} />
       <div className="office-prop office-prop-secondary" data-prop={style.propSecondary} />
       <div className="office-mug" />
