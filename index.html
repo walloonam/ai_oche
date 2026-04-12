@@ -3,50 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Development Team Ops Room</title>
-    <link rel="stylesheet" href="./src/styles.css" />
+    <title>AI Agent Office Pixels</title>
   </head>
-  <body>
-    <div class="app-shell">
-      <header class="hero">
-        <div class="hero__copy">
-          <p class="eyebrow">AI development team orchestrator</p>
-          <h1>Ops room for a character-driven delivery team</h1>
-          <p class="hero__summary">
-            Each role should read like a game character, but status and team flow
-            must be clearer than decoration.
-          </p>
-        </div>
-        <div class="hero__stats" id="summary-strip" aria-label="Delivery summary"></div>
-      </header>
-
-      <main class="dashboard">
-        <section class="panel panel--roles" aria-labelledby="roles-title">
-          <div class="panel__heading">
-            <p class="panel__eyebrow">Squad</p>
-            <h2 id="roles-title">Role roster</h2>
-          </div>
-          <div class="role-grid" id="role-grid" aria-live="polite"></div>
-        </section>
-
-        <section class="panel panel--board" aria-labelledby="board-title">
-          <div class="panel__heading">
-            <p class="panel__eyebrow">Flow</p>
-            <h2 id="board-title">Work board</h2>
-          </div>
-          <div class="board-grid" id="board-grid"></div>
-        </section>
-
-        <aside class="panel panel--detail" aria-labelledby="detail-title">
-          <div class="panel__heading">
-            <p class="panel__eyebrow">Focus</p>
-            <h2 id="detail-title">Role detail</h2>
-          </div>
-          <div id="detail-panel"></div>
-        </aside>
-      </main>
-    </div>
-
-    <script type="module" src="./src/app.mjs"></script>
+  <body class="bg-cream text-ink">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

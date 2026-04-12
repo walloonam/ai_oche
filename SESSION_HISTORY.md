@@ -86,3 +86,42 @@
 7. Read this file.
 8. Verify the current UI in a browser.
 9. Continue from the existing state instead of restarting the design.
+
+## 11. Game UI pivot
+- User clarified the target as a game-style agent scene, not a dashboard.
+- Frontend was reworked so the selected main agent appears on the left and the subagents render on the right.
+- The subagent area was compacted into a 2x2 party grid so the full scene fits in one desktop viewport.
+- Browser validation confirmed the new click interaction still promotes a subagent into the main slot.
+- A local favicon was added to eliminate browser console noise during validation.
+
+## 12. Pixel portrait pass
+- User requested a stronger dot-pixel feel and actual visible characters.
+- The text-only portrait badges were replaced with pixel-style SVG sprites for each agent.
+- The page title and styling were nudged toward a pixel-party presentation while keeping the same layout and interaction model.
+
+## 13. Bright office localization
+- User requested a bright background, Korean copy, and a company-like room layout.
+- The UI was relabeled in Korean and the dark palette was replaced with a bright office theme.
+- Each agent now reads as sitting in a small office booth with a computer, desk, and room backdrop.
+- A Korean web font was added so the translated copy renders correctly in the browser.
+
+## 14. Human-shaped booth pass
+- User asked for the characters to read more like people.
+- The pixel portraits were simplified into human-shaped seated figures instead of icon-like badges.
+- The office scene regained explicit workstation elements like monitor, desk, chair, window, and wall panels.
+- The browser check still confirms subagent clicks switch the main agent correctly.
+
+## 15. Stronger tile emphasis
+- User clarified that the small party tile itself should feel character-first, not tiny.
+- The compact office tiles were enlarged and simplified so the character reads much larger inside each square.
+- The sidebar cards still keep the company-room feel, but the visual weight now goes to the agent portrait.
+
+## 16. Softer portrait pass
+- User asked to make the design prettier because the character felt too broken and scary.
+- The pixel portraits were simplified into softer human silhouettes with calmer proportions.
+- The compact tiles now read more like neat office employees than fragmented pixel icons.
+
+## 17. Reference portrait reset
+- User shared a specific pixel portrait reference and asked for a closer match.
+- The compact subagent cards were simplified into a cleaner portrait tile with a centered character, label, and base bar.
+- The sprite styling was tightened so the result reads closer to the supplied example instead of a busy office scene.

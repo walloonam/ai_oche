@@ -1,0 +1,62 @@
+{
+  "cto": {
+    "outline": "#2a1c16",
+    "skin": "#f6d1a9",
+    "hair": "#7a5645",
+    "hairShadow": "#5c4034",
+    "shirtShadow": "#d9b58d",
+    "white": "#f9f4ef",
+    "primary": "#2b375e",
+    "accent": "#f1b867"
+  },
+  "pm": {
+    "outline": "#2a1c16",
+    "skin": "#f6d1a9",
+    "hair": "#7a5645",
+    "hairShadow": "#5c4034",
+    "shirtShadow": "#d9b58d",
+    "white": "#f9f4ef",
+    "primary": "#6e8a59",
+    "accent": "#f29c6b"
+  },
+  "frontend": {
+    "outline": "#2a1c16",
+    "skin": "#f6d1a9",
+    "hair": "#7a5645",
+    "hairShadow": "#5c4034",
+    "shirtShadow": "#d9b58d",
+    "white": "#f9f4ef",
+    "primary": "#59b6e3",
+    "accent": "#f6c453"
+  },
+  "backend": {
+    "outline": "#2a1c16",
+    "skin": "#f6d1a9",
+    "hair": "#7a5645",
+    "hairShadow": "#5c4034",
+    "shirtShadow": "#d9b58d",
+    "white": "#f9f4ef",
+    "primary": "#3b4f7a",
+    "accent": "#53d1c5"
+  },
+  "qa": {
+    "outline": "#2a1c16",
+    "skin": "#f6d1a9",
+    "hair": "#7a5645",
+    "hairShadow": "#5c4034",
+    "shirtShadow": "#d9b58d",
+    "white": "#f9f4ef",
+    "primary": "#8b78a7",
+    "accent": "#f05c5c"
+  },
+  "designer": {
+    "outline": "#2a1c16",
+    "skin": "#f6d1a9",
+    "hair": "#7a5645",
+    "hairShadow": "#5c4034",
+    "shirtShadow": "#d9b58d",
+    "white": "#f9f4ef",
+    "primary": "#f0a3b0",
+    "accent": "#f5c06d"
+  }
+}
