@@ -1,67 +1,66 @@
-# AI 개발팀 운영실 Handoff
+# AI Agent Office Handoff
 
-## 프로젝트 목표
-- `AI 개발팀 운영실` UI를 단일 화면으로 제공한다.
-- 역할은 실제 작업 상태와 연결된 캐릭터처럼 보이되, 장식보다 상태 가시성과 협업 흐름이 먼저 읽혀야 한다.
+## Project State
+- This repo now contains a Vite + React + Tailwind pixel office UI.
+- The app shows a shared AI agent office layout with:
+  - CTO as the main coordinator on the left
+  - subagents on the right
+  - a separate Character Lab view for sprite preview and downloads
+- Current work focused on making the CTO workstation read as a real seated desk scene:
+  - chair, desk, monitor, mug, tablet, and keyboard are simplified and readable
+  - the CTO is meant to be the focal point of the main command desk
+  - the composition is intentionally clean and uncluttered
 
-## 현재 상태
-- 게임 스타일의 단일 화면 파티 씬으로 전환 완료.
-- 선택된 메인 에이전트가 왼쪽에, 서브 에이전트들이 오른쪽에 보인다.
-- 서브 에이전트 클릭 시 메인 에이전트가 교체된다.
-- 에이전트 아바타는 텍스트 배지가 아니라 사람형 픽셀 SVG 스프라이트로 표시된다.
-- 화면 문구는 한국어로 바뀌었고, 밝은 회사 사무실/부스 느낌으로 조정됐다.
-- 메인 영역과 서브 영역 모두 컴퓨터, 책상, 창문, 칸막이가 있는 회사 방처럼 읽힌다.
-- 작은 타일에서는 캐릭터 비중을 크게 키워서, 이미지 칸 자체가 캐릭터 위주로 보인다.
-- 상태, blocker, approval, outputs는 그대로 화면 안에서 읽힌다.
-- 브라우저 검증에서 데스크톱 한 화면 배치와 상호작용이 확인됐다.
+## Key Files
+- `src/App.jsx`
+- `src/index.css`
+- `assets/characters/`
+- `assets/spritesheet/`
+- `assets/palettes/`
+- `docs/art-direction.md`
+- `docs/character-notes.md`
 
-## 변경 파일
-- `index.html`
-- `src/app.mjs`
-- `src/styles.css`
-- `src/domain/team-operations.mjs`
-- `favicon.svg`
+## Current UI Structure
+- Header with view toggle, scale toggle, and background toggle
+- `Office UI` view:
+  - CTO main workstation on the left
+  - subagent workstations on the right
+  - main agent chat below the CTO area
+  - work board below the chat
+- `Character Lab` view:
+  - role previews
+  - download links for sprites, sprite sheet, and palettes
 
-## 핵심 구현 요약
-- 상단 요약: 전체 작업 수, 진행 중 수, 승인 대기 수, 막힘 수
-- 역할 카드: CTO, Backend, Frontend, QA, Reviewer
-- 보드: `todo / in_progress / in_review / blocked / done`
-- 상세 패널: 선택 역할의 작업, 승인 상태, blocker, 산출물, 다음 가능 상태
-- 안전성:
-  - `escapeHtml()` 적용
-  - `activeRole.key` fallback 처리
-  - `data-role-key` 검증
-  - Reviewer 빈 상태 처리
+## Current CTO Direction
+- CTO should read as:
+  - seated in the chair
+  - using a desk monitor
+  - coordinating from a command desk
+- The current focus is readability:
+  - monitor must be clearly a desk monitor
+  - desk details must look like furniture, not decoration
+  - props should stay minimal and identifiable
 
-## 검증 결과
-- 정적 구조 연결 확인 완료
-- 브라우저에서 데스크톱 배치 확인 완료
-- 서브 에이전트 클릭으로 메인 전환 확인 완료
-- 콘솔 에러 없음 확인 완료
-- `node --check`는 구현 담당 서브에이전트가 통과했다고 보고함
-- 최근에는 캐릭터가 무섭게 보인다는 피드백이 있어, 픽셀 인물을 더 부드럽고 사람답게 정리한 상태다.
-- 최신 상태에서는 사용자가 준 단일 포트레이트 레퍼런스에 맞춰, 컴팩트 카드가 더 단순한 캐릭터 타일로 돌아갔다.
+## Recent Commit Pattern
+- Every user-facing polish pass has been committed separately.
+- Commit messages are in Korean when the user asked for that.
+- The repo has been kept in a clean, revert-friendly state after each change.
 
-## 다음 작업 지시문
-1. 새 서버/새 작업공간에서 먼저 `index.html`과 `src/` 전체를 확인한다.
-2. 브라우저에서 직접 열어 UI 렌더와 반응형을 확인한다.
-3. 화면을 실제 사용 흐름으로 점검한다.
-   - 서브 에이전트 클릭
-   - 메인 에이전트 전환
-   - status / blocker / approval / outputs 확인
-4. 필요하면 다음 개선을 적용한다.
-   - 특정 장르로 더 밀기: 판타지, SF, 픽셀, 전술 JRPG
-   - 모바일에서의 세로 압축 재조정
-   - 캐릭터 아트 강화
-   - 표정과 손/팔 비율을 더 자연스럽게 다듬기
-   - 참조 이미지처럼 보이도록 캐릭터 타일만 더 미세 조정
+## Run It
+- Start dev server with:
+  - `npm run dev -- --host 0.0.0.0 --port 4173`
+- Current browser URL used during work:
+  - `http://192.168.25.150:4173`
 
-## 새 서버로 옮길 때 주의점
-- 이 폴더에는 현재 Git 저장소 정보가 없을 수 있다.
-- `node`가 없던 환경이므로, 새 서버에서는 런타임 여부부터 먼저 확인하는 게 좋다.
-- 기존 파일은 유지하고, 불필요한 대규모 리팩터링은 피한다.
+## Resume Checklist
+1. Read `src/App.jsx` and `src/index.css`.
+2. Open the app in a browser.
+3. Check the CTO workstation first.
+4. Keep changes limited to the requested role or scene.
+5. Commit after each completed polish pass.
 
-## 한 줄 요약
-- 이 프로젝트는 "왼쪽 메인 에이전트, 오른쪽 서브 에이전트"로 구성된 밝은 한국어 픽셀 사무실이며, 다음 서버에서는 사람형 캐릭터의 표정과 자세를 더 다듬으면 된다.
-- 현재 상태는 그 위에서 캐릭터를 더 부드럽게 다듬은 버전이라, 다음엔 표정과 옷차림만 조금 더 정리하면 된다.
-- 현재 컴팩트 타일은 참조 이미지에 더 가까워졌고, 다음엔 직무별 미세한 차이만 다듬으면 된다.
+## Notes For Next Session
+- Do not redesign the whole page unless explicitly asked.
+- Keep the same warm pixel-art office style.
+- Keep the CTO as the main coordinator.
+- If the CTO scene needs more work, prefer simplifying over adding more props.
