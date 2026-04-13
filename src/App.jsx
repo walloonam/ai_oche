@@ -332,11 +332,11 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(340px,1.1fr)_minmax(260px,0.9fr)] lg:items-center">
+                  <div className="mt-8 flex flex-col gap-6">
                     <div className="w-full max-w-[360px]">
                       <OfficeScene role={activeRole} size="lg" />
                     </div>
-                    <div className="max-w-sm">
+                    <div className="max-w-md">
                       <p className="text-sm uppercase tracking-[0.3em] text-cocoa/60">
                         Main Agent (Codex)
                       </p>
