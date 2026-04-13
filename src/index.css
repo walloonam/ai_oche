@@ -34,7 +34,7 @@ body {
 }
 
 .office-scene-sm {
-  height: 190px;
+  height: 226px;
 }
 
 .office-wall {
@@ -369,8 +369,8 @@ body {
 }
 
 .office-scene-sm .office-character {
-  width: 36%;
-  bottom: 32%;
+  width: 42%;
+  bottom: 28%;
 }
 
 .office-scene[data-role="pm"] .office-character {
