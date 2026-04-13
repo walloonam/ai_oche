@@ -1,12 +1,42 @@
 import React, { useMemo, useState } from "react";
 
 const roles = [
-  { key: "cto", label: "CTO / Coordinator", file: "/assets/characters/cto.png" },
-  { key: "pm", label: "Planner / PM", file: "/assets/characters/pm.png" },
-  { key: "frontend", label: "Frontend Engineer", file: "/assets/characters/frontend.png" },
-  { key: "backend", label: "Backend Engineer", file: "/assets/characters/backend.png" },
-  { key: "qa", label: "QA Engineer", file: "/assets/characters/qa.png" },
-  { key: "designer", label: "Designer", file: "/assets/characters/designer.png" },
+  {
+    key: "cto",
+    label: "CTO / Coordinator",
+    file: "/assets/characters/cto.png",
+    labFile: "/assets/lab-characters/cto.png",
+  },
+  {
+    key: "pm",
+    label: "Planner / PM",
+    file: "/assets/characters/pm.png",
+    labFile: "/assets/lab-characters/pm.png",
+  },
+  {
+    key: "frontend",
+    label: "Frontend Engineer",
+    file: "/assets/characters/frontend.png",
+    labFile: "/assets/lab-characters/frontend.png",
+  },
+  {
+    key: "backend",
+    label: "Backend Engineer",
+    file: "/assets/characters/backend.png",
+    labFile: "/assets/lab-characters/backend.png",
+  },
+  {
+    key: "qa",
+    label: "QA Engineer",
+    file: "/assets/characters/qa.png",
+    labFile: "/assets/lab-characters/qa.png",
+  },
+  {
+    key: "designer",
+    label: "Designer",
+    file: "/assets/characters/designer.png",
+    labFile: "/assets/lab-characters/designer.png",
+  },
 ];
 
 const scaleOptions = [
@@ -102,299 +132,6 @@ const officeStyles = {
     propSecondary: "swatches",
   },
 };
-
-const labStyles = {
-  cto: {
-    frame: "from-[#f7f3ff] to-[#eef3ff]",
-    glow: "#dce4ff",
-    jacket: "#24346c",
-    shirt: "#f8fbff",
-    hair: "#2c2349",
-    accessory: "#2f78d9",
-    accent: "#7e93d8",
-  },
-  pm: {
-    frame: "from-[#f7f2e8] to-[#eef5e5]",
-    glow: "#dce7c9",
-    jacket: "#6d8e48",
-    shirt: "#d9efb0",
-    hair: "#6f4b35",
-    accessory: "#9b6a45",
-    accent: "#9cb765",
-  },
-  frontend: {
-    frame: "from-[#ecf8ff] to-[#ebf4ff]",
-    glow: "#cfeeff",
-    jacket: "#29b8f3",
-    shirt: "#def9ff",
-    hair: "#704b38",
-    accessory: "#0f2d5b",
-    accent: "#65d4ff",
-  },
-  backend: {
-    frame: "from-[#edf2fb] to-[#eef6f6]",
-    glow: "#d1dce8",
-    jacket: "#145c7f",
-    shirt: "#6fd0db",
-    hair: "#273055",
-    accessory: "#1f3c69",
-    accent: "#52b2c6",
-  },
-  qa: {
-    frame: "from-[#f6efff] to-[#fff1f8]",
-    glow: "#e6d4ff",
-    jacket: "#b955d8",
-    shirt: "#d889f5",
-    hair: "#7a49bf",
-    accessory: "#9ac9ff",
-    accent: "#ff86c2",
-  },
-  designer: {
-    frame: "from-[#fff0ec] to-[#fff6ea]",
-    glow: "#ffd7cf",
-    jacket: "#ff7b8f",
-    shirt: "#ff9d7d",
-    hair: "#f05f8e",
-    accessory: "#f4c057",
-    accent: "#ff9a73",
-  },
-};
-
-function LabRolePortrait({ role, spriteSize }) {
-  const style = labStyles[role.key] ?? labStyles.cto;
-  const sceneHeight = Math.round(spriteSize * 1.95);
-  const wrapperStyle = {
-    width: spriteSize + 42,
-    height: sceneHeight,
-    background: `radial-gradient(circle at 50% 30%, rgba(255,255,255,0.96), ${style.glow} 74%)`,
-  };
-
-  const face = {
-    position: "absolute",
-    left: "50%",
-    top: "28%",
-    width: 46,
-    height: 46,
-    transform: "translateX(-50%)",
-    background: "#f7d8b7",
-    boxShadow: "0 0 0 4px #2f2547",
-  };
-
-  const eye = (left) => ({
-    position: "absolute",
-    top: 16,
-    left,
-    width: 6,
-    height: 16,
-    background: "#2b2443",
-  });
-
-  const common = (
-    <>
-      <div className="absolute bottom-3 left-1/2 h-3 w-24 -translate-x-1/2 rounded-full bg-cocoa/10 blur-[1px]" />
-      <div style={face}>
-        <div style={eye(11)} />
-        <div style={eye(29)} />
-        <div className="absolute left-1/2 top-[31px] h-[4px] w-[8px] -translate-x-1/2 bg-[#ee9b88]" />
-      </div>
-    </>
-  );
-
-  if (role.key === "cto") {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-[28px] border border-cocoa/10 bg-gradient-to-b ${style.frame} shadow-[0_18px_40px_rgba(120,96,78,0.14)]`}
-        style={wrapperStyle}
-      >
-        <div className="absolute inset-x-5 bottom-4 h-14 rounded-[20px] bg-white/35" />
-        {common}
-        <div className="absolute left-1/2 top-[23%] h-[18px] w-[62px] -translate-x-1/2 bg-[#2b2248]" />
-        <div className="absolute left-[calc(50%-31px)] top-[25%] h-[28px] w-[14px] bg-[#332753]" />
-        <div className="absolute left-[calc(50%+17px)] top-[25%] h-[28px] w-[14px] bg-[#332753]" />
-        <div className="absolute left-[calc(50%-43px)] top-[31%] h-[31px] w-[18px] bg-[#2f78d9]" />
-        <div className="absolute left-[calc(50%-45px)] top-[39%] h-[4px] w-[12px] bg-[#192349]" />
-        <div className="absolute left-[calc(50%-28px)] top-[42%] h-[3px] w-[10px] bg-[#192349]" />
-        <div className="absolute left-[calc(50%-26px)] top-[50%] h-[38px] w-[52px] bg-[#24346c]" />
-        <div className="absolute left-[calc(50%-8px)] top-[50%] h-[38px] w-[16px] bg-[#f8fbff]" />
-        <div className="absolute left-[calc(50%-40px)] top-[54%] h-[15px] w-[19px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%-44px)] top-[56%] h-[10px] w-[6px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%-49px)] top-[51%] h-[10px] w-[6px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%+22px)] top-[53%] h-[16px] w-[14px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%+33px)] top-[48%] h-[36px] w-[24px] bg-[#2f78d9]" />
-        <div className="absolute left-[calc(50%+36px)] top-[51%] h-[26px] w-[18px] bg-white/20" />
-        <div className="absolute left-[calc(50%-20px)] top-[84px] h-[18px] w-[14px] bg-[#24346c]" />
-        <div className="absolute left-[calc(50%+6px)] top-[84px] h-[18px] w-[14px] bg-[#24346c]" />
-        <div className="absolute left-[calc(50%-24px)] top-[102px] h-[34px] w-[16px] bg-[#24346c]" />
-        <div className="absolute left-[calc(50%+8px)] top-[102px] h-[34px] w-[16px] bg-[#24346c]" />
-        <div className="absolute left-[calc(50%-28px)] top-[136px] h-[10px] w-[20px] bg-[#1d2550]" />
-        <div className="absolute left-[calc(50%+4px)] top-[136px] h-[10px] w-[20px] bg-[#1d2550]" />
-      </div>
-    );
-  }
-
-  if (role.key === "pm") {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-[28px] border border-cocoa/10 bg-gradient-to-b ${style.frame} shadow-[0_18px_40px_rgba(120,96,78,0.14)]`}
-        style={wrapperStyle}
-      >
-        <div className="absolute inset-x-5 bottom-4 h-14 rounded-[20px] bg-white/35" />
-        {common}
-        <div className="absolute left-1/2 top-[24%] h-[16px] w-[58px] -translate-x-1/2 bg-[#6f4b35]" />
-        <div className="absolute left-[calc(50%-29px)] top-[27%] h-[14px] w-[16px] bg-[#7f593f]" />
-        <div className="absolute left-[calc(50%+14px)] top-[27%] h-[26px] w-[12px] bg-[#6f4b35]" />
-        <div className="absolute left-[calc(50%-25px)] top-[50%] h-[38px] w-[50px] bg-[#6d8e48]" />
-        <div className="absolute left-[calc(50%-9px)] top-[51%] h-[12px] w-[18px] bg-[#d9efb0]" />
-        <div className="absolute left-[calc(50%-18px)] top-[54%] h-[28px] w-[5px] rotate-[38deg] bg-[#9b6a45]" />
-        <div className="absolute left-[calc(50%+4px)] top-[53%] h-[28px] w-[5px] rotate-[38deg] bg-[#9b6a45]" />
-        <div className="absolute left-[calc(50%-43px)] top-[58%] h-[32px] w-[26px] bg-[#9b6a45]" />
-        <div className="absolute left-[calc(50%-39px)] top-[61%] h-[24px] w-[18px] bg-[#c9a27d]" />
-        <div className="absolute left-[calc(50%-35px)] top-[64%] h-[4px] w-[10px] bg-[#7ab47f]" />
-        <div className="absolute left-[calc(50%-44px)] top-[53%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%+28px)] top-[53%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%+18px)] top-[50%] h-[30px] w-[24px] bg-[#d7d9df]" />
-        <div className="absolute left-[calc(50%+21px)] top-[54%] h-[20px] w-[18px] bg-white/30" />
-        <div className="absolute left-[calc(50%-23px)] top-[88px] h-[18px] w-[13px] bg-[#6d8e48]" />
-        <div className="absolute left-[calc(50%+7px)] top-[88px] h-[18px] w-[13px] bg-[#6d8e48]" />
-        <div className="absolute left-[calc(50%-24px)] top-[106px] h-[34px] w-[15px] bg-[#6d8e48]" />
-        <div className="absolute left-[calc(50%+8px)] top-[106px] h-[34px] w-[15px] bg-[#6d8e48]" />
-        <div className="absolute left-[calc(50%-27px)] top-[140px] h-[10px] w-[18px] bg-[#5b4332]" />
-        <div className="absolute left-[calc(50%+5px)] top-[140px] h-[10px] w-[18px] bg-[#5b4332]" />
-      </div>
-    );
-  }
-
-  if (role.key === "frontend") {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-[28px] border border-cocoa/10 bg-gradient-to-b ${style.frame} shadow-[0_18px_40px_rgba(120,96,78,0.14)]`}
-        style={wrapperStyle}
-      >
-        <div className="absolute inset-x-5 bottom-4 h-14 rounded-[20px] bg-white/35" />
-        {common}
-        <div className="absolute left-1/2 top-[24%] h-[16px] w-[58px] -translate-x-1/2 bg-[#704b38]" />
-        <div className="absolute left-[calc(50%-28px)] top-[28%] h-[12px] w-[16px] bg-[#563626]" />
-        <div className="absolute left-[calc(50%-40px)] top-[46%] h-[38px] w-[24px] rounded-t-[8px] bg-[#23a7ea]" />
-        <div className="absolute left-[calc(50%+16px)] top-[46%] h-[38px] w-[24px] rounded-t-[8px] bg-[#23a7ea]" />
-        <div className="absolute left-[calc(50%-25px)] top-[50%] h-[38px] w-[50px] bg-[#29b8f3]" />
-        <div className="absolute left-[calc(50%-10px)] top-[50%] h-[10px] w-[20px] bg-[#def9ff]" />
-        <div className="absolute left-[calc(50%-8px)] top-[56%] h-[16px] w-[4px] bg-[#def9ff]" />
-        <div className="absolute left-[calc(50%+4px)] top-[56%] h-[16px] w-[4px] bg-[#def9ff]" />
-        <div className="absolute left-[calc(50%-44px)] top-[58%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%-54px)] top-[55%] h-[22px] w-[18px] bg-[#0f2d5b]" />
-        <div className="absolute left-[calc(50%-50px)] top-[58%] h-[12px] w-[10px] bg-[#fbddb3]" />
-        <div className="absolute left-[calc(50%+28px)] top-[53%] h-[18px] w-[18px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%+16px)] top-[49%] h-[32px] w-[42px] bg-[#17264d]" />
-        <div className="absolute left-[calc(50%+20px)] top-[53%] h-[22px] w-[34px] bg-[#8be6ff]" />
-        <div className="absolute left-[calc(50%+23px)] top-[56%] h-[4px] w-[28px] bg-white/60" />
-        <div className="absolute left-[calc(50%+22px)] top-[62%] h-[8px] w-[5px] bg-[#ff8ea6]" />
-        <div className="absolute left-[calc(50%+31px)] top-[62%] h-[8px] w-[7px] bg-[#ffd067]" />
-        <div className="absolute left-[calc(50%+42px)] top-[62%] h-[8px] w-[10px] bg-[#bdf0ff]" />
-        <div className="absolute left-[calc(50%-20px)] top-[88px] h-[18px] w-[14px] bg-[#2950a5]" />
-        <div className="absolute left-[calc(50%+6px)] top-[88px] h-[18px] w-[14px] bg-[#2950a5]" />
-        <div className="absolute left-[calc(50%-21px)] top-[106px] h-[34px] w-[15px] bg-[#2950a5]" />
-        <div className="absolute left-[calc(50%+7px)] top-[106px] h-[34px] w-[15px] bg-[#2950a5]" />
-        <div className="absolute left-[calc(50%-24px)] top-[140px] h-[10px] w-[18px] bg-[#4cbefe]" />
-        <div className="absolute left-[calc(50%+4px)] top-[140px] h-[10px] w-[18px] bg-[#4cbefe]" />
-      </div>
-    );
-  }
-
-  if (role.key === "backend") {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-[28px] border border-cocoa/10 bg-gradient-to-b ${style.frame} shadow-[0_18px_40px_rgba(120,96,78,0.14)]`}
-        style={wrapperStyle}
-      >
-        <div className="absolute inset-x-5 bottom-4 h-14 rounded-[20px] bg-white/35" />
-        {common}
-        <div className="absolute left-1/2 top-[24%] h-[18px] w-[60px] -translate-x-1/2 bg-[#273055]" />
-        <div className="absolute left-[calc(50%-30px)] top-[28%] h-[14px] w-[18px] bg-[#1f2545]" />
-        <div className="absolute left-[calc(50%-17px)] top-[39%] h-[6px] w-[16px] bg-[#101722]" />
-        <div className="absolute left-[calc(50%+1px)] top-[39%] h-[6px] w-[16px] bg-[#101722]" />
-        <div className="absolute left-[calc(50%-26px)] top-[50%] h-[40px] w-[52px] bg-[#145c7f]" />
-        <div className="absolute left-[calc(50%-10px)] top-[52%] h-[10px] w-[20px] bg-[#6fd0db]" />
-        <div className="absolute left-[calc(50%-50px)] top-[54%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%-60px)] top-[50%] h-[34px] w-[18px] bg-[#4a925f]" />
-        <div className="absolute left-[calc(50%-56px)] top-[54%] h-[22px] w-[10px] bg-[#f5d780]" />
-        <div className="absolute left-[calc(50%+26px)] top-[54%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%+12px)] top-[50%] h-[34px] w-[42px] bg-[#243a67]" />
-        <div className="absolute left-[calc(50%+16px)] top-[54%] h-[22px] w-[34px] bg-[#334c84]" />
-        <div className="absolute left-[calc(50%+19px)] top-[57%] h-[4px] w-[16px] bg-white/50" />
-        <div className="absolute left-[calc(50%-20px)] top-[90px] h-[18px] w-[14px] bg-[#233a7a]" />
-        <div className="absolute left-[calc(50%+6px)] top-[90px] h-[18px] w-[14px] bg-[#233a7a]" />
-        <div className="absolute left-[calc(50%-21px)] top-[108px] h-[34px] w-[15px] bg-[#233a7a]" />
-        <div className="absolute left-[calc(50%+7px)] top-[108px] h-[34px] w-[15px] bg-[#233a7a]" />
-        <div className="absolute left-[calc(50%-24px)] top-[142px] h-[10px] w-[18px] bg-[#5fd0d1]" />
-        <div className="absolute left-[calc(50%+4px)] top-[142px] h-[10px] w-[18px] bg-[#5fd0d1]" />
-      </div>
-    );
-  }
-
-  if (role.key === "qa") {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-[28px] border border-cocoa/10 bg-gradient-to-b ${style.frame} shadow-[0_18px_40px_rgba(120,96,78,0.14)]`}
-        style={wrapperStyle}
-      >
-        <div className="absolute inset-x-5 bottom-4 h-14 rounded-[20px] bg-white/35" />
-        {common}
-        <div className="absolute left-1/2 top-[23%] h-[16px] w-[58px] -translate-x-1/2 bg-[#7a49bf]" />
-        <div className="absolute left-[calc(50%-29px)] top-[27%] h-[32px] w-[12px] bg-[#7a49bf]" />
-        <div className="absolute left-[calc(50%+11px)] top-[27%] h-[34px] w-[14px] bg-[#9155dd]" />
-        <div className="absolute left-[calc(50%-25px)] top-[50%] h-[40px] w-[50px] bg-[#b955d8]" />
-        <div className="absolute left-[calc(50%-24px)] top-[59%] h-[4px] w-[48px] bg-[#d889f5]" />
-        <div className="absolute left-[calc(50%-24px)] top-[66%] h-[4px] w-[48px] bg-[#d889f5]" />
-        <div className="absolute left-[calc(50%-42px)] top-[53%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%-56px)] top-[48%] h-[42px] w-[24px] bg-white" />
-        <div className="absolute left-[calc(50%-50px)] top-[50%] h-[8px] w-[12px] bg-[#26376f]" />
-        <div className="absolute left-[calc(50%-51px)] top-[60%] h-[4px] w-[16px] bg-[#ff8ea6]" />
-        <div className="absolute left-[calc(50%-51px)] top-[66%] h-[4px] w-[16px] bg-[#71b0ff]" />
-        <div className="absolute left-[calc(50%-51px)] top-[72%] h-[4px] w-[12px] bg-[#81cc7f]" />
-        <div className="absolute left-[calc(50%+28px)] top-[54%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-        <div className="absolute left-[calc(50%+40px)] top-[50%] h-[18px] w-[18px] rounded-full border-[4px] border-[#9ac9ff]" />
-        <div className="absolute left-[calc(50%+32px)] top-[67%] h-[5px] w-[14px] rotate-[42deg] bg-[#9ac9ff]" />
-        <div className="absolute left-[calc(50%-20px)] top-[92px] h-[18px] w-[14px] bg-[#5d4f95]" />
-        <div className="absolute left-[calc(50%+6px)] top-[92px] h-[18px] w-[14px] bg-[#5d4f95]" />
-        <div className="absolute left-[calc(50%-21px)] top-[110px] h-[34px] w-[15px] bg-[#5d4f95]" />
-        <div className="absolute left-[calc(50%+7px)] top-[110px] h-[34px] w-[15px] bg-[#5d4f95]" />
-        <div className="absolute left-[calc(50%-24px)] top-[144px] h-[10px] w-[18px] bg-[#ff86c2]" />
-        <div className="absolute left-[calc(50%+4px)] top-[144px] h-[10px] w-[18px] bg-[#ff86c2]" />
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={`relative overflow-hidden rounded-[28px] border border-cocoa/10 bg-gradient-to-b ${style.frame} shadow-[0_18px_40px_rgba(120,96,78,0.14)]`}
-      style={wrapperStyle}
-    >
-      <div className="absolute inset-x-5 bottom-4 h-14 rounded-[20px] bg-white/35" />
-      {common}
-      <div className="absolute left-1/2 top-[23%] h-[16px] w-[58px] -translate-x-1/2 bg-[#f05f8e]" />
-      <div className="absolute left-[calc(50%-27px)] top-[27%] h-[14px] w-[16px] bg-[#da4f7c]" />
-      <div className="absolute left-[calc(50%+10px)] top-[27%] h-[30px] w-[18px] bg-[#f05f8e]" />
-      <div className="absolute left-[calc(50%-24px)] top-[50%] h-[38px] w-[48px] bg-[#ff7b8f]" />
-      <div className="absolute left-[calc(50%-20px)] top-[59%] h-[4px] w-[40px] bg-[#ff9d7d]" />
-      <div className="absolute left-[calc(50%-20px)] top-[66%] h-[4px] w-[40px] bg-[#ff9d7d]" />
-      <div className="absolute left-[calc(50%-42px)] top-[54%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-      <div className="absolute left-[calc(50%-57px)] top-[52%] h-[20px] w-[20px] rounded-full bg-[#f4c057]" />
-      <div className="absolute left-[calc(50%-55px)] top-[54%] h-[16px] w-[16px] rounded-full bg-white/70" />
-      <div className="absolute left-[calc(50%-58px)] top-[57%] h-[10px] w-[6px] rounded-full bg-[#ff935c]" />
-      <div className="absolute left-[calc(50%-49px)] top-[54%] h-[6px] w-[6px] rounded-full bg-[#6fd0ff]" />
-      <div className="absolute left-[calc(50%-47px)] top-[64%] h-[6px] w-[8px] rounded-full bg-[#7bc97a]" />
-      <div className="absolute left-[calc(50%+28px)] top-[54%] h-[16px] w-[16px] bg-[#f7d8b7]" />
-      <div className="absolute left-[calc(50%+45px)] top-[52%] h-[24px] w-[6px] bg-[#3d4255]" />
-      <div className="absolute left-[calc(50%+40px)] top-[50%] h-[12px] w-[16px] bg-[#3d4255]" />
-      <div className="absolute left-[calc(50%-18px)] top-[88px] h-[18px] w-[12px] bg-[#ff7b8f]" />
-      <div className="absolute left-[calc(50%+6px)] top-[88px] h-[18px] w-[12px] bg-[#ff7b8f]" />
-      <div className="absolute left-[calc(50%-20px)] top-[106px] h-[34px] w-[14px] bg-[#ff7b8f]" />
-      <div className="absolute left-[calc(50%+8px)] top-[106px] h-[34px] w-[14px] bg-[#ff7b8f]" />
-      <div className="absolute left-[calc(50%-22px)] top-[140px] h-[10px] w-[16px] bg-[#6a4035]" />
-      <div className="absolute left-[calc(50%+8px)] top-[140px] h-[10px] w-[16px] bg-[#6a4035]" />
-    </div>
-  );
-}
 
 function OfficeScene({ role, size = "sm" }) {
   const style = officeStyles[role.key] ?? officeStyles.cto;
@@ -679,7 +416,16 @@ export default function App() {
                     key={role.key}
                     className="flex flex-col items-center gap-4 rounded-[26px] border border-cocoa/10 bg-white/85 p-5 shadow-[0_10px_28px_rgba(120,96,78,0.08)]"
                   >
-                    <LabRolePortrait role={role} spriteSize={spriteSize} />
+                    <div
+                      className="flex items-end justify-center rounded-[28px] border border-cocoa/10 bg-gradient-to-b from-white to-[#fbf6f0] px-4 py-5 shadow-[0_18px_40px_rgba(120,96,78,0.10)]"
+                      style={{ width: spriteSize + 56, height: Math.round(spriteSize * 2.25) }}
+                    >
+                      <img
+                        src={role.labFile}
+                        alt={role.label}
+                        className="pixel max-h-full w-auto object-contain"
+                      />
+                    </div>
                     <p className="text-center text-sm font-semibold text-cocoa">{role.label}</p>
                   </div>
                 ))}
@@ -696,11 +442,11 @@ export default function App() {
                   {roles.map((role) => (
                     <a
                       key={role.key}
-                      href={role.file}
+                      href={role.labFile}
                       download
                       className="rounded-xl border border-cocoa/10 bg-white/80 px-3 py-2 text-cocoa"
                     >
-                      {role.label} PNG
+                      {role.label} Lab PNG
                     </a>
                   ))}
                   <a
