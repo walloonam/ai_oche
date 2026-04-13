@@ -145,228 +145,75 @@ const officeStyles = {
   },
 };
 
-function rect(x, y, width, height, fill) {
-  return { x, y, width, height, fill };
-}
-
 const portraitThemes = {
   cto: {
-    outline: "#2a1c16",
-    skin: "#f4cfad",
     hair: "#392b26",
-    primary: "#2b375e",
-    secondary: "#42517d",
     accent: "#f1b867",
-    stage: "#e7edf8",
   },
   pm: {
-    outline: "#2a1c16",
-    skin: "#f2d1b0",
     hair: "#6d5144",
-    primary: "#6e8a59",
-    secondary: "#8ea56f",
     accent: "#f29c6b",
-    stage: "#edf0de",
   },
   frontend: {
-    outline: "#2a1c16",
-    skin: "#f5d0ae",
     hair: "#7d5339",
-    primary: "#46b8df",
-    secondary: "#91dff4",
     accent: "#f6c453",
-    stage: "#e5f5ff",
   },
   backend: {
-    outline: "#2a1c16",
-    skin: "#efcaa5",
     hair: "#2d2f35",
-    primary: "#34516f",
-    secondary: "#406981",
     accent: "#53d1c5",
-    stage: "#e2e8ef",
   },
   qa: {
-    outline: "#2a1c16",
-    skin: "#f5d1b4",
     hair: "#5f4a72",
-    primary: "#8b78a7",
-    secondary: "#baa6d1",
     accent: "#f06793",
-    stage: "#f7e8f2",
   },
   designer: {
-    outline: "#2a1c16",
-    skin: "#f5d2b7",
     hair: "#cb7481",
-    primary: "#f0a3b0",
-    secondary: "#f7ccd4",
     accent: "#f5c06d",
-    stage: "#ffe7dd",
   },
-};
-
-const portraitShapes = {
-  cto: [
-    rect(18, 10, 26, 12, "hair"),
-    rect(16, 14, 6, 10, "hair"),
-    rect(22, 12, 18, 16, "outline"),
-    rect(23, 13, 16, 14, "skin"),
-    rect(21, 30, 22, 18, "outline"),
-    rect(22, 31, 20, 16, "primary"),
-    rect(22, 34, 20, 4, "secondary"),
-    rect(17, 31, 5, 12, "outline"),
-    rect(18, 32, 3, 10, "skin"),
-    rect(43, 25, 6, 14, "outline"),
-    rect(44, 26, 4, 12, "skin"),
-    rect(46, 22, 11, 14, "outline"),
-    rect(47, 23, 9, 12, "secondary"),
-    rect(19, 16, 4, 10, "secondary"),
-    rect(16, 17, 4, 7, "secondary"),
-    rect(28, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(27, 48, 6, 11, "outline"),
-    rect(28, 49, 4, 9, "primary"),
-    rect(35, 48, 6, 11, "outline"),
-    rect(36, 49, 4, 9, "primary"),
-    rect(27, 58, 6, 3, "outline"),
-    rect(35, 58, 6, 3, "outline"),
-  ],
-  pm: [
-    rect(18, 10, 24, 11, "hair"),
-    rect(39, 12, 5, 9, "hair"),
-    rect(30, 7, 7, 5, "hair"),
-    rect(22, 13, 18, 15, "outline"),
-    rect(23, 14, 16, 13, "skin"),
-    rect(23, 30, 18, 18, "outline"),
-    rect(24, 31, 16, 16, "primary"),
-    rect(30, 31, 3, 16, "accent"),
-    rect(13, 28, 10, 14, "outline"),
-    rect(14, 29, 8, 12, "secondary"),
-    rect(15, 31, 6, 2, "stage"),
-    rect(35, 34, 10, 12, "outline"),
-    rect(36, 35, 8, 10, "accent"),
-    rect(37, 37, 6, 2, "stage"),
-    rect(27, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(25, 47, 6, 11, "outline"),
-    rect(26, 48, 4, 9, "primary"),
-    rect(35, 46, 6, 12, "outline"),
-    rect(36, 47, 4, 10, "primary"),
-    rect(24, 58, 7, 3, "outline"),
-    rect(35, 58, 7, 3, "outline"),
-  ],
-  frontend: [
-    rect(18, 11, 24, 15, "primary"),
-    rect(16, 15, 4, 9, "primary"),
-    rect(40, 15, 4, 9, "primary"),
-    rect(21, 9, 18, 6, "hair"),
-    rect(20, 12, 20, 16, "outline"),
-    rect(21, 13, 18, 14, "skin"),
-    rect(19, 29, 22, 18, "outline"),
-    rect(20, 30, 20, 16, "primary"),
-    rect(22, 32, 16, 4, "secondary"),
-    rect(13, 31, 6, 11, "outline"),
-    rect(14, 32, 4, 9, "skin"),
-    rect(42, 27, 12, 11, "outline"),
-    rect(43, 28, 10, 9, "secondary"),
-    rect(44, 30, 8, 2, "stage"),
-    rect(44, 33, 3, 2, "accent"),
-    rect(48, 33, 3, 2, "accent"),
-    rect(27, 18, 3, 4, "outline"),
-    rect(34, 18, 3, 4, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(23, 47, 6, 10, "outline"),
-    rect(24, 48, 4, 8, "primary"),
-    rect(32, 48, 6, 9, "outline"),
-    rect(33, 49, 4, 7, "primary"),
-    rect(23, 57, 6, 3, "outline"),
-    rect(32, 57, 6, 3, "outline"),
-  ],
-  backend: [
-    rect(19, 9, 24, 18, "hair"),
-    rect(19, 12, 6, 8, "hair"),
-    rect(20, 11, 19, 17, "outline"),
-    rect(21, 12, 17, 15, "skin"),
-    rect(18, 28, 24, 19, "outline"),
-    rect(19, 29, 22, 17, "primary"),
-    rect(21, 34, 18, 5, "secondary"),
-    rect(13, 31, 6, 11, "outline"),
-    rect(14, 32, 4, 9, "skin"),
-    rect(10, 34, 10, 14, "outline"),
-    rect(11, 35, 8, 12, "secondary"),
-    rect(12, 38, 6, 2, "accent"),
-    rect(12, 42, 6, 2, "accent"),
-    rect(43, 38, 6, 8, "outline"),
-    rect(44, 39, 4, 6, "stage"),
-    rect(44, 37, 4, 2, "accent"),
-    rect(26, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(29, 24, 4, 1, "accent"),
-    rect(24, 47, 6, 11, "outline"),
-    rect(25, 48, 4, 9, "secondary"),
-    rect(34, 47, 6, 11, "outline"),
-    rect(35, 48, 4, 9, "secondary"),
-    rect(24, 58, 6, 3, "outline"),
-    rect(34, 58, 6, 3, "outline"),
-  ],
-  qa: [
-    rect(19, 9, 22, 17, "hair"),
-    rect(38, 11, 6, 11, "hair"),
-    rect(40, 20, 3, 8, "hair"),
-    rect(22, 12, 18, 16, "outline"),
-    rect(23, 13, 16, 14, "skin"),
-    rect(22, 30, 18, 18, "outline"),
-    rect(23, 31, 16, 16, "primary"),
-    rect(24, 32, 14, 4, "secondary"),
-    rect(13, 29, 9, 14, "outline"),
-    rect(14, 30, 7, 12, "stage"),
-    rect(15, 30, 5, 1, "accent"),
-    rect(42, 28, 8, 8, "outline"),
-    rect(43, 29, 6, 6, "stage"),
-    rect(46, 35, 2, 7, "outline"),
-    rect(27, 18, 3, 3, "outline"),
-    rect(34, 17, 3, 4, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(24, 47, 6, 10, "outline"),
-    rect(25, 48, 4, 8, "primary"),
-    rect(33, 48, 6, 9, "outline"),
-    rect(34, 49, 4, 7, "primary"),
-    rect(24, 57, 6, 3, "outline"),
-    rect(33, 57, 6, 3, "outline"),
-  ],
-  designer: [
-    rect(18, 8, 26, 18, "hair"),
-    rect(14, 12, 10, 14, "hair"),
-    rect(39, 8, 6, 10, "hair"),
-    rect(22, 11, 18, 16, "outline"),
-    rect(23, 12, 16, 14, "skin"),
-    rect(21, 29, 20, 19, "outline"),
-    rect(22, 30, 18, 17, "primary"),
-    rect(23, 32, 16, 5, "secondary"),
-    rect(14, 31, 7, 11, "outline"),
-    rect(15, 32, 5, 9, "skin"),
-    rect(42, 35, 8, 8, "outline"),
-    rect(43, 36, 6, 6, "accent"),
-    rect(44, 34, 2, 2, "secondary"),
-    rect(47, 32, 2, 10, "outline"),
-    rect(27, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(29, 24, 5, 2, "secondary"),
-    rect(25, 47, 6, 10, "outline"),
-    rect(26, 48, 4, 8, "secondary"),
-    rect(35, 46, 6, 11, "outline"),
-    rect(36, 47, 4, 9, "secondary"),
-    rect(25, 57, 6, 3, "outline"),
-    rect(35, 57, 6, 3, "outline"),
-  ],
 };
 
 function PixelRolePortrait({ role, size }) {
   const theme = portraitThemes[role.key] ?? portraitThemes.cto;
-  const shapes = portraitShapes[role.key] ?? portraitShapes.cto;
+  const accessory = {
+    cto: (
+      <>
+        <div className="absolute left-[31%] top-[26%] h-[8%] w-[7%] rounded-full bg-[#4e5673]" />
+        <div className="absolute right-[31%] top-[26%] h-[8%] w-[7%] rounded-full bg-[#4e5673]" />
+        <div className="absolute left-[31%] right-[31%] top-[23%] h-[4%] rounded-full border-[3px] border-b-0 border-[#4e5673]" />
+        <div className="absolute right-[27%] top-[35%] h-[10%] w-[4%] rounded-full bg-[#f1b867]" />
+      </>
+    ),
+    pm: (
+      <>
+        <div className="absolute right-[30%] top-[24%] h-[7%] w-[12%] rounded-full bg-[#f29c6b]" />
+        <div className="absolute right-[33%] top-[26%] h-[3%] w-[6%] rounded-full bg-[#fff5ec]" />
+      </>
+    ),
+    frontend: (
+      <>
+        <div className="absolute left-[28%] right-[28%] top-[21%] h-[10%] rounded-[999px_999px_12px_12px] border-[3px] border-b-0 border-[#46b8df]" />
+        <div className="absolute right-[24%] top-[27%] h-[6%] w-[6%] rounded-full bg-[#f6c453]" />
+      </>
+    ),
+    backend: (
+      <>
+        <div className="absolute left-[29%] right-[29%] top-[22%] h-[9%] rounded-[12px_12px_6px_6px] bg-[#2d2f35]" />
+        <div className="absolute right-[25%] top-[34%] h-[7%] w-[7%] rounded-md bg-[#53d1c5]" />
+      </>
+    ),
+    qa: (
+      <>
+        <div className="absolute left-[28%] right-[28%] top-[24%] h-[5%] rounded-full bg-[#f06793]" />
+        <div className="absolute right-[25%] top-[30%] h-[7%] w-[7%] rounded-full border-[3px] border-[#baa6d1]" />
+      </>
+    ),
+    designer: (
+      <>
+        <div className="absolute left-[26%] top-[19%] h-[15%] w-[18%] rounded-[14px_12px_18px_8px] bg-[#cb7481]" />
+        <div className="absolute right-[26%] top-[24%] h-[6%] w-[10%] rounded-full bg-[#f5c06d]" />
+      </>
+    ),
+  }[role.key];
 
   return (
     <div
@@ -376,24 +223,14 @@ function PixelRolePortrait({ role, size }) {
       <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-[#f8efe3] to-[#ecddca]" />
       <div className="absolute inset-x-[14%] bottom-[10%] h-[10%] rounded-full bg-[#c79669]/30 blur-md" />
       <div className="absolute right-[12%] top-[10%] h-[18%] w-[26%] rounded-2xl border border-white/70 bg-white/35 shadow-[inset_0_0_0_1px_rgba(160,130,110,0.08)]" />
-      <svg
-        viewBox="0 0 64 64"
-        className="absolute inset-x-[8%] bottom-[4%] h-[92%] w-[84%]"
-        aria-hidden="true"
-        shapeRendering="crispEdges"
-      >
-        <rect x="0" y="0" width="64" height="64" fill="transparent" />
-        {shapes.map((shape, index) => (
-          <rect
-            key={`${role.key}-${index}`}
-            x={shape.x}
-            y={shape.y}
-            width={shape.width}
-            height={shape.height}
-            fill={theme[shape.fill] ?? shape.fill}
-          />
-        ))}
-      </svg>
+      <div className="absolute inset-x-[10%] bottom-[2%] top-[18%]">
+        <img src={role.file} alt={role.label} className="pixel h-full w-full object-contain" />
+        <div
+          className="absolute left-[24%] right-[24%] top-[18%] h-[10%] rounded-[16px_16px_8px_8px] opacity-80"
+          style={{ background: theme.hair }}
+        />
+        {accessory}
+      </div>
     </div>
   );
 }
