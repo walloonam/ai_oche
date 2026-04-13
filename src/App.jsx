@@ -172,256 +172,64 @@ const portraitThemes = {
   },
 };
 
-const seatedRoleConcepts = {
-  cto:
-    "Centered command desk, headset on, one hand lifted in a calm guiding pose over a navy workstation.",
-  pm:
-    "Planner seat with sticky notes and a scheduling screen, leaning slightly forward like they are juggling the next sprint.",
-  frontend:
-    "Bright UI desk with a lively monitor layout, relaxed hoodie silhouette, and quick hands over the keyboard tray.",
-  backend:
-    "Grounded engineering desk with a darker setup, utility mug, and a sturdier seated posture behind a heavy monitor.",
-  qa:
-    "Checker desk with a clipped checklist, bug markers, and a focused face framed by a neat tester station.",
-  designer:
-    "Most styled seat in the room, asymmetrical hair, pen tablet and palette accents arranged around a soft creative setup.",
-};
-
-const seatedRoleScenes = {
-  cto: {
-    hair: "rounded-[16px_16px_8px_8px]",
-    hairWidth: "w-[26%]",
-    hairLeft: "left-[37%]",
-    chair: "bg-[#566082]",
-    desk: "bg-[#d8ae82]",
-    deskEdge: "bg-[#c39568]",
-    torso: "bg-[#2b375e]",
-    torsoInset: "bg-[#42517d]",
-    monitor: "bg-[#324056]",
-    screen: "bg-[linear-gradient(180deg,#9fc0ef_0_24%,#d9e5fb_24%_100%)]",
-    accent: "bg-[#f1b867]",
-    floorGlow: "bg-[#c69a73]/35",
-    chairBack: "rounded-[16px_16px_8px_8px]",
-    leftProp: "tablet",
-    rightProp: "headsetMic",
-    mood: "Command Desk",
-  },
-  pm: {
-    hair: "rounded-[14px_16px_8px_10px]",
-    hairWidth: "w-[24%]",
-    hairLeft: "left-[38%]",
-    chair: "bg-[#8ea56f]",
-    desk: "bg-[#d8b483]",
-    deskEdge: "bg-[#bd9461]",
-    torso: "bg-[#6e8a59]",
-    torsoInset: "bg-[#93ad74]",
-    monitor: "bg-[#495247]",
-    screen: "bg-[linear-gradient(180deg,#b9d49f_0_22%,#e9f1dd_22%_100%)]",
-    accent: "bg-[#f29c6b]",
-    floorGlow: "bg-[#d2b087]/35",
-    chairBack: "rounded-[18px_18px_10px_10px]",
-    leftProp: "sticky",
-    rightProp: "planner",
-    mood: "Scheduling Pod",
-  },
-  frontend: {
-    hair: "rounded-[14px_14px_10px_10px]",
-    hairWidth: "w-[22%]",
-    hairLeft: "left-[39%]",
-    chair: "bg-[#53a7ca]",
-    desk: "bg-[#d6af85]",
-    deskEdge: "bg-[#bb9365]",
-    torso: "bg-[#46b8df]",
-    torsoInset: "bg-[#91dff4]",
-    monitor: "bg-[#2f4054]",
-    screen: "bg-[linear-gradient(180deg,#a4e2fb_0_20%,#ffe1ef_20%_54%,#d6f5ff_54%_100%)]",
-    accent: "bg-[#f6c453]",
-    floorGlow: "bg-[#b9d7e4]/28",
-    chairBack: "rounded-[18px_18px_8px_8px]",
-    leftProp: "uiChip",
-    rightProp: "hoodieCord",
-    mood: "UI Station",
-  },
-  backend: {
-    hair: "rounded-[12px_12px_8px_8px]",
-    hairWidth: "w-[24%]",
-    hairLeft: "left-[38%]",
-    chair: "bg-[#406981]",
-    desk: "bg-[#cda57f]",
-    deskEdge: "bg-[#ac8058]",
-    torso: "bg-[#34516f]",
-    torsoInset: "bg-[#406981]",
-    monitor: "bg-[#2c3445]",
-    screen: "bg-[linear-gradient(180deg,#7fa5be_0_18%,#b7d3df_18%_100%)]",
-    accent: "bg-[#53d1c5]",
-    floorGlow: "bg-[#8ca5b5]/28",
-    chairBack: "rounded-[14px_14px_8px_8px]",
-    leftProp: "mug",
-    rightProp: "serverNote",
-    mood: "Systems Desk",
-  },
-  qa: {
-    hair: "rounded-[14px_14px_8px_12px]",
-    hairWidth: "w-[24%]",
-    hairLeft: "left-[38%]",
-    chair: "bg-[#9174a7]",
-    desk: "bg-[#d4ab82]",
-    deskEdge: "bg-[#b88660]",
-    torso: "bg-[#8b78a7]",
-    torsoInset: "bg-[#baa6d1]",
-    monitor: "bg-[#394154]",
-    screen: "bg-[linear-gradient(180deg,#f0bfd3_0_20%,#f7e1eb_20%_50%,#d9e2ff_50%_100%)]",
-    accent: "bg-[#f06793]",
-    floorGlow: "bg-[#d1b7d5]/24",
-    chairBack: "rounded-[16px_16px_10px_10px]",
-    leftProp: "checklist",
-    rightProp: "bugDot",
-    mood: "Test Bench",
-  },
-  designer: {
-    hair: "rounded-[18px_12px_16px_8px]",
-    hairWidth: "w-[26%]",
-    hairLeft: "left-[36%]",
-    chair: "bg-[#cc8f96]",
-    desk: "bg-[#d8ad86]",
-    deskEdge: "bg-[#be8b65]",
-    torso: "bg-[#f0a3b0]",
-    torsoInset: "bg-[#f7ccd4]",
-    monitor: "bg-[#4a3d4c]",
-    screen: "bg-[linear-gradient(180deg,#ffd4c9_0_22%,#ffe9d9_22%_55%,#f5d9ef_55%_100%)]",
-    accent: "bg-[#f5c06d]",
-    floorGlow: "bg-[#f1c4b9]/26",
-    chairBack: "rounded-[18px_12px_16px_8px]",
-    leftProp: "palette",
-    rightProp: "tabletPen",
-    mood: "Creative Seat",
-  },
-};
-
-function DeskProp({ kind }) {
-  if (kind === "tablet") {
-    return <div className="h-8 w-6 rounded-md border-2 border-[#6e86b8]/35 bg-[#6ba6ea]" />;
-  }
-  if (kind === "headsetMic") {
-    return (
-      <div className="relative h-8 w-5">
-        <div className="absolute left-2 top-1 h-4 w-4 rounded-full border-[3px] border-[#4e5673]" />
-        <div className="absolute left-3 top-4 h-4 w-[3px] rounded-full bg-[#f1b867]" />
-      </div>
-    );
-  }
-  if (kind === "sticky") {
-    return (
-      <div className="grid h-8 w-8 grid-cols-2 gap-1">
-        <span className="rounded-sm bg-[#f6d17f]" />
-        <span className="rounded-sm bg-[#f3b89b]" />
-        <span className="rounded-sm bg-[#cfe39b]" />
-        <span className="rounded-sm bg-[#f6d17f]" />
-      </div>
-    );
-  }
-  if (kind === "planner") {
-    return (
-      <div className="h-8 w-6 rounded-md border-2 border-[#977259]/20 bg-[#fff5eb] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.55)]">
-        <div className="mx-auto mt-1 h-1 w-3 rounded-full bg-[#f29c6b]" />
-        <div className="mx-auto mt-1 h-1 w-4 rounded-full bg-[#c8d89d]" />
-        <div className="mx-auto mt-1 h-1 w-4 rounded-full bg-[#c8d89d]" />
-      </div>
-    );
-  }
-  if (kind === "uiChip") {
-    return <div className="h-6 w-8 rounded-md border-2 border-white/60 bg-[#9ae3ff]" />;
-  }
-  if (kind === "hoodieCord") {
-    return (
-      <div className="relative h-8 w-6">
-        <div className="absolute left-2 top-1 h-6 w-[2px] rounded-full bg-white/80" />
-        <div className="absolute left-4 top-2 h-5 w-[2px] rounded-full bg-white/80" />
-      </div>
-    );
-  }
-  if (kind === "mug") {
-    return (
-      <div className="relative h-8 w-6 rounded-[6px_6px_8px_8px] border-2 border-[#7c6a56]/20 bg-[#6ec8bf]">
-        <div className="absolute -right-1 top-2 h-3 w-2 rounded-r-full border-2 border-l-0 border-[#7c6a56]/30" />
-      </div>
-    );
-  }
-  if (kind === "serverNote") {
-    return (
-      <div className="h-8 w-7 rounded-md border-2 border-[#6f7b8b]/25 bg-[#edf2f7]">
-        <div className="mx-auto mt-2 h-1 w-4 rounded-full bg-[#53d1c5]" />
-        <div className="mx-auto mt-2 h-1 w-4 rounded-full bg-[#8da7c5]" />
-      </div>
-    );
-  }
-  if (kind === "checklist") {
-    return (
-      <div className="h-9 w-7 rounded-md border-2 border-[#8f7c86]/18 bg-[#fff5f7]">
-        <div className="ml-2 mt-2 h-1 w-4 rounded-full bg-[#f06793]" />
-        <div className="ml-2 mt-2 h-1 w-3 rounded-full bg-[#baa6d1]" />
-        <div className="ml-2 mt-2 h-1 w-3 rounded-full bg-[#baa6d1]" />
-      </div>
-    );
-  }
-  if (kind === "bugDot") {
-    return <div className="h-6 w-6 rounded-full border-[3px] border-[#baa6d1] bg-[#fff8fb]" />;
-  }
-  if (kind === "palette") {
-    return (
-      <div className="relative h-8 w-8 rounded-full bg-[#fff2e6]">
-        <div className="absolute left-1 top-2 h-2 w-2 rounded-full bg-[#f5c06d]" />
-        <div className="absolute left-4 top-1 h-2 w-2 rounded-full bg-[#f093a4]" />
-        <div className="absolute left-5 top-4 h-2 w-2 rounded-full bg-[#9eced2]" />
-        <div className="absolute left-2 top-5 h-2 w-2 rounded-full bg-[#f7ccd4]" />
-      </div>
-    );
-  }
-  if (kind === "tabletPen") {
-    return (
-      <div className="relative h-8 w-6">
-        <div className="absolute left-2 top-1 h-6 w-4 rounded-md bg-[#2f3442]" />
-        <div className="absolute right-0 top-0 h-7 w-[3px] rounded-full bg-[#f5c06d]" />
-      </div>
-    );
-  }
-  return null;
-}
-
-function SeatedRolePortrait({ role, size }) {
-  const scene = seatedRoleScenes[role.key] ?? seatedRoleScenes.cto;
+function PixelRolePortrait({ role, size }) {
   const theme = portraitThemes[role.key] ?? portraitThemes.cto;
+  const accessory = {
+    cto: (
+      <>
+        <div className="absolute left-[31%] top-[26%] h-[8%] w-[7%] rounded-full bg-[#4e5673]" />
+        <div className="absolute right-[31%] top-[26%] h-[8%] w-[7%] rounded-full bg-[#4e5673]" />
+        <div className="absolute left-[31%] right-[31%] top-[23%] h-[4%] rounded-full border-[3px] border-b-0 border-[#4e5673]" />
+        <div className="absolute right-[27%] top-[35%] h-[10%] w-[4%] rounded-full bg-[#f1b867]" />
+      </>
+    ),
+    pm: (
+      <>
+        <div className="absolute right-[30%] top-[24%] h-[7%] w-[12%] rounded-full bg-[#f29c6b]" />
+        <div className="absolute right-[33%] top-[26%] h-[3%] w-[6%] rounded-full bg-[#fff5ec]" />
+      </>
+    ),
+    frontend: (
+      <>
+        <div className="absolute left-[28%] right-[28%] top-[21%] h-[10%] rounded-[999px_999px_12px_12px] border-[3px] border-b-0 border-[#46b8df]" />
+        <div className="absolute right-[24%] top-[27%] h-[6%] w-[6%] rounded-full bg-[#f6c453]" />
+      </>
+    ),
+    backend: (
+      <>
+        <div className="absolute left-[29%] right-[29%] top-[22%] h-[9%] rounded-[12px_12px_6px_6px] bg-[#2d2f35]" />
+        <div className="absolute right-[25%] top-[34%] h-[7%] w-[7%] rounded-md bg-[#53d1c5]" />
+      </>
+    ),
+    qa: (
+      <>
+        <div className="absolute left-[28%] right-[28%] top-[24%] h-[5%] rounded-full bg-[#f06793]" />
+        <div className="absolute right-[25%] top-[30%] h-[7%] w-[7%] rounded-full border-[3px] border-[#baa6d1]" />
+      </>
+    ),
+    designer: (
+      <>
+        <div className="absolute left-[26%] top-[19%] h-[15%] w-[18%] rounded-[14px_12px_18px_8px] bg-[#cb7481]" />
+        <div className="absolute right-[26%] top-[24%] h-[6%] w-[10%] rounded-full bg-[#f5c06d]" />
+      </>
+    ),
+  }[role.key];
+
   return (
     <div
       className={`relative overflow-hidden rounded-[28px] border border-white/70 bg-gradient-to-b ${role.frame} shadow-[inset_0_1px_0_rgba(255,255,255,0.75),0_20px_35px_-26px_rgba(110,80,60,0.45)]`}
-      style={{ width: size, height: size + 34 }}
+      style={{ width: size, height: size + 28 }}
     >
-      <div className="absolute inset-x-0 bottom-0 h-[34%] bg-gradient-to-b from-[#f8efe3] to-[#ecddca]" />
-      <div className={`absolute inset-x-[16%] bottom-[8%] h-[10%] rounded-full blur-md ${scene.floorGlow}`} />
+      <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-[#f8efe3] to-[#ecddca]" />
+      <div className="absolute inset-x-[14%] bottom-[10%] h-[10%] rounded-full bg-[#c79669]/30 blur-md" />
       <div className="absolute right-[12%] top-[10%] h-[18%] w-[26%] rounded-2xl border border-white/70 bg-white/35 shadow-[inset_0_0_0_1px_rgba(160,130,110,0.08)]" />
-      <div className={`absolute bottom-[20%] left-[19%] h-[27%] w-[22%] ${scene.chair} ${scene.chairBack} border border-black/5`} />
-      <div className={`absolute bottom-[15%] left-[10%] h-[24%] w-[80%] rounded-[20px] ${scene.desk} border border-[#8d6b4f]/10 shadow-[inset_0_-6px_0_rgba(160,112,72,0.18)]`} />
-      <div className={`absolute bottom-[15%] left-[14%] h-[8%] w-[72%] rounded-full ${scene.deskEdge} opacity-55`} />
-      <div className="absolute bottom-[24%] left-[18%] h-[10%] w-[64%] rounded-[18px] border border-white/35 bg-white/12" />
-      <div className="absolute bottom-[19%] left-[39%] h-[4%] w-[22%] rounded-full bg-white/70 shadow-[inset_0_0_0_2px_rgba(190,150,120,0.18)]" />
-      <div className="absolute bottom-[34%] left-[44%] h-[22%] w-[16%] rounded-[20px_20px_10px_10px] bg-[#f6d5b5] border border-[#c79a77]/10" />
-      <div className={`absolute bottom-[51%] ${scene.hairLeft} ${scene.hairWidth} h-[16%] ${scene.hair} ${scene.hair}`} style={{ backgroundColor: theme.hair }} />
-      <div className={`absolute bottom-[39%] left-[41%] h-[14%] w-[22%] rounded-[10px] ${scene.torso} border border-black/5`} />
-      <div className={`absolute bottom-[44%] left-[43%] h-[5%] w-[18%] rounded-full ${scene.torsoInset} opacity-95`} />
-      <div className="absolute bottom-[49%] left-[48%] h-[3%] w-[2%] bg-[#2b2430]" />
-      <div className="absolute bottom-[49%] left-[56%] h-[3%] w-[2%] bg-[#2b2430]" />
-      <div className={`absolute bottom-[45%] left-[52%] h-[1.5%] w-[4%] rounded-full ${scene.accent}`} />
-      <div className="absolute bottom-[39%] left-[36%] h-[8%] w-[8%] rounded-full bg-[#f6d5b5] border border-[#c79a77]/10" />
-      <div className="absolute bottom-[39%] right-[35%] h-[8%] w-[8%] rounded-full bg-[#f6d5b5] border border-[#c79a77]/10" />
-      <div className={`absolute bottom-[38%] right-[17%] h-[18%] w-[18%] rounded-[10px] ${scene.monitor} border border-black/10 shadow-[0_5px_0_rgba(60,45,35,0.1)]`} />
-      <div className={`absolute bottom-[41%] right-[20%] h-[12%] w-[12%] rounded-[6px] ${scene.screen} border border-white/35`} />
-      <div className="absolute bottom-[34%] right-[24%] h-[5%] w-[4%] rounded-b-md bg-[#5c6272]" />
-      <div className="absolute bottom-[31%] right-[20%] h-[3%] w-[12%] rounded-full bg-[#645868]" />
-      <div className="absolute bottom-[24%] left-[40%] h-[5%] w-[20%] rounded-[6px] border border-white/35 bg-white/45" />
-      <div className="absolute bottom-[23%] left-[43%] h-[1.5%] w-[14%] bg-[#ceb7a6]" />
-      <div className="absolute bottom-[36%] left-[17%] flex items-end gap-2">
-        <DeskProp kind={scene.leftProp} />
-        <DeskProp kind={scene.rightProp} />
+      <div className="absolute inset-x-[10%] bottom-[2%] top-[18%]">
+        <img src={role.file} alt={role.label} className="pixel h-full w-full object-contain" />
+        <div
+          className="absolute left-[24%] right-[24%] top-[18%] h-[10%] rounded-[16px_16px_8px_8px] opacity-80"
+          style={{ background: theme.hair }}
+        />
+        {accessory}
       </div>
     </div>
   );
@@ -730,13 +538,11 @@ export default function App() {
                       </span>
                     </div>
                     <div className="mt-4 flex justify-center">
-                      <SeatedRolePortrait role={role} size={spriteSize} />
+                      <PixelRolePortrait role={role} size={spriteSize} />
                     </div>
                     <div className="mt-4">
                       <p className="text-base font-semibold text-cocoa">{role.label}</p>
-                      <p className="mt-2 text-sm leading-6 text-cocoa/65">
-                        {seatedRoleConcepts[role.key]}
-                      </p>
+                      <p className="mt-2 text-sm leading-6 text-cocoa/65">{role.concept}</p>
                     </div>
                   </div>
                 ))}
