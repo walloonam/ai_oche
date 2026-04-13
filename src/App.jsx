@@ -315,36 +315,55 @@ export default function App() {
         {view === "office" ? (
           <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.45fr)_minmax(440px,0.95fr)] xl:items-start">
             <section className="grid gap-6">
-              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <h2 className="font-display text-2xl text-cocoa">Main Agent</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {officeStats.map((stat) => (
-                      <div
-                        key={stat.label}
-                        className="rounded-2xl border border-cocoa/10 bg-white/80 px-3 py-2 text-xs"
-                      >
-                        <p className="text-cocoa/60">{stat.label}</p>
-                        <p className="font-semibold text-cocoa">{stat.value}</p>
-                      </div>
-                    ))}
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(280px,0.82fr)]">
+                <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <h2 className="font-display text-2xl text-cocoa">Main Agent</h2>
+                    <div className="flex flex-wrap gap-2">
+                      {officeStats.map((stat) => (
+                        <div
+                          key={stat.label}
+                          className="rounded-2xl border border-cocoa/10 bg-white/80 px-3 py-2 text-xs"
+                        >
+                          <p className="text-cocoa/60">{stat.label}</p>
+                          <p className="font-semibold text-cocoa">{stat.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(340px,1.1fr)_minmax(260px,0.9fr)] lg:items-center">
+                    <div className="w-full max-w-[360px]">
+                      <OfficeScene role={activeRole} size="lg" />
+                    </div>
+                    <div className="max-w-sm">
+                      <p className="text-sm uppercase tracking-[0.3em] text-cocoa/60">
+                        Main Agent (Codex)
+                      </p>
+                      <h3 className="mt-2 font-display text-3xl text-cocoa">
+                        {activeRole.label}
+                      </h3>
+                      <p className="mt-2 text-sm text-cocoa/70">
+                        {activeRole.label} is coordinating the current sprint flow.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(340px,1.1fr)_minmax(260px,0.9fr)] lg:items-center">
-                  <div className="w-full max-w-[360px]">
-                    <OfficeScene role={activeRole} size="lg" />
-                  </div>
-                  <div className="max-w-sm">
-                    <p className="text-sm uppercase tracking-[0.3em] text-cocoa/60">
-                      Main Agent (Codex)
-                    </p>
-                    <h3 className="mt-2 font-display text-3xl text-cocoa">
-                      {activeRole.label}
-                    </h3>
-                    <p className="mt-2 text-sm text-cocoa/70">
-                      {activeRole.label} is coordinating the current sprint flow.
-                    </p>
+                <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
+                  <h3 className="font-display text-2xl text-cocoa">Work Board</h3>
+                  <div className="mt-4 grid gap-4">
+                    {[
+                      "Ops board refresh",
+                      "Design QA sync",
+                      "Sprint alignment",
+                      "Release checklist",
+                    ].map((item) => (
+                      <div key={item} className="rounded-2xl border border-cocoa/10 bg-white/80 px-4 py-3">
+                        <p className="text-sm font-semibold text-cocoa">{item}</p>
+                        <p className="mt-2 text-xs text-cocoa/60">In progress</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -372,7 +391,7 @@ export default function App() {
               </div>
             </section>
 
-            <aside className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(220px,0.82fr)] xl:items-start">
+            <aside className="grid gap-6">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <h3 className="font-display text-2xl text-cocoa">Sub Agents</h3>
                 <div className="mt-5 grid grid-cols-2 gap-5">
@@ -383,23 +402,6 @@ export default function App() {
                     >
                       <OfficeScene role={role} />
                       <p className="mt-2 text-xs font-semibold text-cocoa">{role.label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                <h3 className="font-display text-2xl text-cocoa">Work Board</h3>
-                <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-1">
-                  {[
-                    "Ops board refresh",
-                    "Design QA sync",
-                    "Sprint alignment",
-                    "Release checklist",
-                  ].map((item) => (
-                    <div key={item} className="rounded-2xl border border-cocoa/10 bg-white/80 px-4 py-3">
-                      <p className="text-sm font-semibold text-cocoa">{item}</p>
-                      <p className="mt-2 text-xs text-cocoa/60">In progress</p>
                     </div>
                   ))}
                 </div>
