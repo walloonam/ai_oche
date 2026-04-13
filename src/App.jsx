@@ -313,7 +313,7 @@ export default function App() {
         </header>
 
         {view === "office" ? (
-          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.45fr)_minmax(440px,0.95fr)] xl:items-start">
+          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.08fr)_minmax(560px,1.12fr)] 2xl:grid-cols-[minmax(0,1fr)_minmax(640px,1.2fr)] xl:items-start">
             <section className="grid gap-6">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <div className="flex flex-wrap items-center justify-between gap-4">
@@ -391,17 +391,17 @@ export default function App() {
               </div>
             </section>
 
-            <aside className="grid gap-6">
+            <aside className="grid gap-6 xl:pl-2">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <h3 className="font-display text-2xl text-cocoa">Sub Agents</h3>
-                <div className="mt-5 grid grid-cols-2 gap-5">
+                <div className="mt-5 grid grid-cols-2 gap-6">
                   {subRoles.map((role) => (
                     <div
                       key={role.key}
-                      className="rounded-2xl border border-cocoa/10 bg-white/80 p-4 text-left"
+                      className="rounded-2xl border border-cocoa/10 bg-white/80 p-5 text-left"
                     >
                       <OfficeScene role={role} />
-                      <p className="mt-2 text-xs font-semibold text-cocoa">{role.label}</p>
+                      <p className="mt-3 text-sm font-semibold text-cocoa">{role.label}</p>
                     </div>
                   ))}
                 </div>
