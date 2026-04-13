@@ -187,6 +187,51 @@ function cropPng(sourcePng, box) {
   return png;
 }
 
+function isNearWhiteBackground(png, x, y) {
+  const idx = (y * png.width + x) * 4;
+  const r = png.data[idx];
+  const g = png.data[idx + 1];
+  const b = png.data[idx + 2];
+  const a = png.data[idx + 3];
+  return a > 0 && r >= 236 && g >= 232 && b >= 228;
+}
+
+function removeEdgeBackground(png) {
+  const queue = [];
+  const visited = new Uint8Array(png.width * png.height);
+
+  const pushIfBackground = (x, y) => {
+    if (x < 0 || y < 0 || x >= png.width || y >= png.height) return;
+    const pos = y * png.width + x;
+    if (visited[pos]) return;
+    if (!isNearWhiteBackground(png, x, y)) return;
+    visited[pos] = 1;
+    queue.push([x, y]);
+  };
+
+  for (let x = 0; x < png.width; x += 1) {
+    pushIfBackground(x, 0);
+    pushIfBackground(x, png.height - 1);
+  }
+
+  for (let y = 0; y < png.height; y += 1) {
+    pushIfBackground(0, y);
+    pushIfBackground(png.width - 1, y);
+  }
+
+  while (queue.length > 0) {
+    const [x, y] = queue.shift();
+    const idx = (y * png.width + x) * 4;
+    png.data[idx + 3] = 0;
+    pushIfBackground(x + 1, y);
+    pushIfBackground(x - 1, y);
+    pushIfBackground(x, y + 1);
+    pushIfBackground(x, y - 1);
+  }
+
+  return png;
+}
+
 const palettes = {};
 const sprites = [];
 const labSource = fs.existsSync(labSourcePath)
@@ -200,7 +245,7 @@ roles.forEach((role) => {
   if (!labSource) {
     throw new Error(`Missing lab source image: ${labSourcePath}`);
   }
-  const labPng = cropPng(labSource, labCropBoxes[role.key]);
+  const labPng = removeEdgeBackground(cropPng(labSource, labCropBoxes[role.key]));
   fs.writeFileSync(path.join(labDir, `${role.key}.png`), PNG.sync.write(labPng));
   palettes[role.key] = palette;
   sprites.push(png);
