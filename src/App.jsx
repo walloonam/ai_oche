@@ -217,7 +217,7 @@ function OfficeScene({ role, size = "sm" }) {
       <div className="office-prop office-prop-secondary" data-prop={style.propSecondary} />
       <div className="office-mug" />
       <div className="office-character">
-        <img src={role.file} alt={role.label} className="pixel" />
+        <img src={role.labFile} alt={role.label} className="pixel" />
       </div>
     </div>
   );
