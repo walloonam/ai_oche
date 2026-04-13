@@ -234,7 +234,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen ${bg.value}`}>
-      <div className="mx-auto max-w-[1680px] px-6 py-10 xl:px-10 2xl:px-12">
+      <div className="mx-auto w-full px-4 py-10 xl:px-6 2xl:px-8">
         <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="font-display text-xs uppercase tracking-[0.35em] text-cocoa/70">
@@ -313,7 +313,7 @@ export default function App() {
         </header>
 
         {view === "office" ? (
-          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,0.92fr)_minmax(760px,1.28fr)] 2xl:grid-cols-[minmax(0,0.88fr)_minmax(860px,1.34fr)] xl:items-start">
+          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.12fr)_minmax(680px,1fr)] 2xl:grid-cols-[minmax(0,1.05fr)_minmax(760px,1.04fr)] xl:items-start">
             <section className="grid gap-6">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <div className="flex flex-wrap items-center justify-between gap-4">
