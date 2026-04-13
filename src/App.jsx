@@ -313,7 +313,7 @@ export default function App() {
         </header>
 
         {view === "office" ? (
-          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(680px,1fr)] 2xl:grid-cols-[minmax(0,0.96fr)_minmax(760px,1.04fr)] xl:items-stretch">
+          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(680px,1fr)] 2xl:grid-cols-[minmax(0,0.96fr)_minmax(760px,1.04fr)] xl:items-start">
             <section className="grid gap-6">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <div className="flex flex-wrap items-center justify-between gap-4">
@@ -391,10 +391,10 @@ export default function App() {
               </div>
             </section>
 
-            <aside className="grid gap-6 xl:h-full">
-              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft xl:flex xl:h-full xl:flex-col">
+            <aside className="grid gap-6">
+              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <h3 className="font-display text-2xl text-cocoa">Sub Agents</h3>
-                <div className="mt-5 grid grid-cols-3 gap-4 xl:flex-1 xl:auto-rows-max">
+                <div className="mt-5 grid grid-cols-3 gap-4">
                   {subRoles.map((role) => (
                     <div
                       key={role.key}
