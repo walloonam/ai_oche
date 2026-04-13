@@ -394,11 +394,11 @@ export default function App() {
             <aside className="grid gap-6 xl:h-full">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft xl:flex xl:h-full xl:flex-col">
                 <h3 className="font-display text-2xl text-cocoa">Sub Agents</h3>
-                <div className="mt-5 grid grid-cols-3 gap-4 xl:flex-1 xl:auto-rows-max">
+                <div className="mt-5 grid grid-cols-3 gap-4 auto-rows-fr xl:flex-1">
                   {subRoles.map((role) => (
                     <div
                       key={role.key}
-                      className="rounded-2xl border border-cocoa/10 bg-white/80 p-4 text-left"
+                      className="flex h-full flex-col rounded-2xl border border-cocoa/10 bg-white/80 p-4 text-left"
                     >
                       <OfficeScene role={role} />
                       <p className="mt-3 text-xs font-semibold leading-snug text-cocoa">{role.label}</p>
