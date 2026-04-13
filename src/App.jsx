@@ -398,10 +398,10 @@ export default function App() {
                   {subRoles.map((role) => (
                     <div
                       key={role.key}
-                      className="rounded-2xl border border-cocoa/10 bg-white/80 p-4 text-left"
+                      className="rounded-2xl border border-cocoa/10 bg-white/80 p-3 text-left"
                     >
                       <OfficeScene role={role} />
-                      <p className="mt-3 text-xs font-semibold leading-snug text-cocoa">{role.label}</p>
+                      <p className="mt-2 text-[11px] font-semibold leading-snug text-cocoa">{role.label}</p>
                     </div>
                   ))}
                 </div>
