@@ -1,54 +1,12 @@
 import React, { useMemo, useState } from "react";
 
 const roles = [
-  {
-    key: "cto",
-    label: "CTO / Coordinator",
-    file: "/assets/characters/cto.png",
-    concept: "Broad-shouldered lead with a headset, calm stance, and a raised command hand.",
-    tone: "Leadership",
-    frame: "from-slate-100 via-[#e6ebf7] to-[#f5ede6]",
-  },
-  {
-    key: "pm",
-    label: "Planner / PM",
-    file: "/assets/characters/pm.png",
-    concept: "Busy organizer with a planner pad, shoulder strap, and quick step posture.",
-    tone: "Scheduling",
-    frame: "from-[#eef1de] via-[#f4ecd9] to-[#f7e2d6]",
-  },
-  {
-    key: "frontend",
-    label: "Frontend Engineer",
-    file: "/assets/characters/frontend.png",
-    concept: "Hoodie-wearing UI builder with a bright handheld screen and springy pose.",
-    tone: "Interface",
-    frame: "from-[#e4f5ff] via-[#f2efff] to-[#fff0f5]",
-  },
-  {
-    key: "backend",
-    label: "Backend Engineer",
-    file: "/assets/characters/backend.png",
-    concept: "Grounded systems dev with a chunky laptop rig, server badge, and steady stance.",
-    tone: "Systems",
-    frame: "from-[#e4e9f2] via-[#e7eef0] to-[#f4ede5]",
-  },
-  {
-    key: "qa",
-    label: "QA Engineer",
-    file: "/assets/characters/qa.png",
-    concept: "Precise checker silhouette with a clipboard, magnifier, and alert side glance.",
-    tone: "Testing",
-    frame: "from-[#f6e8f1] via-[#f3eefc] to-[#f9ece3]",
-  },
-  {
-    key: "designer",
-    label: "Designer",
-    file: "/assets/characters/designer.png",
-    concept: "Asymmetrical stylist with a palette, pen, and the boldest fashion silhouette.",
-    tone: "Creative",
-    frame: "from-[#ffe7de] via-[#fdebf2] to-[#fff0db]",
-  },
+  { key: "cto", label: "CTO / Coordinator", file: "/assets/characters/cto.png" },
+  { key: "pm", label: "Planner / PM", file: "/assets/characters/pm.png" },
+  { key: "frontend", label: "Frontend Engineer", file: "/assets/characters/frontend.png" },
+  { key: "backend", label: "Backend Engineer", file: "/assets/characters/backend.png" },
+  { key: "qa", label: "QA Engineer", file: "/assets/characters/qa.png" },
+  { key: "designer", label: "Designer", file: "/assets/characters/designer.png" },
 ];
 
 const scaleOptions = [
@@ -145,259 +103,6 @@ const officeStyles = {
   },
 };
 
-function rect(x, y, width, height, fill) {
-  return { x, y, width, height, fill };
-}
-
-const portraitThemes = {
-  cto: {
-    outline: "#2a1c16",
-    skin: "#f4cfad",
-    hair: "#392b26",
-    primary: "#2b375e",
-    secondary: "#42517d",
-    accent: "#f1b867",
-    stage: "#e7edf8",
-  },
-  pm: {
-    outline: "#2a1c16",
-    skin: "#f2d1b0",
-    hair: "#6d5144",
-    primary: "#6e8a59",
-    secondary: "#8ea56f",
-    accent: "#f29c6b",
-    stage: "#edf0de",
-  },
-  frontend: {
-    outline: "#2a1c16",
-    skin: "#f5d0ae",
-    hair: "#7d5339",
-    primary: "#46b8df",
-    secondary: "#91dff4",
-    accent: "#f6c453",
-    stage: "#e5f5ff",
-  },
-  backend: {
-    outline: "#2a1c16",
-    skin: "#efcaa5",
-    hair: "#2d2f35",
-    primary: "#34516f",
-    secondary: "#406981",
-    accent: "#53d1c5",
-    stage: "#e2e8ef",
-  },
-  qa: {
-    outline: "#2a1c16",
-    skin: "#f5d1b4",
-    hair: "#5f4a72",
-    primary: "#8b78a7",
-    secondary: "#baa6d1",
-    accent: "#f06793",
-    stage: "#f7e8f2",
-  },
-  designer: {
-    outline: "#2a1c16",
-    skin: "#f5d2b7",
-    hair: "#cb7481",
-    primary: "#f0a3b0",
-    secondary: "#f7ccd4",
-    accent: "#f5c06d",
-    stage: "#ffe7dd",
-  },
-};
-
-const portraitShapes = {
-  cto: [
-    rect(18, 10, 26, 12, "hair"),
-    rect(16, 14, 6, 10, "hair"),
-    rect(22, 12, 18, 16, "outline"),
-    rect(23, 13, 16, 14, "skin"),
-    rect(21, 30, 22, 18, "outline"),
-    rect(22, 31, 20, 16, "primary"),
-    rect(22, 34, 20, 4, "secondary"),
-    rect(17, 31, 5, 12, "outline"),
-    rect(18, 32, 3, 10, "skin"),
-    rect(43, 25, 6, 14, "outline"),
-    rect(44, 26, 4, 12, "skin"),
-    rect(46, 22, 11, 14, "outline"),
-    rect(47, 23, 9, 12, "secondary"),
-    rect(19, 16, 4, 10, "secondary"),
-    rect(16, 17, 4, 7, "secondary"),
-    rect(28, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(27, 48, 6, 11, "outline"),
-    rect(28, 49, 4, 9, "primary"),
-    rect(35, 48, 6, 11, "outline"),
-    rect(36, 49, 4, 9, "primary"),
-    rect(27, 58, 6, 3, "outline"),
-    rect(35, 58, 6, 3, "outline"),
-  ],
-  pm: [
-    rect(18, 10, 24, 11, "hair"),
-    rect(39, 12, 5, 9, "hair"),
-    rect(30, 7, 7, 5, "hair"),
-    rect(22, 13, 18, 15, "outline"),
-    rect(23, 14, 16, 13, "skin"),
-    rect(23, 30, 18, 18, "outline"),
-    rect(24, 31, 16, 16, "primary"),
-    rect(30, 31, 3, 16, "accent"),
-    rect(13, 28, 10, 14, "outline"),
-    rect(14, 29, 8, 12, "secondary"),
-    rect(15, 31, 6, 2, "stage"),
-    rect(35, 34, 10, 12, "outline"),
-    rect(36, 35, 8, 10, "accent"),
-    rect(37, 37, 6, 2, "stage"),
-    rect(27, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(25, 47, 6, 11, "outline"),
-    rect(26, 48, 4, 9, "primary"),
-    rect(35, 46, 6, 12, "outline"),
-    rect(36, 47, 4, 10, "primary"),
-    rect(24, 58, 7, 3, "outline"),
-    rect(35, 58, 7, 3, "outline"),
-  ],
-  frontend: [
-    rect(18, 11, 24, 15, "primary"),
-    rect(16, 15, 4, 9, "primary"),
-    rect(40, 15, 4, 9, "primary"),
-    rect(21, 9, 18, 6, "hair"),
-    rect(20, 12, 20, 16, "outline"),
-    rect(21, 13, 18, 14, "skin"),
-    rect(19, 29, 22, 18, "outline"),
-    rect(20, 30, 20, 16, "primary"),
-    rect(22, 32, 16, 4, "secondary"),
-    rect(13, 31, 6, 11, "outline"),
-    rect(14, 32, 4, 9, "skin"),
-    rect(42, 27, 12, 11, "outline"),
-    rect(43, 28, 10, 9, "secondary"),
-    rect(44, 30, 8, 2, "stage"),
-    rect(44, 33, 3, 2, "accent"),
-    rect(48, 33, 3, 2, "accent"),
-    rect(27, 18, 3, 4, "outline"),
-    rect(34, 18, 3, 4, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(23, 47, 6, 10, "outline"),
-    rect(24, 48, 4, 8, "primary"),
-    rect(32, 48, 6, 9, "outline"),
-    rect(33, 49, 4, 7, "primary"),
-    rect(23, 57, 6, 3, "outline"),
-    rect(32, 57, 6, 3, "outline"),
-  ],
-  backend: [
-    rect(19, 9, 24, 18, "hair"),
-    rect(19, 12, 6, 8, "hair"),
-    rect(20, 11, 19, 17, "outline"),
-    rect(21, 12, 17, 15, "skin"),
-    rect(18, 28, 24, 19, "outline"),
-    rect(19, 29, 22, 17, "primary"),
-    rect(21, 34, 18, 5, "secondary"),
-    rect(13, 31, 6, 11, "outline"),
-    rect(14, 32, 4, 9, "skin"),
-    rect(10, 34, 10, 14, "outline"),
-    rect(11, 35, 8, 12, "secondary"),
-    rect(12, 38, 6, 2, "accent"),
-    rect(12, 42, 6, 2, "accent"),
-    rect(43, 38, 6, 8, "outline"),
-    rect(44, 39, 4, 6, "stage"),
-    rect(44, 37, 4, 2, "accent"),
-    rect(26, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(29, 24, 4, 1, "accent"),
-    rect(24, 47, 6, 11, "outline"),
-    rect(25, 48, 4, 9, "secondary"),
-    rect(34, 47, 6, 11, "outline"),
-    rect(35, 48, 4, 9, "secondary"),
-    rect(24, 58, 6, 3, "outline"),
-    rect(34, 58, 6, 3, "outline"),
-  ],
-  qa: [
-    rect(19, 9, 22, 17, "hair"),
-    rect(38, 11, 6, 11, "hair"),
-    rect(40, 20, 3, 8, "hair"),
-    rect(22, 12, 18, 16, "outline"),
-    rect(23, 13, 16, 14, "skin"),
-    rect(22, 30, 18, 18, "outline"),
-    rect(23, 31, 16, 16, "primary"),
-    rect(24, 32, 14, 4, "secondary"),
-    rect(13, 29, 9, 14, "outline"),
-    rect(14, 30, 7, 12, "stage"),
-    rect(15, 30, 5, 1, "accent"),
-    rect(42, 28, 8, 8, "outline"),
-    rect(43, 29, 6, 6, "stage"),
-    rect(46, 35, 2, 7, "outline"),
-    rect(27, 18, 3, 3, "outline"),
-    rect(34, 17, 3, 4, "outline"),
-    rect(30, 24, 4, 2, "accent"),
-    rect(24, 47, 6, 10, "outline"),
-    rect(25, 48, 4, 8, "primary"),
-    rect(33, 48, 6, 9, "outline"),
-    rect(34, 49, 4, 7, "primary"),
-    rect(24, 57, 6, 3, "outline"),
-    rect(33, 57, 6, 3, "outline"),
-  ],
-  designer: [
-    rect(18, 8, 26, 18, "hair"),
-    rect(14, 12, 10, 14, "hair"),
-    rect(39, 8, 6, 10, "hair"),
-    rect(22, 11, 18, 16, "outline"),
-    rect(23, 12, 16, 14, "skin"),
-    rect(21, 29, 20, 19, "outline"),
-    rect(22, 30, 18, 17, "primary"),
-    rect(23, 32, 16, 5, "secondary"),
-    rect(14, 31, 7, 11, "outline"),
-    rect(15, 32, 5, 9, "skin"),
-    rect(42, 35, 8, 8, "outline"),
-    rect(43, 36, 6, 6, "accent"),
-    rect(44, 34, 2, 2, "secondary"),
-    rect(47, 32, 2, 10, "outline"),
-    rect(27, 18, 3, 3, "outline"),
-    rect(34, 18, 3, 3, "outline"),
-    rect(29, 24, 5, 2, "secondary"),
-    rect(25, 47, 6, 10, "outline"),
-    rect(26, 48, 4, 8, "secondary"),
-    rect(35, 46, 6, 11, "outline"),
-    rect(36, 47, 4, 9, "secondary"),
-    rect(25, 57, 6, 3, "outline"),
-    rect(35, 57, 6, 3, "outline"),
-  ],
-};
-
-function PixelRolePortrait({ role, size }) {
-  const theme = portraitThemes[role.key] ?? portraitThemes.cto;
-  const shapes = portraitShapes[role.key] ?? portraitShapes.cto;
-
-  return (
-    <div
-      className={`relative overflow-hidden rounded-[28px] border border-white/70 bg-gradient-to-b ${role.frame} shadow-[inset_0_1px_0_rgba(255,255,255,0.75),0_20px_35px_-26px_rgba(110,80,60,0.45)]`}
-      style={{ width: size, height: size + 28 }}
-    >
-      <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-[#f8efe3] to-[#ecddca]" />
-      <div className="absolute inset-x-[14%] bottom-[10%] h-[10%] rounded-full bg-[#c79669]/30 blur-md" />
-      <div className="absolute right-[12%] top-[10%] h-[18%] w-[26%] rounded-2xl border border-white/70 bg-white/35 shadow-[inset_0_0_0_1px_rgba(160,130,110,0.08)]" />
-      <svg
-        viewBox="0 0 64 64"
-        className="absolute inset-x-[8%] bottom-[4%] h-[92%] w-[84%]"
-        aria-hidden="true"
-        shapeRendering="crispEdges"
-      >
-        <rect x="0" y="0" width="64" height="64" fill="transparent" />
-        {shapes.map((shape, index) => (
-          <rect
-            key={`${role.key}-${index}`}
-            x={shape.x}
-            y={shape.y}
-            width={shape.width}
-            height={shape.height}
-            fill={theme[shape.fill] ?? shape.fill}
-          />
-        ))}
-      </svg>
-    </div>
-  );
-}
-
 function OfficeScene({ role, size = "sm" }) {
   const style = officeStyles[role.key] ?? officeStyles.cto;
   return (
@@ -493,7 +198,7 @@ export default function App() {
   const [bg, setBg] = useState(backgroundOptions[0]);
   const [view, setView] = useState("office");
 
-  const spriteSize = useMemo(() => 72 + scale * 18, [scale]);
+  const spriteSize = useMemo(() => 64 * scale, [scale]);
   const activeRole = roles.find((role) => role.key === "cto") ?? roles[0];
   const subRoles = roles.filter((role) => role.key !== "cto");
 
@@ -674,39 +379,24 @@ export default function App() {
         ) : (
           <main className="mt-10 grid gap-8 xl:grid-cols-[2fr_1fr]">
             <section className="grid gap-6 rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-              <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-                <div>
-                  <h2 className="font-display text-2xl text-cocoa">Team Selection</h2>
-                  <p className="mt-2 max-w-2xl text-sm text-cocoa/70">
-                    Pick between six clearly different teammates designed to feel collectible,
-                    role-first, and readable at a glance.
-                  </p>
-                </div>
-                <p className="text-xs uppercase tracking-[0.28em] text-cocoa/45">
-                  Silhouette First
-                </p>
-              </div>
+              <h2 className="font-display text-2xl text-cocoa">Team Selection</h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {roles.map((role) => (
                   <div
                     key={role.key}
-                    className="flex flex-col rounded-[28px] border border-cocoa/10 bg-white/85 p-4 shadow-[0_18px_32px_-28px_rgba(96,70,55,0.5)]"
+                    className="flex flex-col items-center gap-3 rounded-2xl border border-cocoa/10 bg-white/80 p-4"
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="rounded-full bg-cocoa/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-cocoa/55">
-                        {role.tone}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-[0.28em] text-cocoa/35">
-                        #{role.key}
-                      </span>
+                    <div
+                      className="pixel rounded-xl bg-white/80 p-3 shadow-sm"
+                      style={{ width: spriteSize, height: spriteSize }}
+                    >
+                      <img
+                        src={role.file}
+                        alt={role.label}
+                        className="pixel h-full w-full"
+                      />
                     </div>
-                    <div className="mt-4 flex justify-center">
-                      <PixelRolePortrait role={role} size={spriteSize} />
-                    </div>
-                    <div className="mt-4">
-                      <p className="text-base font-semibold text-cocoa">{role.label}</p>
-                      <p className="mt-2 text-sm leading-6 text-cocoa/65">{role.concept}</p>
-                    </div>
+                    <p className="text-sm font-semibold text-cocoa">{role.label}</p>
                   </div>
                 ))}
               </div>
