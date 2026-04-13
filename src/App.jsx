@@ -349,43 +349,24 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-                <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                  <h3 className="font-display text-2xl text-cocoa">Main Agent Chat</h3>
-                  <p className="mt-2 text-sm text-cocoa/70">
-                    Send instructions to the main Codex agent here.
-                  </p>
-                  <div className="mt-4 rounded-2xl border border-cocoa/10 bg-white/80 p-4">
-                    <div className="h-40 overflow-y-auto text-sm text-cocoa/70">
-                      <p className="font-semibold text-cocoa">System</p>
-                      <p>CTO is locked as main. Subagents are on the right.</p>
-                    </div>
-                    <div className="mt-4 flex items-center gap-2">
-                      <input
-                        className="w-full rounded-xl border border-cocoa/10 bg-white px-3 py-2 text-sm text-cocoa"
-                        placeholder="Type an instruction for Codex..."
-                      />
-                      <button className="rounded-xl bg-cocoa px-4 py-2 text-sm font-semibold text-cream">
-                        Send
-                      </button>
-                    </div>
+              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
+                <h3 className="font-display text-2xl text-cocoa">Main Agent Chat</h3>
+                <p className="mt-2 text-sm text-cocoa/70">
+                  Send instructions to the main Codex agent here.
+                </p>
+                <div className="mt-4 rounded-2xl border border-cocoa/10 bg-white/80 p-4">
+                  <div className="h-40 overflow-y-auto text-sm text-cocoa/70">
+                    <p className="font-semibold text-cocoa">System</p>
+                    <p>CTO is locked as main. Subagents are on the right.</p>
                   </div>
-                </div>
-
-                <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                  <h3 className="font-display text-2xl text-cocoa">Work Board</h3>
-                  <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-1">
-                    {[
-                      "Ops board refresh",
-                      "Design QA sync",
-                      "Sprint alignment",
-                      "Release checklist",
-                    ].map((item) => (
-                      <div key={item} className="rounded-2xl border border-cocoa/10 bg-white/80 px-4 py-3">
-                        <p className="text-sm font-semibold text-cocoa">{item}</p>
-                        <p className="mt-2 text-xs text-cocoa/60">In progress</p>
-                      </div>
-                    ))}
+                  <div className="mt-4 flex items-center gap-2">
+                    <input
+                      className="w-full rounded-xl border border-cocoa/10 bg-white px-3 py-2 text-sm text-cocoa"
+                      placeholder="Type an instruction for Codex..."
+                    />
+                    <button className="rounded-xl bg-cocoa px-4 py-2 text-sm font-semibold text-cream">
+                      Send
+                    </button>
                   </div>
                 </div>
               </div>
@@ -402,6 +383,23 @@ export default function App() {
                     >
                       <OfficeScene role={role} />
                       <p className="mt-2 text-xs font-semibold text-cocoa">{role.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
+                <h3 className="font-display text-2xl text-cocoa">Work Board</h3>
+                <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-1">
+                  {[
+                    "Ops board refresh",
+                    "Design QA sync",
+                    "Sprint alignment",
+                    "Release checklist",
+                  ].map((item) => (
+                    <div key={item} className="rounded-2xl border border-cocoa/10 bg-white/80 px-4 py-3">
+                      <p className="text-sm font-semibold text-cocoa">{item}</p>
+                      <p className="mt-2 text-xs text-cocoa/60">In progress</p>
                     </div>
                   ))}
                 </div>
