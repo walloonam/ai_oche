@@ -333,6 +333,26 @@ body {
   display: block;
 }
 
+.office-scene .office-prop-primary,
+.office-scene .office-prop-secondary,
+.office-scene .office-mug,
+.office-scene .office-planner-board,
+.office-scene .office-notebook,
+.office-scene .office-pen,
+.office-scene .office-doc-stack,
+.office-scene .office-ui-cards,
+.office-scene .office-ui-chip,
+.office-scene .office-browser-bar,
+.office-scene .office-server-tower,
+.office-scene .office-api-chip,
+.office-scene .office-qa-clipboard,
+.office-scene .office-qa-magnifier,
+.office-scene .office-tablet,
+.office-scene .office-stylus,
+.office-scene .office-swatch-strip {
+  display: none;
+}
+
 .office-scene-sm .office-desk {
   left: 8%;
   width: 84%;
