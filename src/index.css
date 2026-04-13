@@ -719,7 +719,8 @@ body {
 .office-scene[data-role="frontend"] .office-character,
 .office-scene[data-role="backend"] .office-character,
 .office-scene[data-role="qa"] .office-character,
-.office-scene[data-role="designer"] .office-character {
+.office-scene[data-role="designer"] .office-character,
+.office-scene[data-role="platform"] .office-character {
   left: 50%;
   bottom: 32%;
   width: 37%;
@@ -727,10 +728,16 @@ body {
   z-index: 5;
 }
 
+.office-scene[data-role="platform"] .office-character {
+  bottom: 28%;
+  width: 28%;
+}
+
 .office-scene[data-role="frontend"] .office-desk,
 .office-scene[data-role="backend"] .office-desk,
 .office-scene[data-role="qa"] .office-desk,
-.office-scene[data-role="designer"] .office-desk {
+.office-scene[data-role="designer"] .office-desk,
+.office-scene[data-role="platform"] .office-desk {
   left: 8%;
   width: 84%;
   height: 27%;
@@ -742,7 +749,8 @@ body {
 .office-scene[data-role="frontend"] .office-desk-surface,
 .office-scene[data-role="backend"] .office-desk-surface,
 .office-scene[data-role="qa"] .office-desk-surface,
-.office-scene[data-role="designer"] .office-desk-surface {
+.office-scene[data-role="designer"] .office-desk-surface,
+.office-scene[data-role="platform"] .office-desk-surface {
   left: 6%;
   right: 6%;
   top: 16%;
@@ -753,7 +761,8 @@ body {
 .office-scene[data-role="frontend"] .office-chair,
 .office-scene[data-role="backend"] .office-chair,
 .office-scene[data-role="qa"] .office-chair,
-.office-scene[data-role="designer"] .office-chair {
+.office-scene[data-role="designer"] .office-chair,
+.office-scene[data-role="platform"] .office-chair {
   left: 39%;
   width: 22%;
   height: 30%;
@@ -766,7 +775,8 @@ body {
 .office-scene[data-role="frontend"] .office-chair::before,
 .office-scene[data-role="backend"] .office-chair::before,
 .office-scene[data-role="qa"] .office-chair::before,
-.office-scene[data-role="designer"] .office-chair::before {
+.office-scene[data-role="designer"] .office-chair::before,
+.office-scene[data-role="platform"] .office-chair::before {
   content: "";
   position: absolute;
   left: 3%;
@@ -781,7 +791,8 @@ body {
 .office-scene[data-role="frontend"] .office-chair::after,
 .office-scene[data-role="backend"] .office-chair::after,
 .office-scene[data-role="qa"] .office-chair::after,
-.office-scene[data-role="designer"] .office-chair::after {
+.office-scene[data-role="designer"] .office-chair::after,
+.office-scene[data-role="platform"] .office-chair::after {
   content: "";
   position: absolute;
   left: 18%;
@@ -795,7 +806,8 @@ body {
 .office-scene[data-role="frontend"] .office-desk-edge,
 .office-scene[data-role="backend"] .office-desk-edge,
 .office-scene[data-role="qa"] .office-desk-edge,
-.office-scene[data-role="designer"] .office-desk-edge {
+.office-scene[data-role="designer"] .office-desk-edge,
+.office-scene[data-role="platform"] .office-desk-edge {
   height: 18%;
   opacity: 0.35;
 }
@@ -848,7 +860,8 @@ body {
 .office-scene[data-role="frontend"] .office-wall-deco,
 .office-scene[data-role="backend"] .office-wall-deco,
 .office-scene[data-role="qa"] .office-wall-deco,
-.office-scene[data-role="designer"] .office-wall-deco {
+.office-scene[data-role="designer"] .office-wall-deco,
+.office-scene[data-role="platform"] .office-wall-deco {
   top: 14%;
   right: 14%;
   width: 28%;
@@ -868,7 +881,10 @@ body {
 .office-scene[data-role="qa"] .office-mug,
 .office-scene[data-role="designer"] .office-prop-primary,
 .office-scene[data-role="designer"] .office-prop-secondary,
-.office-scene[data-role="designer"] .office-mug {
+.office-scene[data-role="designer"] .office-mug,
+.office-scene[data-role="platform"] .office-prop-primary,
+.office-scene[data-role="platform"] .office-prop-secondary,
+.office-scene[data-role="platform"] .office-mug {
   display: none;
 }
 
@@ -938,6 +954,10 @@ body {
 
 .office-scene[data-role="backend"] .office-wall-deco {
   background: linear-gradient(135deg, rgba(224, 230, 244, 0.96), rgba(205, 214, 238, 0.92));
+}
+
+.office-scene[data-role="platform"] .office-wall-deco {
+  background: linear-gradient(135deg, rgba(207, 212, 225, 0.96), rgba(171, 178, 201, 0.92));
 }
 
 .office-scene[data-role="backend"] .office-server-tower {
