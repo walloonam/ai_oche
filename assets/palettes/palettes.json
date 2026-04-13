@@ -58,5 +58,15 @@
     "white": "#f9f4ef",
     "primary": "#f0a3b0",
     "accent": "#f5c06d"
+  },
+  "platform": {
+    "outline": "#2a1c16",
+    "skin": "#f6d1a9",
+    "hair": "#7a5645",
+    "hairShadow": "#5c4034",
+    "shirtShadow": "#d9b58d",
+    "white": "#f9f4ef",
+    "primary": "#444d5d",
+    "accent": "#8bc46d"
   }
 }

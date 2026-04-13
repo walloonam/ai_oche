@@ -7,7 +7,10 @@ const charDir = path.join(baseDir, "assets", "characters");
 const labDir = path.join(baseDir, "assets", "lab-characters");
 const sheetDir = path.join(baseDir, "assets", "spritesheet");
 const paletteDir = path.join(baseDir, "assets", "palettes");
-const labSourcePath = path.join(baseDir, "image.png");
+const labSourcePaths = {
+  image1: path.join(baseDir, "image.png"),
+  image2: path.join(baseDir, "image2.png"),
+};
 
 fs.mkdirSync(charDir, { recursive: true });
 fs.mkdirSync(labDir, { recursive: true });
@@ -21,6 +24,7 @@ const roles = [
     primary: "#2b375e",
     accent: "#f1b867",
     prop: "tablet",
+    labSource: "image1",
   },
   {
     key: "pm",
@@ -28,6 +32,7 @@ const roles = [
     primary: "#6e8a59",
     accent: "#f29c6b",
     prop: "notebook",
+    labSource: "image1",
   },
   {
     key: "frontend",
@@ -35,6 +40,7 @@ const roles = [
     primary: "#59b6e3",
     accent: "#f6c453",
     prop: "ui",
+    labSource: "image1",
   },
   {
     key: "backend",
@@ -42,6 +48,7 @@ const roles = [
     primary: "#3b4f7a",
     accent: "#53d1c5",
     prop: "server",
+    labSource: "image1",
   },
   {
     key: "qa",
@@ -49,6 +56,7 @@ const roles = [
     primary: "#8b78a7",
     accent: "#f05c5c",
     prop: "magnifier",
+    labSource: "image1",
   },
   {
     key: "designer",
@@ -56,6 +64,15 @@ const roles = [
     primary: "#f0a3b0",
     accent: "#f5c06d",
     prop: "palette",
+    labSource: "image1",
+  },
+  {
+    key: "platform",
+    label: "Platform Engineer",
+    primary: "#444d5d",
+    accent: "#8bc46d",
+    prop: "server",
+    labSource: "image2",
   },
 ];
 
@@ -76,6 +93,7 @@ const labCropBoxes = {
   backend: { x: 150, y: 548, width: 324, height: 336 },
   qa: { x: 636, y: 548, width: 292, height: 336 },
   designer: { x: 1108, y: 548, width: 294, height: 336 },
+  platform: { x: 505, y: 72, width: 490, height: 710 },
 };
 
 function hexToRgba(hex) {
@@ -196,15 +214,40 @@ function isNearWhiteBackground(png, x, y) {
   return a > 0 && r >= 236 && g >= 232 && b >= 228;
 }
 
-function removeEdgeBackground(png) {
+function colorDistance(a, b) {
+  return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]);
+}
+
+function getPixel(png, x, y) {
+  const idx = (y * png.width + x) * 4;
+  return [png.data[idx], png.data[idx + 1], png.data[idx + 2], png.data[idx + 3]];
+}
+
+function removeEdgeBackground(png, options = {}) {
   const queue = [];
   const visited = new Uint8Array(png.width * png.height);
+  const threshold = options.threshold ?? 44;
+  const referenceColors =
+    options.referenceColors ??
+    [
+      getPixel(png, 0, 0),
+      getPixel(png, png.width - 1, 0),
+      getPixel(png, 0, png.height - 1),
+      getPixel(png, png.width - 1, png.height - 1),
+    ];
+
+  const matchesBackground = (x, y) => {
+    const pixel = getPixel(png, x, y);
+    if (pixel[3] === 0) return true;
+    if (options.mode === "light") return isNearWhiteBackground(png, x, y);
+    return referenceColors.some((ref) => colorDistance(pixel, ref) <= threshold);
+  };
 
   const pushIfBackground = (x, y) => {
     if (x < 0 || y < 0 || x >= png.width || y >= png.height) return;
     const pos = y * png.width + x;
     if (visited[pos]) return;
-    if (!isNearWhiteBackground(png, x, y)) return;
+    if (!matchesBackground(x, y)) return;
     visited[pos] = 1;
     queue.push([x, y]);
   };
@@ -234,29 +277,38 @@ function removeEdgeBackground(png) {
 
 const palettes = {};
 const sprites = [];
-const labSource = fs.existsSync(labSourcePath)
-  ? PNG.sync.read(fs.readFileSync(labSourcePath))
-  : null;
+const labSources = Object.fromEntries(
+  Object.entries(labSourcePaths).map(([key, sourcePath]) => [
+    key,
+    fs.existsSync(sourcePath) ? PNG.sync.read(fs.readFileSync(sourcePath)) : null,
+  ]),
+);
 
 roles.forEach((role) => {
   const { png, palette } = drawSprite(role);
   const outPath = path.join(charDir, `${role.key}.png`);
   fs.writeFileSync(outPath, PNG.sync.write(png));
+  const labSource = labSources[role.labSource];
   if (!labSource) {
-    throw new Error(`Missing lab source image: ${labSourcePath}`);
+    throw new Error(`Missing lab source image for ${role.key}: ${role.labSource}`);
   }
-  const labPng = removeEdgeBackground(cropPng(labSource, labCropBoxes[role.key]));
+  const labPng = removeEdgeBackground(cropPng(labSource, labCropBoxes[role.key]), {
+    mode: role.labSource === "image1" ? "light" : "reference",
+    threshold: role.labSource === "image1" ? 44 : 110,
+  });
   fs.writeFileSync(path.join(labDir, `${role.key}.png`), PNG.sync.write(labPng));
   palettes[role.key] = palette;
   sprites.push(png);
 });
 
-const sheet = new PNG({ width: 64 * 3, height: 64 * 2 });
+const columns = 3;
+const rows = Math.ceil(sprites.length / columns);
+const sheet = new PNG({ width: 64 * columns, height: 64 * rows });
 sheet.data.fill(0);
 
 sprites.forEach((sprite, index) => {
-  const col = index % 3;
-  const row = Math.floor(index / 3);
+  const col = index % columns;
+  const row = Math.floor(index / columns);
   for (let y = 0; y < 64; y += 1) {
     for (let x = 0; x < 64; x += 1) {
       const srcIdx = (y * 64 + x) * 4;

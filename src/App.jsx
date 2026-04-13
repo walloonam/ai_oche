@@ -37,6 +37,12 @@ const roles = [
     file: "/assets/characters/designer.png",
     labFile: "/assets/lab-characters/designer.png",
   },
+  {
+    key: "platform",
+    label: "Platform Engineer",
+    file: "/assets/characters/platform.png",
+    labFile: "/assets/lab-characters/platform.png",
+  },
 ];
 
 const scaleOptions = [
@@ -52,7 +58,7 @@ const backgroundOptions = [
 ];
 
 const officeStats = [
-  { label: "Agents", value: "6" },
+  { label: "Agents", value: "7" },
   { label: "Tasks", value: "12" },
   { label: "Reviews", value: "3" },
   { label: "Blocked", value: "1" },
@@ -130,6 +136,18 @@ const officeStyles = {
     monitorView: "canvas",
     propPrimary: "pen",
     propSecondary: "swatches",
+  },
+  platform: {
+    wall: "#f3f0e4",
+    floor: "#e4d7bf",
+    desk: "#b89b6f",
+    monitor: "#d8dccf",
+    accent: "#d1b37a",
+    chair: "#4d5260",
+    wallDeco: "infrastructure",
+    monitorView: "terminal",
+    propPrimary: "server",
+    propSecondary: "cables",
   },
 };
 
