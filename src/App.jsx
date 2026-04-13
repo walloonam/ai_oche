@@ -313,7 +313,7 @@ export default function App() {
         </header>
 
         {view === "office" ? (
-          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.45fr)_minmax(440px,0.95fr)] xl:items-start">
+          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,0.92fr)_minmax(760px,1.28fr)] 2xl:grid-cols-[minmax(0,0.88fr)_minmax(860px,1.34fr)] xl:items-start">
             <section className="grid gap-6">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <div className="flex flex-wrap items-center justify-between gap-4">
