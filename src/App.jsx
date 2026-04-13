@@ -234,7 +234,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen ${bg.value}`}>
-      <div className="mx-auto max-w-[1440px] px-6 py-10 xl:px-10">
+      <div className="mx-auto max-w-[1680px] px-6 py-10 xl:px-10 2xl:px-12">
         <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="font-display text-xs uppercase tracking-[0.35em] text-cocoa/70">
