@@ -372,7 +372,7 @@ export default function App() {
               </div>
             </section>
 
-            <aside className="grid gap-6">
+            <aside className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(220px,0.82fr)] xl:items-start">
               <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
                 <h3 className="font-display text-2xl text-cocoa">Sub Agents</h3>
                 <div className="mt-5 grid grid-cols-2 gap-5">
