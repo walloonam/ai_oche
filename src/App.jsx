@@ -204,7 +204,15 @@ function PlanCard({ plan }) {
   );
 }
 
-function WorkspacePanel({ workspace, capabilityState, onRunCapability }) {
+function WorkspacePanel({
+  workspace,
+  capabilityState,
+  workspaceDraft,
+  workspaceChanging,
+  onWorkspaceDraftChange,
+  onChangeWorkspace,
+  onRunCapability,
+}) {
   const info = workspace ?? WORKSPACE_INFO;
 
   return (
@@ -214,8 +222,19 @@ function WorkspacePanel({ workspace, capabilityState, onRunCapability }) {
           <p className="eyebrow">Workspace</p>
           <h2>Codex 작업 공간</h2>
         </div>
-        <button type="button">Change</button>
       </div>
+
+      <form className="workspace-selector" onSubmit={onChangeWorkspace}>
+        <input
+          value={workspaceDraft}
+          onChange={(event) => onWorkspaceDraftChange(event.target.value)}
+          placeholder={info.path}
+          aria-label="Workspace path"
+        />
+        <button type="submit" disabled={workspaceChanging}>
+          {workspaceChanging ? "..." : "Change"}
+        </button>
+      </form>
 
       <div className="workspace-path">{info.path}</div>
 
@@ -257,6 +276,8 @@ export default function App() {
   const [lastDistributedKeys, setLastDistributedKeys] = useState(["frontend"]);
   const [lastPlan, setLastPlan] = useState(null);
   const [workspace, setWorkspace] = useState(null);
+  const [workspaceDraft, setWorkspaceDraft] = useState("");
+  const [workspaceChanging, setWorkspaceChanging] = useState(false);
   const [capabilityState, setCapabilityState] = useState({
     running: null,
     command: null,
@@ -282,6 +303,7 @@ export default function App() {
       .then((payload) => {
         if (active && payload.ok) {
           setWorkspace(payload.workspace);
+          setWorkspaceDraft(payload.workspace.path);
         }
       })
       .catch(() => {
@@ -323,6 +345,7 @@ export default function App() {
         .then((workspacePayload) => {
           if (workspacePayload.ok) {
             setWorkspace(workspacePayload.workspace);
+            setWorkspaceDraft(workspacePayload.workspace.path);
           }
         })
         .catch(() => {});
@@ -332,6 +355,59 @@ export default function App() {
         command: capability,
         output: error.message,
       });
+    }
+  }
+
+  async function changeWorkspace(event) {
+    event.preventDefault();
+    const path = workspaceDraft.trim();
+    if (!path) {
+      return;
+    }
+
+    setWorkspaceChanging(true);
+    setCapabilityState({
+      running: "workspace",
+      command: "workspace select",
+      output: `Switching workspace to ${path}...`,
+    });
+
+    try {
+      const response = await fetch("/api/workspace/select", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path }),
+      });
+      const payload = await response.json();
+      if (!payload.ok) {
+        throw new Error(payload.error ?? "Failed to change workspace.");
+      }
+
+      setWorkspace(payload.workspace);
+      setWorkspaceDraft(payload.workspace.path);
+      setLastPlan(null);
+      setLastDistributedKeys([]);
+      setCapabilityState({
+        running: null,
+        command: "workspace select",
+        output: `Workspace changed to ${payload.workspace.path}`,
+      });
+      setMessages((current) => [
+        ...current,
+        {
+          id: `workspace-${Date.now()}`,
+          from: "system",
+          text: `작업공간을 ${payload.workspace.path}로 변경했습니다.`,
+        },
+      ]);
+    } catch (error) {
+      setCapabilityState({
+        running: null,
+        command: "workspace select",
+        output: error.message,
+      });
+    } finally {
+      setWorkspaceChanging(false);
     }
   }
 
@@ -465,6 +541,10 @@ export default function App() {
           <WorkspacePanel
             workspace={workspace}
             capabilityState={capabilityState}
+            workspaceDraft={workspaceDraft}
+            workspaceChanging={workspaceChanging}
+            onWorkspaceDraftChange={setWorkspaceDraft}
+            onChangeWorkspace={changeWorkspace}
             onRunCapability={runCapability}
           />
 

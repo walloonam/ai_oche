@@ -82,6 +82,26 @@ Returns:
 
 The UI uses this to fill the Workspace panel.
 
+### Select Workspace
+
+```bash
+curl -X POST http://localhost:4174/api/workspace/select \
+  -H "Content-Type: application/json" \
+  -d '{"path":"/root/ai_oche"}'
+```
+
+The UI uses the Workspace input and `Change` button to call this endpoint.
+
+After a workspace is selected:
+
+```txt
+/api/workspace          reads git/package info from that directory
+/api/capabilities/run   runs allowlisted commands in that directory
+/api/cto/plan           calls codex exec --cd with that directory
+```
+
+Relative paths are resolved from the current active workspace. The server validates that the selected path exists and is a directory.
+
 ### Run Capability
 
 ```bash
@@ -209,6 +229,7 @@ Do not put API keys in React, Vite client env variables, or browser local storag
 
 - CTO planning calls `codex exec`, but it is non-streaming for now.
 - When Codex CLI fails, the UI uses the local fallback planner.
+- Workspace selection is process-local; restarting `npm run agent` resets it to the directory where the server starts.
 - Capability buttons execute simple allowlisted commands only.
 - `Edit Files` is a placeholder and does not write files.
 - There is no persistent run history yet.

@@ -74,4 +74,5 @@
 - CTO planner now runs in `server/agent-server.mjs` as `POST /api/cto/plan`.
 - The planner tries `codex exec` first with `--sandbox read-only` and a strict output schema.
 - If Codex CLI is unavailable or returns invalid JSON, it falls back to the local rule-based planner.
+- Workspace can be changed from the UI through `POST /api/workspace/select`; the server keeps the active workspace in memory.
 - Next likely task: add execution/run history after the planning step, still behind the local agent server.

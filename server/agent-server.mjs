@@ -1,13 +1,14 @@
 import { exec, spawn } from "node:child_process";
 import { createServer } from "node:http";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { isAbsolute, join, resolve } from "node:path";
 import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
 const PORT = Number(process.env.AGENT_PORT ?? 4174);
-const workspaceRoot = process.cwd();
+const serverRoot = process.cwd();
+let activeWorkspaceRoot = serverRoot;
 const codexBinary = process.env.CODEX_BIN ?? "codex";
 const codexTimeoutMs = Number(process.env.CODEX_TIMEOUT_MS ?? 120000);
 const ctoPlanSchemaPath = new URL("./cto-plan.schema.json", import.meta.url);
@@ -36,7 +37,7 @@ function sendJson(response, statusCode, payload) {
 async function runCommand(command, timeout = 20000) {
   try {
     const { stdout, stderr } = await execAsync(command, {
-      cwd: workspaceRoot,
+      cwd: activeWorkspaceRoot,
       timeout,
       maxBuffer: 1024 * 1024,
       env: process.env,
@@ -71,11 +72,31 @@ async function readBody(request) {
 
 async function getPackageInfo() {
   try {
-    const raw = await readFile(new URL("../package.json", import.meta.url), "utf8");
+    const raw = await readFile(join(activeWorkspaceRoot, "package.json"), "utf8");
     return JSON.parse(raw);
   } catch {
     return {};
   }
+}
+
+async function selectWorkspace(nextPath) {
+  const cleanedPath = String(nextPath ?? "").trim();
+  if (!cleanedPath) {
+    throw new Error("workspace path is required");
+  }
+
+  const targetPath = isAbsolute(cleanedPath)
+    ? cleanedPath
+    : resolve(activeWorkspaceRoot, cleanedPath);
+  const resolvedPath = await realpath(targetPath);
+  const pathStat = await stat(resolvedPath);
+
+  if (!pathStat.isDirectory()) {
+    throw new Error("workspace path must be a directory");
+  }
+
+  activeWorkspaceRoot = resolvedPath;
+  return getWorkspace();
 }
 
 async function getWorkspace() {
@@ -84,12 +105,17 @@ async function getWorkspace() {
     runCommand("git status --short", 5000),
     getPackageInfo(),
   ]);
-  const statusLines = status.output ? status.output.split("\n").filter(Boolean) : [];
+  const statusLines = status.ok && status.output ? status.output.split("\n").filter(Boolean) : [];
+  const isGitWorkspace = branch.ok && status.ok;
 
   return {
-    path: workspaceRoot,
-    branch: branch.output || "unknown",
-    status: statusLines.length > 0 ? `${statusLines.length} changed files` : "clean",
+    path: activeWorkspaceRoot,
+    branch: isGitWorkspace ? branch.output || "detached" : "not a git repo",
+    status: isGitWorkspace
+      ? statusLines.length > 0
+        ? `${statusLines.length} changed files`
+        : "clean"
+      : "no git status",
     changedFiles: statusLines,
     framework: packageInfo.dependencies?.react ? "Vite + React" : "unknown",
     packageManager: "npm",
@@ -273,7 +299,7 @@ function runCodexPlanner(prompt) {
           "exec",
           "-",
           "--cd",
-          workspaceRoot,
+          activeWorkspaceRoot,
           "--sandbox",
           "read-only",
           "--output-schema",
@@ -284,7 +310,7 @@ function runCodexPlanner(prompt) {
           "never",
         ];
         const child = spawn(codexBinary, args, {
-          cwd: workspaceRoot,
+          cwd: activeWorkspaceRoot,
           env: process.env,
           stdio: ["pipe", "ignore", "pipe"],
         });
@@ -400,12 +426,19 @@ const server = createServer(async (request, response) => {
     const url = new URL(request.url, `http://${request.headers.host}`);
 
     if (request.method === "GET" && url.pathname === "/api/health") {
-      sendJson(response, 200, { ok: true, workspaceRoot });
+      sendJson(response, 200, { ok: true, serverRoot, workspaceRoot: activeWorkspaceRoot });
       return;
     }
 
     if (request.method === "GET" && url.pathname === "/api/workspace") {
       sendJson(response, 200, { ok: true, workspace: await getWorkspace() });
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/workspace/select") {
+      const body = await readBody(request);
+      const workspace = await selectWorkspace(body.path);
+      sendJson(response, 200, { ok: true, workspace });
       return;
     }
 
