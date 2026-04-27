@@ -167,11 +167,38 @@ codex exec - \
 
 If the installed Codex CLI is missing, logged out, times out, or returns invalid JSON, the endpoint falls back to the local rule-based planner so the UI still works.
 
+### Run Codex Events
+
+```bash
+curl -X POST http://localhost:4174/api/codex/run \
+  -H "Content-Type: application/json" \
+  -d '{"command":"현재 프로젝트 구조 확인해줘","sandbox":"read-only"}'
+```
+
+Supported sandbox values:
+
+```txt
+read-only         Inspect and report only
+workspace-write   Allow Codex to edit files inside the selected workspace
+```
+
+The UI calls this from the plan card's `Execute with Codex` button. The server runs:
+
+```bash
+codex exec --json - \
+  --cd <active workspace> \
+  --sandbox <read-only|workspace-write>
+```
+
+The endpoint returns the Codex JSONL events, a compact event-derived plan, and the refreshed workspace state. The UI maps those real Codex events back into the visible subagent desks.
+
 Optional environment variables:
 
 ```txt
 CODEX_BIN          Override the codex executable path
 CODEX_TIMEOUT_MS   Override planner timeout, default 120000
+CODEX_RUN_TIMEOUT_MS
+                   Override event run timeout, default 300000
 AGENT_PORT         Override local agent server port, default 4174
 ```
 
@@ -227,7 +254,8 @@ Do not put API keys in React, Vite client env variables, or browser local storag
 
 ## Current Limitations
 
-- CTO planning calls `codex exec`, but it is non-streaming for now.
+- CTO planning calls `codex exec`, but planner output is non-streaming for now.
+- Codex execution uses `codex exec --json`; the UI receives events after the run completes, not live over SSE yet.
 - When Codex CLI fails, the UI uses the local fallback planner.
 - Workspace selection is process-local; restarting `npm run agent` resets it to the directory where the server starts.
 - Capability buttons execute simple allowlisted commands only.

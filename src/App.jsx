@@ -170,7 +170,7 @@ function TaskTicket({ item, active }) {
   );
 }
 
-function PlanCard({ plan }) {
+function PlanCard({ plan, codexRunning, onRunCodex }) {
   if (!plan) {
     return (
       <div className="plan-card plan-card--empty">
@@ -191,6 +191,11 @@ function PlanCard({ plan }) {
           </span>
         </div>
         <span>{plan.assignments.length}개 배정</span>
+      </div>
+      <div className="plan-card__actions">
+        <button type="button" onClick={onRunCodex} disabled={codexRunning}>
+          {codexRunning ? "Running..." : "Execute with Codex"}
+        </button>
       </div>
       <div className="plan-list">
         {plan.assignments.map((assignment) => (
@@ -278,6 +283,7 @@ export default function App() {
   const [workspace, setWorkspace] = useState(null);
   const [workspaceDraft, setWorkspaceDraft] = useState("");
   const [workspaceChanging, setWorkspaceChanging] = useState(false);
+  const [codexRunning, setCodexRunning] = useState(false);
   const [capabilityState, setCapabilityState] = useState({
     running: null,
     command: null,
@@ -428,6 +434,130 @@ export default function App() {
     };
   }
 
+  function createTasksFromPlan(plan) {
+    return plan.assignments.map((assignment) => {
+        const role = getRole(assignment.roleKey);
+        return {
+            id: assignment.id,
+            title: assignment.title,
+            status: assignment.status,
+            ownerRole: assignment.roleKey,
+            assignee: role.name,
+            reason: assignment.reason,
+            dependencies: assignment.dependencies,
+            approval: {
+              state: plan.planner === "codex-json" ? "approved" : "pending",
+              byRole: "cto",
+              reason:
+                plan.planner === "codex-json"
+                  ? "mirrored from Codex JSON event stream"
+                  : "distributed by CTO main agent",
+            },
+            blocker: null,
+            risk: {
+              level: plan.planner === "codex-json" ? "low" : "medium",
+              label:
+                plan.planner === "codex-json"
+                  ? "actual Codex event"
+                  : "new command requires coordination",
+            },
+            outputs: plan.planner === "codex-json" ? ["codex json event"] : ["agent response", "task update"],
+          };
+      });
+  }
+
+  function applyPlanToQueues(plan) {
+    const targets = plan.assignments.map((assignment) => assignment.roleKey);
+    const createdTasks = createTasksFromPlan(plan);
+
+    setTaskQueues((current) => {
+      const next = { ...current };
+      createdTasks.forEach((item) => {
+        next[item.ownerRole] = [item, ...(next[item.ownerRole] ?? [])];
+      });
+      return next;
+    });
+    setLastDistributedKeys(targets);
+    setFocusedAgentKey(targets[0]);
+    setLastPlan(plan);
+
+    return targets;
+  }
+
+  function formatCodexEvents(events) {
+    return events
+      .slice(-12)
+      .map((event) => {
+        const itemType = event.item?.type ? `:${event.item.type}` : "";
+        const text = event.item?.command ?? event.item?.text ?? event.type;
+        return `${event.type}${itemType} ${String(text).slice(0, 120)}`;
+      })
+      .join("\n");
+  }
+
+  async function runCodexExecution() {
+    const command = lastPlan?.command;
+    if (!command) {
+      return;
+    }
+
+    setCodexRunning(true);
+    setCapabilityState({
+      running: "codex-run",
+      command: "codex exec --json",
+      output: "Running Codex event stream...",
+    });
+
+    try {
+      const response = await fetch("/api/codex/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ command, sandbox: "workspace-write" }),
+      });
+      const payload = await response.json();
+      if (!payload.ok) {
+        throw new Error(payload.error ?? "Codex execution failed.");
+      }
+
+      const plan = {
+        ...payload.plan,
+        planner: payload.planner,
+      };
+      const targets = applyPlanToQueues(plan);
+      setWorkspace(payload.workspace);
+      setWorkspaceDraft(payload.workspace.path);
+      setCapabilityState({
+        running: null,
+        command: `codex exec --json (${payload.sandbox})`,
+        output: formatCodexEvents(payload.events),
+      });
+      setMessages((current) => [
+        ...current,
+        {
+          id: `codex-run-${Date.now()}`,
+          from: "cto",
+          text: `Codex 실제 실행 이벤트 ${payload.eventCount}개를 ${targets.map((roleKey) => getRole(roleKey).shortName).join(", ")} 큐에 반영했습니다.`,
+        },
+      ]);
+    } catch (error) {
+      setCapabilityState({
+        running: null,
+        command: "codex exec --json",
+        output: error.message,
+      });
+      setMessages((current) => [
+        ...current,
+        {
+          id: `codex-run-error-${Date.now()}`,
+          from: "system",
+          text: `Codex execution error: ${error.message}`,
+        },
+      ]);
+    } finally {
+      setCodexRunning(false);
+    }
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const text = draft.trim();
@@ -443,35 +573,7 @@ export default function App() {
 
     requestCtoPlan(text)
       .then((plan) => {
-        const targets = plan.assignments.map((assignment) => assignment.roleKey);
-        const createdTasks = Object.fromEntries(
-          plan.assignments.map((assignment) => {
-            const role = getRole(assignment.roleKey);
-            return [
-              assignment.roleKey,
-              {
-                id: assignment.id,
-                title: assignment.title,
-                status: assignment.status,
-                ownerRole: assignment.roleKey,
-                assignee: role.name,
-                reason: assignment.reason,
-                dependencies: assignment.dependencies,
-                approval: {
-                  state: "pending",
-                  byRole: "cto",
-                  reason: "distributed by CTO main agent",
-                },
-                blocker: null,
-                risk: {
-                  level: "medium",
-                  label: "new command requires coordination",
-                },
-                outputs: ["agent response", "task update"],
-              },
-            ];
-          }),
-        );
+        const targets = applyPlanToQueues(plan);
 
         setMessages((current) => [
           ...current,
@@ -481,16 +583,6 @@ export default function App() {
             text: `${plan.planner === "codex-cli" ? "Codex CLI로" : "로컬 백업으로"} 계획을 만들었습니다. ${targets.map((roleKey) => getRole(roleKey).shortName).join(", ")}에게 ${plan.assignments.length}개 작업을 큐에 넣었습니다.`,
           },
         ]);
-        setTaskQueues((current) => {
-          const next = { ...current };
-          Object.entries(createdTasks).forEach(([roleKey, item]) => {
-            next[roleKey] = [item, ...(next[roleKey] ?? [])];
-          });
-          return next;
-        });
-        setLastDistributedKeys(targets);
-        setFocusedAgentKey(targets[0]);
-        setLastPlan(plan);
       })
       .catch((error) => {
         setMessages((current) => [
@@ -614,7 +706,11 @@ export default function App() {
               <h2>{focusedAgent.name}</h2>
               <p>{focusedAgent.mission}</p>
             </div>
-            <PlanCard plan={lastPlan} />
+            <PlanCard
+              plan={lastPlan}
+              codexRunning={codexRunning}
+              onRunCodex={runCodexExecution}
+            />
             <div className="queue-panel">
               <div className="specialty-list">
                 {focusedAgent.specialties.map((specialty) => (

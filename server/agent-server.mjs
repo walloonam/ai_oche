@@ -12,6 +12,7 @@ let activeWorkspaceRoot = serverRoot;
 const codexBinary = process.env.CODEX_BIN ?? "codex";
 const codexTimeoutMs = Number(process.env.CODEX_TIMEOUT_MS ?? 120000);
 const ctoPlanSchemaPath = new URL("./cto-plan.schema.json", import.meta.url);
+const codexRunTimeoutMs = Number(process.env.CODEX_RUN_TIMEOUT_MS ?? 300000);
 
 const roleShortNames = {
   pm: "PM",
@@ -381,6 +382,249 @@ async function createCodexCtoPlan(command, workspace) {
   return normalizeCtoPlan(command, parseCodexJson(output));
 }
 
+function createCodexRunPrompt(command, workspace, sandbox) {
+  const writeModeNote =
+    sandbox === "workspace-write"
+      ? "You may edit files inside the selected workspace when that is necessary for the task."
+      : "Do not edit files. Inspect and reason only.";
+
+  return `You are Codex running behind a Korean pixel-art command center UI.
+
+Use your built-in planning, tool use, and subagent or multi-agent capabilities when they are useful.
+The UI will mirror your JSON events into visible subagent desks, so make progress explicit.
+
+${writeModeNote}
+Avoid destructive git commands, force pushes, resets, or deleting user work.
+
+Workspace:
+${JSON.stringify(workspace, null, 2)}
+
+User command:
+${command}`;
+}
+
+function parseJsonLine(line) {
+  try {
+    return JSON.parse(line);
+  } catch {
+    return null;
+  }
+}
+
+function runCodexJson(command, workspace, sandbox = "read-only") {
+  return new Promise((resolve, reject) => {
+    const args = [
+      "exec",
+      "--json",
+      "-",
+      "--cd",
+      activeWorkspaceRoot,
+      "--sandbox",
+      sandbox,
+      "--color",
+      "never",
+    ];
+    const child = spawn(codexBinary, args, {
+      cwd: activeWorkspaceRoot,
+      env: process.env,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    const events = [];
+    let stdoutBuffer = "";
+    let stderr = "";
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        child.kill("SIGTERM");
+        reject(new Error(`codex run timed out after ${codexRunTimeoutMs}ms`));
+      }
+    }, codexRunTimeoutMs);
+
+    child.stdout.on("data", (chunk) => {
+      stdoutBuffer += chunk.toString();
+      const lines = stdoutBuffer.split("\n");
+      stdoutBuffer = lines.pop() ?? "";
+      lines.forEach((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return;
+        }
+        const event = parseJsonLine(trimmed);
+        if (event) {
+          events.push(event);
+        }
+      });
+    });
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk.toString();
+    });
+    child.on("error", (error) => {
+      if (!settled) {
+        settled = true;
+        clearTimeout(timer);
+        reject(error);
+      }
+    });
+    child.on("close", (code) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      const finalLine = stdoutBuffer.trim();
+      if (finalLine) {
+        const event = parseJsonLine(finalLine);
+        if (event) {
+          events.push(event);
+        }
+      }
+      if (code !== 0) {
+        reject(new Error(stderr.trim() || `codex exec --json exited with code ${code}`));
+        return;
+      }
+      resolve({ events, stderr });
+    });
+
+    child.stdin.end(createCodexRunPrompt(command, workspace, sandbox));
+  });
+}
+
+function getEventText(event) {
+  const item = event.item ?? {};
+  if (item.text) {
+    return item.text;
+  }
+  if (item.command) {
+    return item.command;
+  }
+  if (item.aggregated_output) {
+    return item.aggregated_output;
+  }
+  if (event.type) {
+    return event.type;
+  }
+  return "";
+}
+
+function inferRoleFromEvent(event) {
+  const text = getEventText(event).toLowerCase();
+  const itemType = event.item?.type ?? "";
+
+  if (/src\/app|src\/main|react|component|frontend|ui|화면/.test(text)) {
+    return "frontend";
+  }
+  if (/src\/index\.css|css|design|디자인|visual|pixel|sprite|color|spacing/.test(text)) {
+    return "designer";
+  }
+  if (itemType === "command_execution") {
+    if (/npm|build|test|git|rg|ls|find|sed|cat|pwd/.test(text)) {
+      return "platform";
+    }
+    return "backend";
+  }
+  if (/test|검증|qa|회귀|build failed|failed/.test(text)) {
+    return "qa";
+  }
+  if (/ui|ux|화면|layout/.test(text)) {
+    return "frontend";
+  }
+  if (/server|api|backend|endpoint|database|db/.test(text)) {
+    return "backend";
+  }
+  if (/design|디자인|visual|pixel|sprite|color|spacing/.test(text)) {
+    return "designer";
+  }
+  if (/plan|scope|요구|정리|handoff|문서/.test(text)) {
+    return "pm";
+  }
+  return "pm";
+}
+
+function truncateText(value, maxLength = 1200) {
+  const text = String(value ?? "");
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
+
+function sanitizeCodexEvent(event) {
+  if (!event.item) {
+    return event;
+  }
+
+  return {
+    ...event,
+    item: {
+      ...event.item,
+      text: event.item.text ? truncateText(event.item.text) : event.item.text,
+      command: event.item.command ? truncateText(event.item.command, 300) : event.item.command,
+      aggregated_output: event.item.aggregated_output
+        ? truncateText(event.item.aggregated_output)
+        : event.item.aggregated_output,
+    },
+  };
+}
+
+function getEventStatus(event) {
+  if (event.type === "item.started" || event.type === "turn.started") {
+    return "in_progress";
+  }
+  if (event.type === "item.completed" || event.type === "turn.completed") {
+    return "done";
+  }
+  return "todo";
+}
+
+function createTaskTitleFromEvent(event) {
+  const item = event.item ?? {};
+  if (item.type === "command_execution") {
+    const command = String(item.command ?? "command").replace(/^\/bin\/bash -lc\s*/, "");
+    return `Codex command: ${command.slice(0, 42)}`;
+  }
+  if (item.type === "agent_message") {
+    return String(item.text ?? "Codex message").slice(0, 58);
+  }
+  return String(event.type ?? "Codex event").slice(0, 58);
+}
+
+function createCodexEventPlan(command, events) {
+  const id = `run-${Date.now()}`;
+  const eventItems = events.filter((event) => event.type?.startsWith("item."));
+  const sourceItems = eventItems.length > 0 ? eventItems : events;
+  const assignments = sourceItems.slice(-8).map((event, index) => {
+    const roleKey = inferRoleFromEvent(event);
+    return {
+      id: `${id}-${index}`,
+      roleKey,
+      roleShortName: roleShortNames[roleKey],
+      title: createTaskTitleFromEvent(event),
+      reason: `Codex JSON event: ${event.type}${event.item?.type ? ` / ${event.item.type}` : ""}`,
+      dependencies: [],
+      status: getEventStatus(event),
+    };
+  });
+
+  if (assignments.length === 0) {
+    assignments.push({
+      id: `${id}-pm`,
+      roleKey: "pm",
+      roleShortName: roleShortNames.pm,
+      title: "Codex run completed",
+      reason: "Codex run returned no item events.",
+      dependencies: [],
+      status: "done",
+    });
+  }
+
+  return {
+    id,
+    command,
+    summary: `Codex 실행 이벤트 ${events.length}개를 반영했습니다.`,
+    priority: /급|빨리|오늘|장애|오류|막힘|긴급/.test(command) ? "high" : "normal",
+    estimatedSteps: Math.max(1, assignments.length),
+    assignments,
+  };
+}
+
 async function runCapability(capability) {
   const handlers = {
     read: () => runCommand("rg --files -g '!node_modules' -g '!dist' | head -80", 8000),
@@ -470,6 +714,32 @@ const server = createServer(async (request, response) => {
           plan,
         });
       }
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/codex/run") {
+      const body = await readBody(request);
+      const command = String(body.command ?? "").trim();
+      const sandbox = body.sandbox === "workspace-write" ? "workspace-write" : "read-only";
+      if (!command) {
+        sendJson(response, 400, { ok: false, error: "command is required" });
+        return;
+      }
+
+      const workspace = await getWorkspace();
+      const run = await runCodexJson(command, workspace, sandbox);
+      const events = run.events.map(sanitizeCodexEvent);
+      const plan = createCodexEventPlan(command, events);
+      sendJson(response, 200, {
+        ok: true,
+        planner: "codex-json",
+        sandbox,
+        eventCount: events.length,
+        events,
+        stderr: run.stderr,
+        plan,
+        workspace: await getWorkspace(),
+      });
       return;
     }
 

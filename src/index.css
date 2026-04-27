@@ -916,6 +916,28 @@ h2 {
   font-weight: 800;
 }
 
+.plan-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.plan-card__actions button {
+  min-height: 30px;
+  border: 1px solid rgba(61, 111, 136, 0.28);
+  border-radius: 6px;
+  padding: 0 10px;
+  background: #2b596e;
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.plan-card__actions button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .plan-list {
   display: grid;
   gap: 4px;

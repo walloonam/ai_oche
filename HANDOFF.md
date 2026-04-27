@@ -75,4 +75,5 @@
 - The planner tries `codex exec` first with `--sandbox read-only` and a strict output schema.
 - If Codex CLI is unavailable or returns invalid JSON, it falls back to the local rule-based planner.
 - Workspace can be changed from the UI through `POST /api/workspace/select`; the server keeps the active workspace in memory.
-- Next likely task: add execution/run history after the planning step, still behind the local agent server.
+- `POST /api/codex/run` executes `codex exec --json` and maps real Codex events into UI subagent queues.
+- Next likely task: stream `/api/codex/run` events live over SSE instead of returning them after completion.
