@@ -4,6 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "agent": "node server/agent-server.mjs",
+    "dev:all": "node server/agent-server.mjs & vite --host 0.0.0.0 --port 4173",
     "dev": "vite --host 0.0.0.0 --port 4173",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 4173",

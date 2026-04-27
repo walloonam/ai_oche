@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   STATUS_LABELS,
   TASK_STATUSES,
@@ -305,7 +305,9 @@ function PlanCard({ plan }) {
   );
 }
 
-function WorkspacePanel() {
+function WorkspacePanel({ workspace, capabilityState, onRunCapability }) {
+  const info = workspace ?? WORKSPACE_INFO;
+
   return (
     <section className="workspace-panel">
       <div className="workspace-panel__header">
@@ -316,22 +318,33 @@ function WorkspacePanel() {
         <button type="button">Change</button>
       </div>
 
-      <div className="workspace-path">{WORKSPACE_INFO.path}</div>
+      <div className="workspace-path">{info.path}</div>
 
       <div className="workspace-meta">
-        <span>branch {WORKSPACE_INFO.branch}</span>
-        <span>{WORKSPACE_INFO.status}</span>
-        <span>{WORKSPACE_INFO.framework}</span>
-        <span>{WORKSPACE_INFO.packageManager}</span>
+        <span>branch {info.branch}</span>
+        <span>{info.status}</span>
+        <span>{info.framework}</span>
+        <span>{info.packageManager}</span>
       </div>
 
       <div className="capability-grid" aria-label="Codex capabilities">
         {CODEX_CAPABILITIES.map((capability) => (
-          <button key={capability.key} type="button" className="capability-button">
+          <button
+            key={capability.key}
+            type="button"
+            className="capability-button"
+            disabled={capabilityState.running === capability.key}
+            onClick={() => onRunCapability(capability.key)}
+          >
             <strong>{capability.label}</strong>
             <span>{capability.detail}</span>
           </button>
         ))}
+      </div>
+
+      <div className="agent-output">
+        <span>{capabilityState.command ?? "agent server"}</span>
+        <pre>{capabilityState.output ?? "Codex capability output will appear here."}</pre>
       </div>
     </section>
   );
@@ -344,6 +357,12 @@ export default function App() {
   const [taskQueues, setTaskQueues] = useState(createInitialTaskQueues);
   const [lastDistributedKeys, setLastDistributedKeys] = useState(["frontend"]);
   const [lastPlan, setLastPlan] = useState(null);
+  const [workspace, setWorkspace] = useState(null);
+  const [capabilityState, setCapabilityState] = useState({
+    running: null,
+    command: null,
+    output: null,
+  });
 
   const subAgents = TEAM_ROLES.filter((role) => role.key !== "cto");
   const focusedAgent = getRole(focusedAgentKey);
@@ -355,6 +374,67 @@ export default function App() {
     const task = getCurrentTask(role.key, taskQueues);
     return task && task.status !== "todo" && task.status !== "done";
   }).length;
+
+  useEffect(() => {
+    let active = true;
+
+    fetch("/api/workspace")
+      .then((response) => response.json())
+      .then((payload) => {
+        if (active && payload.ok) {
+          setWorkspace(payload.workspace);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setCapabilityState((current) => ({
+            ...current,
+            command: "agent server",
+            output: "Local agent server is not connected yet. Run `npm run agent`.",
+          }));
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function runCapability(capability) {
+    setCapabilityState({
+      running: capability,
+      command: capability,
+      output: "Running...",
+    });
+
+    try {
+      const response = await fetch("/api/capabilities/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ capability }),
+      });
+      const payload = await response.json();
+      setCapabilityState({
+        running: null,
+        command: payload.result?.command ?? capability,
+        output: payload.result?.output || "No output.",
+      });
+      fetch("/api/workspace")
+        .then((workspaceResponse) => workspaceResponse.json())
+        .then((workspacePayload) => {
+          if (workspacePayload.ok) {
+            setWorkspace(workspacePayload.workspace);
+          }
+        })
+        .catch(() => {});
+    } catch (error) {
+      setCapabilityState({
+        running: null,
+        command: capability,
+        output: error.message,
+      });
+    }
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -452,7 +532,11 @@ export default function App() {
             </div>
           </div>
 
-          <WorkspacePanel />
+          <WorkspacePanel
+            workspace={workspace}
+            capabilityState={capabilityState}
+            onRunCapability={runCapability}
+          />
 
           <section className="chat-console">
             <div className="chat-console__header">
