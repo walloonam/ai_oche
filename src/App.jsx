@@ -84,13 +84,6 @@ function getStatusCopy(status) {
   return STATUS_COPY[status] ?? STATUS_LABELS[status] ?? status;
 }
 
-function getAssignedTask(roleKey, extraAssignments) {
-  return (
-    extraAssignments[roleKey] ??
-    TEAM_WORK_ITEMS.find((item) => item.ownerRole === roleKey && item.status !== "done")
-  );
-}
-
 function createInitialTaskQueues() {
   const queues = Object.fromEntries(
     TEAM_ROLES.filter((role) => role.key !== "cto").map((role) => [role.key, []]),
@@ -114,103 +107,6 @@ function getCurrentTask(roleKey, taskQueues) {
     queue.find((item) => item.status === "todo") ??
     queue[0]
   );
-}
-
-function getDistributionTargets(command) {
-  const text = command.toLowerCase();
-  const targets = new Set();
-
-  if (/기획|일정|요구|정리|우선|문서|스펙|정책|분배/.test(text)) {
-    targets.add("pm");
-  }
-  if (/화면|ui|ux|프론트|버튼|채팅|컴포넌트|레이아웃|상태/.test(text)) {
-    targets.add("frontend");
-  }
-  if (/api|서버|백엔드|db|데이터|저장|인증|연결/.test(text)) {
-    targets.add("backend");
-  }
-  if (/테스트|검증|qa|버그|품질|회귀|확인/.test(text)) {
-    targets.add("qa");
-  }
-  if (/디자인|예쁘|컬러|캐릭터|애니|모션|배경|톤/.test(text)) {
-    targets.add("designer");
-  }
-  if (/배포|빌드|운영|로그|모니터|인프라|파이프라인/.test(text)) {
-    targets.add("platform");
-  }
-
-  if (targets.size === 0) {
-    return ["pm", "frontend", "backend", "qa"];
-  }
-
-  if (targets.has("frontend") || targets.has("backend")) {
-    targets.add("qa");
-  }
-  if (targets.has("designer")) {
-    targets.add("frontend");
-  }
-
-  return [...targets];
-}
-
-function getDistributedTitle(command, roleKey) {
-  const brief = command.length > 24 ? `${command.slice(0, 24)}...` : command;
-  const prefixes = {
-    pm: "요구사항 정리",
-    frontend: "화면 구현",
-    backend: "기능 연결",
-    qa: "검증 계획",
-    designer: "시각 정리",
-    platform: "운영 점검",
-  };
-
-  return `${prefixes[roleKey] ?? "작업"}: ${brief}`;
-}
-
-function getAssignmentReason(roleKey) {
-  const reasons = {
-    pm: "요구사항과 우선순위를 먼저 정리해야 합니다.",
-    frontend: "사용자가 보는 화면과 상호작용을 구현해야 합니다.",
-    backend: "데이터 흐름과 API 연결이 필요합니다.",
-    qa: "분배된 작업의 회귀/완료 기준을 검증해야 합니다.",
-    designer: "화면 톤, 여백, 모션의 품질을 다듬어야 합니다.",
-    platform: "빌드, 배포, 운영 안정성 확인이 필요합니다.",
-  };
-
-  return reasons[roleKey] ?? "CTO가 실행이 필요하다고 판단했습니다.";
-}
-
-function getDependencies(roleKey, targets) {
-  if (roleKey === "qa") {
-    return targets.filter((target) => target !== "qa");
-  }
-  if (roleKey === "frontend" && targets.includes("designer")) {
-    return ["designer"];
-  }
-  if (roleKey === "platform") {
-    return targets.filter((target) => ["frontend", "backend"].includes(target));
-  }
-  return [];
-}
-
-function createCtoPlan(command) {
-  const targets = getDistributionTargets(command);
-  const priority = /급|빨리|오늘|장애|오류|막힘|긴급/.test(command) ? "high" : "normal";
-
-  return {
-    id: `plan-${Date.now()}`,
-    command,
-    summary: command.length > 34 ? `${command.slice(0, 34)}...` : command,
-    priority,
-    estimatedSteps: targets.length + 1,
-    assignments: targets.map((roleKey, index) => ({
-      roleKey,
-      title: getDistributedTitle(command, roleKey),
-      reason: getAssignmentReason(roleKey),
-      dependencies: getDependencies(roleKey, targets),
-      status: index === 0 ? "in_progress" : "todo",
-    })),
-  };
 }
 
 function countByStatus(items) {
@@ -436,6 +332,19 @@ export default function App() {
     }
   }
 
+  async function requestCtoPlan(command) {
+    const response = await fetch("/api/cto/plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ command }),
+    });
+    const payload = await response.json();
+    if (!payload.ok) {
+      throw new Error(payload.error ?? "Failed to create CTO plan.");
+    }
+    return payload.plan;
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const text = draft.trim();
@@ -443,59 +352,73 @@ export default function App() {
       return;
     }
 
-    const plan = createCtoPlan(text);
-    const targets = plan.assignments.map((assignment) => assignment.roleKey);
-    const timestamp = Date.now();
-    const createdTasks = Object.fromEntries(
-      plan.assignments.map((assignment) => {
-        const roleKey = assignment.roleKey;
-        const role = getRole(roleKey);
-        return [
-          roleKey,
-          {
-            id: `local-${timestamp}-${roleKey}`,
-            title: assignment.title,
-            status: assignment.status,
-            ownerRole: roleKey,
-            assignee: role.name,
-            reason: assignment.reason,
-            dependencies: assignment.dependencies,
-            approval: {
-              state: "pending",
-              byRole: "cto",
-              reason: "distributed by CTO main agent",
-            },
-            blocker: null,
-            risk: {
-              level: "medium",
-              label: "new command requires coordination",
-            },
-            outputs: ["agent response", "task update"],
-          },
-        ];
-      }),
-    );
-
     setMessages((current) => [
       ...current,
       { id: `user-${Date.now()}`, from: "user", text },
-      {
-        id: `cto-${Date.now()}`,
-        from: "cto",
-        text: `계획을 만들었습니다. ${targets.map((roleKey) => getRole(roleKey).shortName).join(", ")}에게 ${plan.assignments.length}개 작업을 큐에 넣었습니다.`,
-      },
     ]);
-    setTaskQueues((current) => {
-      const next = { ...current };
-      Object.entries(createdTasks).forEach(([roleKey, item]) => {
-        next[roleKey] = [item, ...(next[roleKey] ?? [])];
-      });
-      return next;
-    });
-    setLastDistributedKeys(targets);
-    setFocusedAgentKey(targets[0]);
-    setLastPlan(plan);
     setDraft("");
+
+    requestCtoPlan(text)
+      .then((plan) => {
+        const targets = plan.assignments.map((assignment) => assignment.roleKey);
+        const createdTasks = Object.fromEntries(
+          plan.assignments.map((assignment) => {
+            const role = getRole(assignment.roleKey);
+            return [
+              assignment.roleKey,
+              {
+                id: assignment.id,
+                title: assignment.title,
+                status: assignment.status,
+                ownerRole: assignment.roleKey,
+                assignee: role.name,
+                reason: assignment.reason,
+                dependencies: assignment.dependencies,
+                approval: {
+                  state: "pending",
+                  byRole: "cto",
+                  reason: "distributed by CTO main agent",
+                },
+                blocker: null,
+                risk: {
+                  level: "medium",
+                  label: "new command requires coordination",
+                },
+                outputs: ["agent response", "task update"],
+              },
+            ];
+          }),
+        );
+
+        setMessages((current) => [
+          ...current,
+          {
+            id: `cto-${Date.now()}`,
+            from: "cto",
+            text: `계획을 만들었습니다. ${targets.map((roleKey) => getRole(roleKey).shortName).join(", ")}에게 ${plan.assignments.length}개 작업을 큐에 넣었습니다.`,
+          },
+        ]);
+        setTaskQueues((current) => {
+          const next = { ...current };
+          Object.entries(createdTasks).forEach(([roleKey, item]) => {
+            next[roleKey] = [item, ...(next[roleKey] ?? [])];
+          });
+          return next;
+        });
+        setLastDistributedKeys(targets);
+        setFocusedAgentKey(targets[0]);
+        setLastPlan(plan);
+      })
+      .catch((error) => {
+        setMessages((current) => [
+          ...current,
+          {
+            id: `cto-error-${Date.now()}`,
+            from: "system",
+            text: `CTO planner server error: ${error.message}`,
+          },
+        ]);
+      });
   }
 
   return (

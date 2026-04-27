@@ -69,4 +69,5 @@
 - Keep the same warm pixel-art office style.
 - Keep the CTO as the main coordinator.
 - Do not allow arbitrary browser-supplied shell commands.
-- Next likely task: move CTO planner from `src/App.jsx` into `server/agent-server.mjs` as `POST /api/cto/plan`.
+- CTO planner now runs in `server/agent-server.mjs` as `POST /api/cto/plan`.
+- Next likely task: add a pluggable OpenAI/Codex planner adapter behind the same endpoint.

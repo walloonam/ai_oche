@@ -44,6 +44,7 @@ http://localhost:4174/
 server/agent-server.mjs   Local agent server
 vite.config.js            Proxies /api to localhost:4174
 src/App.jsx               Calls /api/workspace and /api/capabilities/run
+                          Calls /api/cto/plan for CTO planning
 package.json              agent, dev, dev:all scripts
 ```
 
@@ -98,6 +99,39 @@ edit    -> placeholder; actual file edits should be task-gated
 commit  -> git status --short
 ```
 
+### CTO Plan
+
+```bash
+curl -X POST http://localhost:4174/api/cto/plan \
+  -H "Content-Type: application/json" \
+  -d '{"command":"로그인 화면 API 연결하고 테스트까지 진행해줘"}'
+```
+
+Returns a CTO plan:
+
+```js
+{
+  id,
+  command,
+  summary,
+  priority,
+  estimatedSteps,
+  assignments: [
+    {
+      id,
+      roleKey,
+      roleShortName,
+      title,
+      reason,
+      dependencies,
+      status
+    }
+  ]
+}
+```
+
+The current planner is still rule-based, but it now runs server-side in `server/agent-server.mjs`. This is the intended replacement point for an OpenAI/Codex-backed planner.
+
 ## Safety Model
 
 The server intentionally does not accept arbitrary shell commands from the browser. It only runs a fixed allowlist in `runCapability()`.
@@ -117,7 +151,7 @@ The next integration should happen server-side, not in the browser.
 ```txt
 React chat
   -> POST /api/cto/plan
-  -> server-side Codex/OpenAI adapter
+  -> server-side planner adapter
   -> tool calls / repo reads / shell allowlist
   -> CTO plan + agent assignments
 ```
@@ -135,8 +169,8 @@ Suggested adapter shape:
 
 ```js
 async function planWithCto({ command, workspace }) {
-  // current: local rule-based planner in src/App.jsx
-  // next: move planner to server and optionally call OpenAI/Codex here
+  // current: local rule-based planner in server/agent-server.mjs
+  // next: optionally call OpenAI/Codex here
   return {
     summary: "...",
     assignments: [
@@ -150,7 +184,7 @@ Keep API keys only on the server. Never expose an OpenAI API key in React, Vite 
 
 ## Current Limitations
 
-- CTO planning is still local/rule-based in `src/App.jsx`.
+- CTO planning is still rule-based, though it now runs server-side.
 - Capability buttons execute simple allowlisted commands only.
 - `Edit Files` is a placeholder and does not write files.
 - There is no persistent run history yet.
@@ -158,10 +192,11 @@ Keep API keys only on the server. Never expose an OpenAI API key in React, Vite 
 
 ## Suggested Next Step
 
-Move CTO planning from `src/App.jsx` into `server/agent-server.mjs`:
+Replace the rule-based server planner with a pluggable adapter:
 
 ```txt
-POST /api/cto/plan
+createLocalCtoPlan()
+createOpenAiCtoPlan()
 ```
 
-Then the UI should send the chat command to the server, receive the CTO plan, and update the subagent queues from that server response. After that, replacing the local planner with a real Codex/OpenAI planner becomes a contained server-side change.
+Keep the UI contract for `POST /api/cto/plan` stable while changing the implementation behind it.
