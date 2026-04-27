@@ -1,45 +1,44 @@
 # AI Agent Office Handoff
 
 ## Project State
-- This repo now contains a Vite + React + Tailwind pixel office UI.
-- The app shows a shared AI agent office layout with:
-  - CTO as the main coordinator on the left
+- This repo now contains a Vite + React pixel office UI for a CTO-led Codex workspace.
+- The app shows:
+  - CTO as the main agent on the left
+  - user commands sent only to the CTO
+  - CTO planning/distribution into subagent queues
   - subagents on the right
-  - a separate Character Lab view for sprite preview and downloads
-- Current work focused on making the CTO workstation read as a real seated desk scene:
-  - chair, desk, monitor, mug, tablet, and keyboard are simplified and readable
-  - the CTO is meant to be the focal point of the main command desk
-  - the composition is intentionally clean and uncluttered
+  - a Workspace/Codex capability panel connected to a local agent server
 
 ## Key Files
 - `src/App.jsx`
 - `src/index.css`
-- `assets/characters/`
-- `assets/spritesheet/`
+- `server/agent-server.mjs`
+- `docs/codex-connection.md`
+- `assets/ai-characters/`
 - `assets/palettes/`
 - `docs/art-direction.md`
 - `docs/character-notes.md`
 
 ## Current UI Structure
-- Header with view toggle, scale toggle, and background toggle
-- `Office UI` view:
-  - CTO main workstation on the left
-  - subagent workstations on the right
-  - main agent chat below the CTO area
-  - work board below the chat
-- `Character Lab` view:
-  - role previews
-  - download links for sprites, sprite sheet, and palettes
+- Header with office stats
+- Left side:
+  - CTO command desk
+  - Workspace/Codex capability panel
+  - command chat to the CTO main agent
+- Right side:
+  - subagent office booths
+  - queue counts and current task per subagent
+  - CTO distribution/plan summary
 
 ## Current CTO Direction
 - CTO should read as:
-  - seated in the chair
-  - using a desk monitor
-  - coordinating from a command desk
+  - the single main agent
+  - the only direct target for user instructions
+  - the planner that decides which subagents receive work
 - The current focus is readability:
-  - monitor must be clearly a desk monitor
-  - desk details must look like furniture, not decoration
-  - props should stay minimal and identifiable
+  - do not make users manually pick subagents as the primary flow
+  - show the CTO plan and resulting subagent queues
+  - keep local command execution behind the agent server allowlist
 
 ## Recent Commit Pattern
 - Every user-facing polish pass has been committed separately.
@@ -47,20 +46,27 @@
 - The repo has been kept in a clean, revert-friendly state after each change.
 
 ## Run It
-- Start dev server with:
-  - `npm run dev -- --host 0.0.0.0 --port 4173`
-- Current browser URL used during work:
-  - `http://192.168.25.150:4173`
+- Start UI + local agent server:
+  - `npm run dev:all`
+- Or start separately:
+  - `npm run agent`
+  - `npm run dev`
+- Browser URL:
+  - `http://localhost:4173`
+- Agent server:
+  - `http://localhost:4174`
 
 ## Resume Checklist
 1. Read `src/App.jsx` and `src/index.css`.
-2. Open the app in a browser.
-3. Check the CTO workstation first.
-4. Keep changes limited to the requested role or scene.
-5. Commit after each completed polish pass.
+2. Read `docs/codex-connection.md` before changing agent integration.
+3. Start `npm run agent` and `npm run dev`.
+4. Test `/api/workspace` before debugging the UI.
+5. Open the app in a browser.
+6. Keep the CTO as the command entry point.
+7. Commit after each completed integration or polish pass.
 
 ## Notes For Next Session
-- Do not redesign the whole page unless explicitly asked.
 - Keep the same warm pixel-art office style.
 - Keep the CTO as the main coordinator.
-- If the CTO scene needs more work, prefer simplifying over adding more props.
+- Do not allow arbitrary browser-supplied shell commands.
+- Next likely task: move CTO planner from `src/App.jsx` into `server/agent-server.mjs` as `POST /api/cto/plan`.
