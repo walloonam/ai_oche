@@ -1,503 +1,491 @@
 import React, { useMemo, useState } from "react";
+import {
+  STATUS_LABELS,
+  TASK_STATUSES,
+  TEAM_ROLES,
+  TEAM_WORK_ITEMS,
+  getAllowedNextStatuses,
+} from "./domain/team-operations.mjs";
 
-const roles = [
-  {
-    key: "cto",
-    label: "CTO / Coordinator",
-    file: "/assets/characters/cto.png",
-    labFile: "/assets/lab-characters/cto.png",
-  },
-  {
-    key: "pm",
-    label: "Planner / PM",
-    file: "/assets/characters/pm.png",
-    labFile: "/assets/lab-characters/pm.png",
-  },
-  {
-    key: "frontend",
-    label: "Frontend Engineer",
-    file: "/assets/characters/frontend.png",
-    labFile: "/assets/lab-characters/frontend.png",
-  },
-  {
-    key: "backend",
-    label: "Backend Engineer",
-    file: "/assets/characters/backend.png",
-    labFile: "/assets/lab-characters/backend.png",
-  },
-  {
-    key: "qa",
-    label: "QA Engineer",
-    file: "/assets/characters/qa.png",
-    labFile: "/assets/lab-characters/qa.png",
-  },
-  {
-    key: "designer",
-    label: "Designer",
-    file: "/assets/characters/designer.png",
-    labFile: "/assets/lab-characters/designer.png",
-  },
-  {
-    key: "platform",
-    label: "Platform Engineer",
-    file: "/assets/characters/platform.png",
-    labFile: "/assets/lab-characters/platform.png",
-  },
-];
+import backendCharacter from "../assets/ai-characters/backend.png";
+import ctoCharacter from "../assets/ai-characters/cto.png";
+import designerCharacter from "../assets/ai-characters/designer.png";
+import frontendCharacter from "../assets/ai-characters/frontend.png";
+import platformCharacter from "../assets/ai-characters/platform.png";
+import pmCharacter from "../assets/ai-characters/pm.png";
+import qaCharacter from "../assets/ai-characters/qa.png";
 
-const scaleOptions = [
-  { label: "1x", value: 1 },
-  { label: "2x", value: 2 },
-  { label: "4x", value: 4 },
-];
-
-const backgroundOptions = [
-  { label: "Cream", value: "bg-cream" },
-  { label: "Mist", value: "bg-[#f6f0e6]" },
-  { label: "Night", value: "bg-[#2b2420] text-white" },
-];
-
-const officeStats = [
-  { label: "Agents", value: "7" },
-  { label: "Tasks", value: "12" },
-  { label: "Reviews", value: "3" },
-  { label: "Blocked", value: "1" },
-];
-
-const officeStyles = {
-  cto: {
-    wall: "#f8f1e6",
-    floor: "#f2dcc8",
-    desk: "#e4b185",
-    monitor: "#ccd8f0",
-    accent: "#b28a5f",
-    chair: "#5a5d78",
-    wallDeco: "command",
-    monitorView: "overview",
-    propPrimary: "tablet",
-    propSecondary: "notebook",
-  },
-  pm: {
-    wall: "#f7efe8",
-    floor: "#f0d8c6",
-    desk: "#e0a97c",
-    monitor: "#d7e6c4",
-    accent: "#f2c377",
-    chair: "#c9a07d",
-    wallDeco: "planning",
-    monitorView: "timeline",
-    propPrimary: "notes",
-    propSecondary: "calendar",
-  },
-  frontend: {
-    wall: "#f6f0f4",
-    floor: "#e9d6e2",
-    desk: "#e1a1b6",
-    monitor: "#cde8f6",
-    accent: "#f2b6d0",
-    chair: "#e2a1c4",
-    wallDeco: "grid",
-    monitorView: "ui",
-    propPrimary: "components",
-    propSecondary: "palette",
-  },
-  backend: {
-    wall: "#efeef3",
-    floor: "#d8d4e6",
-    desk: "#9ba1c7",
-    monitor: "#bcd0e6",
-    accent: "#7580b8",
-    chair: "#7e86a8",
-    wallDeco: "infrastructure",
-    monitorView: "terminal",
-    propPrimary: "server",
-    propSecondary: "cables",
-  },
-  qa: {
-    wall: "#f5f2ea",
-    floor: "#e7dbc8",
-    desk: "#d2a56c",
-    monitor: "#d6e8d3",
-    accent: "#d7a05c",
-    chair: "#c79a69",
-    wallDeco: "checklist",
-    monitorView: "bugs",
-    propPrimary: "check",
-    propSecondary: "warning",
-  },
-  designer: {
-    wall: "#f7efe9",
-    floor: "#edd8cf",
-    desk: "#caa07a",
-    monitor: "#f0d7e5",
-    accent: "#e7b98c",
-    chair: "#c08a6c",
-    wallDeco: "moodboard",
-    monitorView: "canvas",
-    propPrimary: "pen",
-    propSecondary: "swatches",
-  },
-  platform: {
-    wall: "#f3f0e4",
-    floor: "#e4d7bf",
-    desk: "#b89b6f",
-    monitor: "#d8dccf",
-    accent: "#d1b37a",
-    chair: "#4d5260",
-    wallDeco: "infrastructure",
-    monitorView: "terminal",
-    propPrimary: "server",
-    propSecondary: "cables",
-  },
+const ROLE_IMAGES = {
+  cto: ctoCharacter,
+  pm: pmCharacter,
+  frontend: frontendCharacter,
+  backend: backendCharacter,
+  qa: qaCharacter,
+  designer: designerCharacter,
+  platform: platformCharacter,
 };
 
-function OfficeScene({ role, size = "sm" }) {
-  const style = officeStyles[role.key] ?? officeStyles.cto;
+const STATUS_COPY = {
+  todo: "대기",
+  in_progress: "작업중",
+  in_review: "검토중",
+  blocked: "막힘",
+  done: "완료",
+};
+
+const AGENT_POSITIONS = {
+  pm: "agent-pm",
+  frontend: "agent-frontend",
+  backend: "agent-backend",
+  qa: "agent-qa",
+  designer: "agent-designer",
+  platform: "agent-platform",
+};
+
+const DEFAULT_MESSAGES = [
+  {
+    id: "msg-01",
+    from: "system",
+    text: "Codex 메인 에이전트가 CTO 데스크에 연결되었습니다.",
+  },
+  {
+    id: "msg-02",
+    from: "cto",
+    text: "나에게 지시하면 필요한 서브에이전트를 골라 작업을 분배하겠습니다.",
+  },
+];
+
+function classNames(...values) {
+  return values.filter(Boolean).join(" ");
+}
+
+function getRole(roleKey) {
+  return TEAM_ROLES.find((role) => role.key === roleKey) ?? TEAM_ROLES[0];
+}
+
+function getStatusCopy(status) {
+  return STATUS_COPY[status] ?? STATUS_LABELS[status] ?? status;
+}
+
+function getAssignedTask(roleKey, extraAssignments) {
   return (
-    <div
-      className={`office-scene ${size === "lg" ? "office-scene-lg" : "office-scene-sm"}`}
-      data-role={role.key}
-      style={{
-        "--scene-wall": style.wall,
-        "--scene-floor": style.floor,
-        "--scene-desk": style.desk,
-        "--scene-monitor": style.monitor,
-        "--scene-accent": style.accent,
-        "--scene-chair": style.chair,
-      }}
+    extraAssignments[roleKey] ??
+    TEAM_WORK_ITEMS.find((item) => item.ownerRole === roleKey && item.status !== "done")
+  );
+}
+
+function createInitialTaskQueues() {
+  const queues = Object.fromEntries(
+    TEAM_ROLES.filter((role) => role.key !== "cto").map((role) => [role.key, []]),
+  );
+
+  TEAM_WORK_ITEMS.filter((item) => item.status !== "done").forEach((item) => {
+    queues[item.ownerRole] = [...(queues[item.ownerRole] ?? []), item];
+  });
+
+  return queues;
+}
+
+function getQueueItems(taskQueues) {
+  return Object.values(taskQueues).flat();
+}
+
+function getCurrentTask(roleKey, taskQueues) {
+  const queue = taskQueues[roleKey] ?? [];
+  return (
+    queue.find((item) => ["in_progress", "in_review", "blocked"].includes(item.status)) ??
+    queue.find((item) => item.status === "todo") ??
+    queue[0]
+  );
+}
+
+function getDistributionTargets(command) {
+  const text = command.toLowerCase();
+  const targets = new Set();
+
+  if (/기획|일정|요구|정리|우선|문서|스펙|정책|분배/.test(text)) {
+    targets.add("pm");
+  }
+  if (/화면|ui|ux|프론트|버튼|채팅|컴포넌트|레이아웃|상태/.test(text)) {
+    targets.add("frontend");
+  }
+  if (/api|서버|백엔드|db|데이터|저장|인증|연결/.test(text)) {
+    targets.add("backend");
+  }
+  if (/테스트|검증|qa|버그|품질|회귀|확인/.test(text)) {
+    targets.add("qa");
+  }
+  if (/디자인|예쁘|컬러|캐릭터|애니|모션|배경|톤/.test(text)) {
+    targets.add("designer");
+  }
+  if (/배포|빌드|운영|로그|모니터|인프라|파이프라인/.test(text)) {
+    targets.add("platform");
+  }
+
+  if (targets.size === 0) {
+    return ["pm", "frontend", "backend", "qa"];
+  }
+
+  if (targets.has("frontend") || targets.has("backend")) {
+    targets.add("qa");
+  }
+  if (targets.has("designer")) {
+    targets.add("frontend");
+  }
+
+  return [...targets];
+}
+
+function getDistributedTitle(command, roleKey) {
+  const brief = command.length > 24 ? `${command.slice(0, 24)}...` : command;
+  const prefixes = {
+    pm: "요구사항 정리",
+    frontend: "화면 구현",
+    backend: "기능 연결",
+    qa: "검증 계획",
+    designer: "시각 정리",
+    platform: "운영 점검",
+  };
+
+  return `${prefixes[roleKey] ?? "작업"}: ${brief}`;
+}
+
+function getAssignmentReason(roleKey) {
+  const reasons = {
+    pm: "요구사항과 우선순위를 먼저 정리해야 합니다.",
+    frontend: "사용자가 보는 화면과 상호작용을 구현해야 합니다.",
+    backend: "데이터 흐름과 API 연결이 필요합니다.",
+    qa: "분배된 작업의 회귀/완료 기준을 검증해야 합니다.",
+    designer: "화면 톤, 여백, 모션의 품질을 다듬어야 합니다.",
+    platform: "빌드, 배포, 운영 안정성 확인이 필요합니다.",
+  };
+
+  return reasons[roleKey] ?? "CTO가 실행이 필요하다고 판단했습니다.";
+}
+
+function getDependencies(roleKey, targets) {
+  if (roleKey === "qa") {
+    return targets.filter((target) => target !== "qa");
+  }
+  if (roleKey === "frontend" && targets.includes("designer")) {
+    return ["designer"];
+  }
+  if (roleKey === "platform") {
+    return targets.filter((target) => ["frontend", "backend"].includes(target));
+  }
+  return [];
+}
+
+function createCtoPlan(command) {
+  const targets = getDistributionTargets(command);
+  const priority = /급|빨리|오늘|장애|오류|막힘|긴급/.test(command) ? "high" : "normal";
+
+  return {
+    id: `plan-${Date.now()}`,
+    command,
+    summary: command.length > 34 ? `${command.slice(0, 34)}...` : command,
+    priority,
+    estimatedSteps: targets.length + 1,
+    assignments: targets.map((roleKey, index) => ({
+      roleKey,
+      title: getDistributedTitle(command, roleKey),
+      reason: getAssignmentReason(roleKey),
+      dependencies: getDependencies(roleKey, targets),
+      status: index === 0 ? "in_progress" : "todo",
+    })),
+  };
+}
+
+function countByStatus(items) {
+  return items.reduce((counts, item) => {
+    counts[item.status] = (counts[item.status] ?? 0) + 1;
+    return counts;
+  }, {});
+}
+
+function AgentSprite({ role, active = false, size = "md" }) {
+  return (
+    <div className={classNames("agent-sprite", `agent-sprite--${size}`, active && "is-working")}>
+      <img src={ROLE_IMAGES[role.key]} alt="" className="pixel" />
+    </div>
+  );
+}
+
+function StatusPill({ status }) {
+  return <span className={classNames("status-pill", `status-${status}`)}>{getStatusCopy(status)}</span>;
+}
+
+function SubAgentDesk({ role, task, queueCount, selected, onSelect }) {
+  const isWorking = Boolean(task && task.status !== "todo" && task.status !== "done");
+  const nextStatuses = task ? getAllowedNextStatuses(task.status).map(getStatusCopy).join(" / ") : "대기";
+
+  return (
+    <button
+      type="button"
+      className={classNames(
+        "sub-agent",
+        AGENT_POSITIONS[role.key],
+        selected && "is-selected",
+        isWorking && "is-working",
+      )}
+      onClick={() => onSelect(role.key)}
     >
-      <div className="office-wall" />
-      <div className="office-wall-deco" data-wall={style.wallDeco} />
-      <div className="office-floor" />
-      <div className="office-shadow" />
-      <div className="office-desk">
-        <div className="office-desk-edge" />
-        <div className="office-desk-surface" />
-        <div className="office-desk-handle" />
-        <div className="office-keyboard" />
+      <span className="desk-monitor">
+        <span />
+      </span>
+      <AgentSprite role={role} active={isWorking} />
+      <span className="sub-agent__name">{role.shortName}</span>
+      <span className="sub-agent__queue">큐 {queueCount}</span>
+      <span className="sub-agent__task">{task?.title ?? "작업 대기"}</span>
+      {task ? <StatusPill status={task.status} /> : null}
+      <span className="sub-agent__next">next: {nextStatuses || "없음"}</span>
+    </button>
+  );
+}
+
+function TaskTicket({ item, active }) {
+  const role = getRole(item.ownerRole);
+
+  return (
+    <div className={classNames("task-ticket", active && "is-active")}>
+      <div>
+        <strong>{item.title}</strong>
+        <span>{role.name}</span>
       </div>
-      <div className="office-chair" />
-      <div className="office-monitor">
-        <span className="office-screen-glow" />
-        <span className="office-cursor" />
-        <span className="office-monitor-content" data-monitor={style.monitorView} />
+      <StatusPill status={item.status} />
+    </div>
+  );
+}
+
+function PlanCard({ plan }) {
+  if (!plan) {
+    return (
+      <div className="plan-card plan-card--empty">
+        <strong>CTO 계획 대기</strong>
+        <span>채팅으로 지시하면 CTO가 역할별 작업 계획을 생성합니다.</span>
       </div>
-      {role.key === "cto" ? (
-        <>
-          <div className="office-cto-arm" />
-          <div className="office-cto-arm office-cto-arm-secondary" />
-        </>
-      ) : null}
-      {role.key === "pm" ? (
-        <>
-          <div className="office-planner-board" />
-          <div className="office-notebook" />
-          <div className="office-pen" />
-          <div className="office-doc-stack" />
-        </>
-      ) : null}
-      {role.key === "frontend" ? (
-        <>
-          <div className="office-monitor office-monitor-secondary">
-            <span className="office-screen-glow" />
-            <span className="office-monitor-content" data-monitor="ui" />
+    );
+  }
+
+  return (
+    <div className="plan-card">
+      <div className="plan-card__top">
+        <div>
+          <strong>{plan.summary}</strong>
+          <span>우선순위 {plan.priority === "high" ? "높음" : "보통"} · {plan.estimatedSteps}단계</span>
+        </div>
+        <span>{plan.assignments.length}개 배정</span>
+      </div>
+      <div className="plan-list">
+        {plan.assignments.map((assignment) => (
+          <div key={`${plan.id}-${assignment.roleKey}`}>
+            <b>{getRole(assignment.roleKey).shortName}</b>
+            <span>{assignment.title}</span>
           </div>
-          <div className="office-ui-board" />
-          <div className="office-ui-cards" />
-          <div className="office-ui-chip" />
-          <div className="office-browser-bar" />
-        </>
-      ) : null}
-      {role.key === "backend" ? (
-        <>
-          <div className="office-server-tower" />
-          <div className="office-log-panel" />
-          <div className="office-api-chip" />
-        </>
-      ) : null}
-      {role.key === "qa" ? (
-        <>
-          <div className="office-qa-board" />
-          <div className="office-qa-clipboard" />
-          <div className="office-qa-magnifier" />
-          <div className="office-qa-badge" />
-        </>
-      ) : null}
-      {role.key === "designer" ? (
-        <>
-          <div className="office-designer-board" />
-          <div className="office-tablet" />
-          <div className="office-stylus" />
-          <div className="office-swatch-strip" />
-        </>
-      ) : null}
-      <div className="office-prop office-prop-primary" data-prop={style.propPrimary} />
-      <div className="office-prop office-prop-secondary" data-prop={style.propSecondary} />
-      <div className="office-mug" />
-      <div className="office-character">
-        <img src={role.labFile} alt={role.label} className="pixel" />
+        ))}
       </div>
     </div>
   );
 }
 
 export default function App() {
-  const [scale, setScale] = useState(2);
-  const [bg, setBg] = useState(backgroundOptions[0]);
-  const [view, setView] = useState("office");
+  const [focusedAgentKey, setFocusedAgentKey] = useState("frontend");
+  const [draft, setDraft] = useState("");
+  const [messages, setMessages] = useState(DEFAULT_MESSAGES);
+  const [taskQueues, setTaskQueues] = useState(createInitialTaskQueues);
+  const [lastDistributedKeys, setLastDistributedKeys] = useState(["frontend"]);
+  const [lastPlan, setLastPlan] = useState(null);
 
-  const spriteSize = useMemo(() => 64 * scale, [scale]);
-  const activeRole = roles.find((role) => role.key === "cto") ?? roles[0];
-  const subRoles = roles.filter((role) => role.key !== "cto");
+  const subAgents = TEAM_ROLES.filter((role) => role.key !== "cto");
+  const focusedAgent = getRole(focusedAgentKey);
+  const focusedTask = getCurrentTask(focusedAgentKey, taskQueues);
+  const focusedQueue = taskQueues[focusedAgentKey] ?? [];
+  const allQueueItems = useMemo(() => getQueueItems(taskQueues), [taskQueues]);
+  const statusCounts = useMemo(() => countByStatus(allQueueItems), [allQueueItems]);
+  const activeCount = subAgents.filter((role) => {
+    const task = getCurrentTask(role.key, taskQueues);
+    return task && task.status !== "todo" && task.status !== "done";
+  }).length;
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const text = draft.trim();
+    if (!text) {
+      return;
+    }
+
+    const plan = createCtoPlan(text);
+    const targets = plan.assignments.map((assignment) => assignment.roleKey);
+    const timestamp = Date.now();
+    const createdTasks = Object.fromEntries(
+      plan.assignments.map((assignment) => {
+        const roleKey = assignment.roleKey;
+        const role = getRole(roleKey);
+        return [
+          roleKey,
+          {
+            id: `local-${timestamp}-${roleKey}`,
+            title: assignment.title,
+            status: assignment.status,
+            ownerRole: roleKey,
+            assignee: role.name,
+            reason: assignment.reason,
+            dependencies: assignment.dependencies,
+            approval: {
+              state: "pending",
+              byRole: "cto",
+              reason: "distributed by CTO main agent",
+            },
+            blocker: null,
+            risk: {
+              level: "medium",
+              label: "new command requires coordination",
+            },
+            outputs: ["agent response", "task update"],
+          },
+        ];
+      }),
+    );
+
+    setMessages((current) => [
+      ...current,
+      { id: `user-${Date.now()}`, from: "user", text },
+      {
+        id: `cto-${Date.now()}`,
+        from: "cto",
+        text: `계획을 만들었습니다. ${targets.map((roleKey) => getRole(roleKey).shortName).join(", ")}에게 ${plan.assignments.length}개 작업을 큐에 넣었습니다.`,
+      },
+    ]);
+    setTaskQueues((current) => {
+      const next = { ...current };
+      Object.entries(createdTasks).forEach(([roleKey, item]) => {
+        next[roleKey] = [item, ...(next[roleKey] ?? [])];
+      });
+      return next;
+    });
+    setLastDistributedKeys(targets);
+    setFocusedAgentKey(targets[0]);
+    setLastPlan(plan);
+    setDraft("");
+  }
 
   return (
-    <div className={`min-h-screen ${bg.value}`}>
-      <div className="mx-auto max-w-[1440px] px-6 py-10 xl:px-10">
-        <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="font-display text-xs uppercase tracking-[0.35em] text-cocoa/70">
-              AI Agent Office
-            </p>
-            <h1 className="font-display text-4xl text-cocoa">Cozy Office Board</h1>
-            <p className="mt-2 max-w-2xl text-sm text-cocoa/70">
-              Office dashboard with the new 6-character pixel set layered on top.
-            </p>
+    <main className="office-app">
+      <header className="office-header">
+        <div>
+          <p className="eyebrow">AI Agent Office</p>
+          <h1>Codex 지휘실</h1>
+        </div>
+        <div className="office-stats">
+          <span>서브에이전트 {subAgents.length}</span>
+          <span>작업중 {activeCount}</span>
+          <span>막힘 {statusCounts.blocked ?? 0}</span>
+        </div>
+      </header>
+
+      <section className="office-floorplan">
+        <section className="cto-zone" aria-label="메인 Codex 연결 영역">
+          <div className="office-window">
+            <span />
+            <span />
+            <span />
           </div>
 
-          <div className="flex flex-wrap gap-3 lg:justify-end">
-            <div className="rounded-2xl border border-cocoa/15 bg-white/70 px-4 py-3 shadow-soft">
-              <p className="text-xs uppercase tracking-[0.3em] text-cocoa/60">View</p>
-              <div className="mt-2 flex gap-2">
-                {[
-                  { key: "office", label: "Office UI" },
-                  { key: "lab", label: "Character Lab" },
-                ].map((option) => (
-                  <button
-                    key={option.key}
-                    type="button"
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      view === option.key
-                        ? "bg-cocoa text-cream"
-                        : "bg-white text-cocoa shadow-sm"
-                    }`}
-                    onClick={() => setView(option.key)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+          <div className="cto-desk">
+            <div className="cto-screen">
+              <span>CODEX</span>
+              <strong>MAIN ONLINE</strong>
             </div>
-
-            <div className="rounded-2xl border border-cocoa/15 bg-white/70 px-4 py-3 shadow-soft">
-              <p className="text-xs uppercase tracking-[0.3em] text-cocoa/60">Scale</p>
-              <div className="mt-2 flex gap-2">
-                {scaleOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      scale === option.value
-                        ? "bg-cocoa text-cream"
-                        : "bg-white text-cocoa shadow-sm"
-                    }`}
-                    onClick={() => setScale(option.value)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-cocoa/15 bg-white/70 px-4 py-3 shadow-soft">
-              <p className="text-xs uppercase tracking-[0.3em] text-cocoa/60">Background</p>
-              <div className="mt-2 flex gap-2">
-                {backgroundOptions.map((option) => (
-                  <button
-                    key={option.label}
-                    type="button"
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      bg.label === option.label
-                        ? "bg-cocoa text-cream"
-                        : "bg-white text-cocoa shadow-sm"
-                    }`}
-                    onClick={() => setBg(option)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+            <AgentSprite role={getRole("cto")} size="lg" active />
+            <div className="desk-surface">
+              <span className="keyboard" />
+              <span className="coffee" />
             </div>
           </div>
-        </header>
 
-        {view === "office" ? (
-          <main className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.45fr)_minmax(440px,0.95fr)] xl:items-start">
-            <section className="grid gap-6">
-              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(280px,0.82fr)]">
-                <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <h2 className="font-display text-2xl text-cocoa">Main Agent</h2>
-                    <div className="flex flex-wrap gap-2">
-                      {officeStats.map((stat) => (
-                        <div
-                          key={stat.label}
-                          className="rounded-2xl border border-cocoa/10 bg-white/80 px-3 py-2 text-xs"
-                        >
-                          <p className="text-cocoa/60">{stat.label}</p>
-                          <p className="font-semibold text-cocoa">{stat.value}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-8 flex flex-col gap-6">
-                    <div className="w-full max-w-[360px]">
-                      <OfficeScene role={activeRole} size="lg" />
-                    </div>
-                    <div className="max-w-md">
-                      <p className="text-sm uppercase tracking-[0.3em] text-cocoa/60">
-                        Main Agent (Codex)
-                      </p>
-                      <h3 className="mt-2 font-display text-3xl text-cocoa">
-                        {activeRole.label}
-                      </h3>
-                      <p className="mt-2 text-sm text-cocoa/70">
-                        {activeRole.label} is coordinating the current sprint flow.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                  <h3 className="font-display text-2xl text-cocoa">Work Board</h3>
-                  <div className="mt-4 grid gap-4">
-                    {[
-                      "Ops board refresh",
-                      "Design QA sync",
-                      "Sprint alignment",
-                      "Release checklist",
-                    ].map((item) => (
-                      <div key={item} className="rounded-2xl border border-cocoa/10 bg-white/80 px-4 py-3">
-                        <p className="text-sm font-semibold text-cocoa">{item}</p>
-                        <p className="mt-2 text-xs text-cocoa/60">In progress</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+          <section className="chat-console">
+            <div className="chat-console__header">
+              <div>
+                <p className="eyebrow">Command Chat</p>
+                <h2>나 → CTO 메인 에이전트</h2>
               </div>
+              <span>자동 분배 모드</span>
+            </div>
 
-              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                <h3 className="font-display text-2xl text-cocoa">Main Agent Chat</h3>
-                <p className="mt-2 text-sm text-cocoa/70">
-                  Send instructions to the main Codex agent here.
-                </p>
-                <div className="mt-4 rounded-2xl border border-cocoa/10 bg-white/80 p-4">
-                  <div className="h-40 overflow-y-auto text-sm text-cocoa/70">
-                    <p className="font-semibold text-cocoa">System</p>
-                    <p>CTO is locked as main. Subagents are on the right.</p>
-                  </div>
-                  <div className="mt-4 flex items-center gap-2">
-                    <input
-                      className="w-full rounded-xl border border-cocoa/10 bg-white px-3 py-2 text-sm text-cocoa"
-                      placeholder="Type an instruction for Codex..."
-                    />
-                    <button className="rounded-xl bg-cocoa px-4 py-2 text-sm font-semibold text-cream">
-                      Send
-                    </button>
-                  </div>
+            <div className="chat-log" aria-live="polite">
+              {messages.map((message) => (
+                <div key={message.id} className={classNames("chat-message", `from-${message.from}`)}>
+                  <span>{message.from === "user" ? "나" : message.from === "cto" ? "CTO" : "System"}</span>
+                  <p>{message.text}</p>
                 </div>
-              </div>
-            </section>
+              ))}
+            </div>
 
-            <aside className="grid gap-6">
-              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                <h3 className="font-display text-2xl text-cocoa">Sub Agents</h3>
-                <div className="mt-5 grid grid-cols-2 gap-5">
-                  {subRoles.map((role) => (
-                    <div
-                      key={role.key}
-                      className="rounded-2xl border border-cocoa/10 bg-white/80 p-4 text-left"
-                    >
-                      <OfficeScene role={role} />
-                      <p className="mt-2 text-xs font-semibold text-cocoa">{role.label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </aside>
-          </main>
-        ) : (
-          <main className="mt-10 grid gap-8 xl:grid-cols-[2fr_1fr]">
-            <section className="grid gap-6 rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-              <h2 className="font-display text-2xl text-cocoa">Team Selection</h2>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {roles.map((role) => (
-                  <div
-                    key={role.key}
-                    className="flex flex-col items-center gap-4 rounded-[26px] border border-cocoa/10 bg-white/85 p-5 shadow-[0_10px_28px_rgba(120,96,78,0.08)]"
-                  >
-                    <div
-                      className="flex items-end justify-center rounded-[28px] border border-cocoa/10 bg-gradient-to-b from-white to-[#fbf6f0] px-4 py-5 shadow-[0_18px_40px_rgba(120,96,78,0.10)]"
-                      style={{ width: spriteSize + 56, height: Math.round(spriteSize * 2.25) }}
-                    >
-                      <img
-                        src={role.labFile}
-                        alt={role.label}
-                        className="pixel max-h-full w-auto object-contain"
-                      />
-                    </div>
-                    <p className="text-center text-sm font-semibold text-cocoa">{role.label}</p>
-                  </div>
+            <form className="chat-form" onSubmit={handleSubmit}>
+              <input
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                placeholder="CTO에게 지시할 내용을 입력하세요"
+              />
+              <button type="submit">Send</button>
+            </form>
+          </section>
+        </section>
+
+        <section className="agent-zone" aria-label="서브에이전트 사무실">
+          <div className="agent-zone__header">
+            <div>
+              <p className="eyebrow">Sub Agents</p>
+              <h2>오른쪽 작업 부스</h2>
+            </div>
+            <div className="status-legend">
+              {TASK_STATUSES.map((status) => (
+                <StatusPill key={status} status={status} />
+              ))}
+            </div>
+          </div>
+
+          <div className="agent-room">
+            <div className="room-backdrop">
+              <span className="shelf shelf-one" />
+              <span className="shelf shelf-two" />
+              <span className="plant" />
+            </div>
+            {subAgents.map((role) => (
+              <SubAgentDesk
+                key={role.key}
+                role={role}
+                task={getCurrentTask(role.key, taskQueues)}
+                queueCount={(taskQueues[role.key] ?? []).length}
+                selected={lastDistributedKeys.includes(role.key)}
+                onSelect={setFocusedAgentKey}
+              />
+            ))}
+          </div>
+
+          <aside className="assignment-panel">
+            <div>
+              <p className="eyebrow">CTO Distribution</p>
+              <h2>{focusedAgent.name}</h2>
+              <p>{focusedAgent.mission}</p>
+            </div>
+            <PlanCard plan={lastPlan} />
+            <div className="queue-panel">
+              <div className="specialty-list">
+                {focusedAgent.specialties.map((specialty) => (
+                  <span key={specialty}>{specialty}</span>
                 ))}
               </div>
-            </section>
-
-            <aside className="flex flex-col gap-6">
-              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                <h3 className="font-display text-xl text-cocoa">Exports</h3>
-                <p className="mt-2 text-sm text-cocoa/70">
-                  Download individual sprites, the combined sheet, or palette JSON.
-                </p>
-                <div className="mt-4 grid gap-2 text-sm">
-                  {roles.map((role) => (
-                    <a
-                      key={role.key}
-                      href={role.labFile}
-                      download
-                      className="rounded-xl border border-cocoa/10 bg-white/80 px-3 py-2 text-cocoa"
-                    >
-                      {role.label} Lab PNG
-                    </a>
-                  ))}
-                  <a
-                    href="/assets/spritesheet/agents-sheet.png"
-                    download
-                    className="rounded-xl border border-cocoa/10 bg-white/80 px-3 py-2 text-cocoa"
-                  >
-                    Sprite Sheet
-                  </a>
-                  <a
-                    href="/assets/palettes/palettes.json"
-                    download
-                    className="rounded-xl border border-cocoa/10 bg-white/80 px-3 py-2 text-cocoa"
-                  >
-                    Palette JSON
-                  </a>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-cocoa/10 bg-white/70 p-6 shadow-soft">
-                <h3 className="font-display text-xl text-cocoa">Notes</h3>
-                <ul className="mt-3 space-y-2 text-sm text-cocoa/70">
-                  <li>64x64 canvas, chibi proportions, thick outline.</li>
-                  <li>Top-left lighting + limited palette per role.</li>
-                  <li>Props are single-purpose to preserve readability.</li>
-                </ul>
-              </div>
-            </aside>
-          </main>
-        )}
-      </div>
-    </div>
+              <span className="queue-count">큐 {focusedQueue.length}</span>
+            </div>
+            {focusedTask ? (
+              <TaskTicket item={focusedTask} active />
+            ) : (
+              <div className="empty-task">아직 배정된 작업이 없습니다.</div>
+            )}
+          </aside>
+        </section>
+      </section>
+    </main>
   );
 }

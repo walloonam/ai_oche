@@ -1,4 +1,4 @@
-﻿export const TASK_STATUSES = Object.freeze([
+export const TASK_STATUSES = Object.freeze([
   "todo",
   "in_progress",
   "in_review",
@@ -8,42 +8,63 @@
 
 export const ROLE_KEYS = Object.freeze([
   "cto",
-  "backend",
+  "pm",
   "frontend",
+  "backend",
   "qa",
-  "reviewer",
+  "designer",
+  "platform",
 ]);
 
 export const TEAM_ROLES = Object.freeze([
   {
     key: "cto",
-    name: "CTO",
-    character: "strategy_cat",
-    specialty: "task_split, priority, approval_flow",
+    shortName: "CTO",
+    name: "CTO / Coordinator",
+    mission: "작업 범위를 쪼개고 승인 흐름과 리스크를 조율합니다.",
+    specialties: ["priority", "approval", "handoff"],
   },
   {
-    key: "backend",
-    name: "Backend Engineer",
-    character: "server_dragon",
-    specialty: "data_model, transition_rules, error_handling",
+    key: "pm",
+    shortName: "PM",
+    name: "Planner / PM",
+    mission: "일정과 요구사항을 정리하고 다음 의사결정을 명확히 만듭니다.",
+    specialties: ["scope", "timeline", "decision"],
   },
   {
     key: "frontend",
+    shortName: "FE",
     name: "Frontend Engineer",
-    character: "ui_fox",
-    specialty: "state_visibility, card_layout, flow",
+    mission: "사용자 흐름, 상태 가시성, 인터랙션 품질을 책임집니다.",
+    specialties: ["ui state", "layout", "accessibility"],
+  },
+  {
+    key: "backend",
+    shortName: "BE",
+    name: "Backend Engineer",
+    mission: "데이터 모델과 상태 전환 규칙을 안정적으로 관리합니다.",
+    specialties: ["data model", "rules", "errors"],
   },
   {
     key: "qa",
+    shortName: "QA",
     name: "QA Engineer",
-    character: "validation_owl",
-    specialty: "regression_checks, edge_cases",
+    mission: "회귀 위험과 엣지 케이스를 찾아 릴리스 품질을 지킵니다.",
+    specialties: ["regression", "edge cases", "release"],
   },
   {
-    key: "reviewer",
-    name: "Reviewer",
-    character: "review_panda",
-    specialty: "stability, maintainability, risk_review",
+    key: "designer",
+    shortName: "Design",
+    name: "Designer",
+    mission: "정보 위계, 시각 톤, 화면 밀도를 조정합니다.",
+    specialties: ["visual system", "density", "polish"],
+  },
+  {
+    key: "platform",
+    shortName: "Ops",
+    name: "Platform Engineer",
+    mission: "빌드, 배포, 운영 안정성에 필요한 기반을 점검합니다.",
+    specialties: ["build", "deploy", "observability"],
   },
 ]);
 
@@ -74,80 +95,120 @@ export const RISK_LEVELS = Object.freeze(["low", "medium", "high"]);
 export const TEAM_WORK_ITEMS = Object.freeze([
   {
     id: "item-01",
-    title: "Operations board layout",
+    title: "운영 보드 재구성",
     status: "in_progress",
     ownerRole: "frontend",
     assignee: "Frontend Engineer",
     approval: {
       state: "pending",
-      byRole: "reviewer",
-      reason: "layout and status badges need a joint review",
+      byRole: "designer",
+      reason: "layout density and hierarchy need a paired review",
     },
     blocker: null,
     risk: {
       level: "medium",
-      label: "too much information density",
+      label: "too much information can compete for attention",
     },
-    outputs: ["single screen board", "status cards", "workflow timeline"],
+    outputs: ["responsive board", "role rail", "task detail panel"],
   },
   {
     id: "item-02",
-    title: "State transition rules",
+    title: "상태 전환 규칙",
     status: "done",
     ownerRole: "backend",
     assignee: "Backend Engineer",
     approval: {
       state: "approved",
       byRole: "cto",
-      reason: "transition rules are compact and unambiguous",
+      reason: "transition map is compact and testable",
     },
     blocker: null,
     risk: {
       level: "low",
-      label: "limited change scope",
+      label: "small blast radius",
     },
-    outputs: ["transition map", "validation function", "sample data"],
+    outputs: ["transition map", "validator", "summary helper"],
   },
   {
     id: "item-03",
-    title: "Regression checklist",
+    title: "회귀 점검표",
     status: "in_review",
     ownerRole: "qa",
     assignee: "QA Engineer",
     approval: {
       state: "pending",
-      byRole: "reviewer",
-      reason: "blocked and done transition cases need more review",
+      byRole: "cto",
+      reason: "blocked and done recovery paths need confirmation",
     },
-    blocker: "resume condition after done is not documented",
+    blocker: "done items can only reopen through review",
     risk: {
       level: "medium",
-      label: "possible edge-case gap",
+      label: "missed recovery path",
     },
-    outputs: ["validation checklist", "edge-case scenarios"],
+    outputs: ["validation checklist", "transition scenarios"],
   },
   {
     id: "item-04",
-    title: "Blocked reason standard",
+    title: "막힘 사유 표준화",
     status: "blocked",
-    ownerRole: "cto",
-    assignee: "CTO",
+    ownerRole: "pm",
+    assignee: "Planner / PM",
+    approval: {
+      state: "needs_changes",
+      byRole: "qa",
+      reason: "blocked labels need consistent wording",
+    },
+    blocker: "risk labels are displayed inconsistently across handoffs",
+    risk: {
+      level: "high",
+      label: "ambiguous ownership",
+    },
+    outputs: ["blocked reason taxonomy", "handoff criteria"],
+  },
+  {
+    id: "item-05",
+    title: "스프라이트 자산 파이프라인",
+    status: "todo",
+    ownerRole: "platform",
+    assignee: "Platform Engineer",
+    approval: {
+      state: "pending",
+      byRole: "designer",
+      reason: "asset import path should work in build output",
+    },
+    blocker: null,
+    risk: {
+      level: "low",
+      label: "clear static asset surface",
+    },
+    outputs: ["asset imports", "sprite sheet preview"],
+  },
+  {
+    id: "item-06",
+    title: "시각 QA 점검",
+    status: "in_progress",
+    ownerRole: "designer",
+    assignee: "Designer",
     approval: {
       state: "pending",
       byRole: "qa",
-      reason: "blocked reason taxonomy needs alignment",
+      reason: "mobile density and contrast should be checked together",
     },
-    blocker: "risk labels are displayed inconsistently across roles",
+    blocker: null,
     risk: {
-      level: "high",
-      label: "no shared standard",
+      level: "medium",
+      label: "small screens can crowd controls",
     },
-    outputs: ["blocked reason tags", "approval criteria"],
+    outputs: ["contrast pass", "mobile layout pass"],
   },
 ]);
 
 export function isKnownStatus(status) {
   return TASK_STATUSES.includes(status);
+}
+
+export function isKnownRole(roleKey) {
+  return ROLE_KEYS.includes(roleKey);
 }
 
 export function getAllowedNextStatuses(status) {
