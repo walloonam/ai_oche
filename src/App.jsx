@@ -55,6 +55,23 @@ const DEFAULT_MESSAGES = [
   },
 ];
 
+const WORKSPACE_INFO = {
+  path: "/root/ai_oche",
+  branch: "main",
+  status: "prototype changes",
+  framework: "Vite + React",
+  packageManager: "npm",
+};
+
+const CODEX_CAPABILITIES = [
+  { key: "read", label: "Read Code", detail: "파일/구조 읽기" },
+  { key: "edit", label: "Edit Files", detail: "패치 작성" },
+  { key: "test", label: "Run Tests", detail: "테스트 실행" },
+  { key: "build", label: "Build", detail: "빌드 검증" },
+  { key: "review", label: "Review Diff", detail: "변경 검토" },
+  { key: "commit", label: "Commit", detail: "작업 저장" },
+];
+
 function classNames(...values) {
   return values.filter(Boolean).join(" ");
 }
@@ -288,6 +305,38 @@ function PlanCard({ plan }) {
   );
 }
 
+function WorkspacePanel() {
+  return (
+    <section className="workspace-panel">
+      <div className="workspace-panel__header">
+        <div>
+          <p className="eyebrow">Workspace</p>
+          <h2>Codex 작업 공간</h2>
+        </div>
+        <button type="button">Change</button>
+      </div>
+
+      <div className="workspace-path">{WORKSPACE_INFO.path}</div>
+
+      <div className="workspace-meta">
+        <span>branch {WORKSPACE_INFO.branch}</span>
+        <span>{WORKSPACE_INFO.status}</span>
+        <span>{WORKSPACE_INFO.framework}</span>
+        <span>{WORKSPACE_INFO.packageManager}</span>
+      </div>
+
+      <div className="capability-grid" aria-label="Codex capabilities">
+        {CODEX_CAPABILITIES.map((capability) => (
+          <button key={capability.key} type="button" className="capability-button">
+            <strong>{capability.label}</strong>
+            <span>{capability.detail}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function App() {
   const [focusedAgentKey, setFocusedAgentKey] = useState("frontend");
   const [draft, setDraft] = useState("");
@@ -402,6 +451,8 @@ export default function App() {
               <span className="coffee" />
             </div>
           </div>
+
+          <WorkspacePanel />
 
           <section className="chat-console">
             <div className="chat-console__header">
