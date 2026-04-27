@@ -1,0 +1,50 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["summary", "priority", "estimatedSteps", "assignments"],
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["normal", "high"]
+    },
+    "estimatedSteps": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "assignments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["roleKey", "title", "reason", "dependencies", "status"],
+        "properties": {
+          "roleKey": {
+            "type": "string",
+            "enum": ["pm", "frontend", "backend", "qa", "designer", "platform"]
+          },
+          "title": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["pm", "frontend", "backend", "qa", "designer", "platform"]
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["todo", "in_progress", "in_review", "blocked"]
+          }
+        }
+      }
+    }
+  }
+}

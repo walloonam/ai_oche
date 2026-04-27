@@ -1,11 +1,16 @@
-import { exec } from "node:child_process";
+import { exec, spawn } from "node:child_process";
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
 const PORT = Number(process.env.AGENT_PORT ?? 4174);
 const workspaceRoot = process.cwd();
+const codexBinary = process.env.CODEX_BIN ?? "codex";
+const codexTimeoutMs = Number(process.env.CODEX_TIMEOUT_MS ?? 120000);
+const ctoPlanSchemaPath = new URL("./cto-plan.schema.json", import.meta.url);
 
 const roleShortNames = {
   pm: "PM",
@@ -169,7 +174,7 @@ function getDependencies(roleKey, targets) {
   return [];
 }
 
-function createCtoPlan(command) {
+function createLocalCtoPlan(command) {
   const targets = getDistributionTargets(command);
   const priority = /급|빨리|오늘|장애|오류|막힘|긴급/.test(command) ? "high" : "normal";
   const id = `plan-${Date.now()}`;
@@ -190,6 +195,164 @@ function createCtoPlan(command) {
       status: index === 0 ? "in_progress" : "todo",
     })),
   };
+}
+
+function normalizeCtoPlan(command, rawPlan) {
+  const id = `plan-${Date.now()}`;
+  const assignments = Array.isArray(rawPlan.assignments)
+    ? rawPlan.assignments.filter((assignment) => roleShortNames[assignment.roleKey])
+    : [];
+
+  if (assignments.length === 0) {
+    throw new Error("Codex returned no valid assignments.");
+  }
+
+  const hasActiveAssignment = assignments.some((assignment) => assignment.status !== "todo");
+
+  return {
+    id,
+    command,
+    summary: String(rawPlan.summary || command).slice(0, 80),
+    priority: rawPlan.priority === "high" ? "high" : "normal",
+    estimatedSteps: Number.isInteger(rawPlan.estimatedSteps)
+      ? rawPlan.estimatedSteps
+      : assignments.length + 1,
+    assignments: assignments.map((assignment, index) => ({
+      id: `${id}-${assignment.roleKey}`,
+      roleKey: assignment.roleKey,
+      roleShortName: roleShortNames[assignment.roleKey],
+      title: String(assignment.title || getDistributedTitle(command, assignment.roleKey)).slice(0, 96),
+      reason: String(assignment.reason || getAssignmentReason(assignment.roleKey)).slice(0, 160),
+      dependencies: Array.isArray(assignment.dependencies)
+        ? assignment.dependencies.filter((dependency) => roleShortNames[dependency])
+        : [],
+      status: hasActiveAssignment
+        ? assignment.status
+        : index === 0
+          ? "in_progress"
+          : "todo",
+    })),
+  };
+}
+
+function createCtoPrompt(command, workspace) {
+  return `You are the CTO main agent for a Korean pixel-art Codex office UI.
+
+Create a concise work distribution plan for the user's command.
+Return only JSON that matches the provided output schema.
+Do not edit files, do not run shell commands, and do not include markdown.
+
+Available subagents:
+- pm: requirements, priority, scope, documentation
+- frontend: React UI, interaction, layout, client state
+- backend: local server, API, data flow, integrations
+- qa: tests, regression checks, acceptance criteria
+- designer: visual direction, pixel assets, spacing, motion
+- platform: build, scripts, runtime, deployment readiness
+
+Rules:
+- Pick only the roles that are useful for this command.
+- Include qa when implementation work should be verified.
+- Use Korean for title and reason.
+- Set exactly one first actionable assignment to "in_progress" unless the task is blocked.
+- Keep titles short enough for a compact UI card.
+
+Workspace:
+${JSON.stringify(workspace, null, 2)}
+
+User command:
+${command}`;
+}
+
+function runCodexPlanner(prompt) {
+  return new Promise((resolve, reject) => {
+    mkdtemp(join(tmpdir(), "codex-cto-"))
+      .then((tempDir) => {
+        const outputFile = join(tempDir, "last-message.json");
+        const args = [
+          "exec",
+          "-",
+          "--cd",
+          workspaceRoot,
+          "--sandbox",
+          "read-only",
+          "--output-schema",
+          ctoPlanSchemaPath.pathname,
+          "--output-last-message",
+          outputFile,
+          "--color",
+          "never",
+        ];
+        const child = spawn(codexBinary, args, {
+          cwd: workspaceRoot,
+          env: process.env,
+          stdio: ["pipe", "ignore", "pipe"],
+        });
+        let stderr = "";
+        let settled = false;
+        const cleanup = () => rm(tempDir, { recursive: true, force: true }).catch(() => {});
+        const timer = setTimeout(() => {
+          if (!settled) {
+            settled = true;
+            child.kill("SIGTERM");
+            cleanup();
+            reject(new Error(`codex exec timed out after ${codexTimeoutMs}ms`));
+          }
+        }, codexTimeoutMs);
+
+        child.stderr.on("data", (chunk) => {
+          stderr += chunk.toString();
+        });
+        child.on("error", (error) => {
+          if (!settled) {
+            settled = true;
+            clearTimeout(timer);
+            cleanup();
+            reject(error);
+          }
+        });
+        child.on("close", async (code) => {
+          if (settled) {
+            return;
+          }
+          settled = true;
+          clearTimeout(timer);
+          if (code !== 0) {
+            cleanup();
+            reject(new Error(stderr.trim() || `codex exec exited with code ${code}`));
+            return;
+          }
+          try {
+            const output = await readFile(outputFile, "utf8");
+            resolve(output.trim());
+          } catch (error) {
+            reject(error);
+          } finally {
+            cleanup();
+          }
+        });
+
+        child.stdin.end(prompt);
+      })
+      .catch(reject);
+  });
+}
+
+function parseCodexJson(output) {
+  try {
+    return JSON.parse(output);
+  } catch {
+    const match = output.match(/\{[\s\S]*\}/);
+    if (!match) {
+      throw new Error("Codex did not return JSON.");
+    }
+    return JSON.parse(match[0]);
+  }
+}
+
+async function createCodexCtoPlan(command, workspace) {
+  const output = await runCodexPlanner(createCtoPrompt(command, workspace));
+  return normalizeCtoPlan(command, parseCodexJson(output));
 }
 
 async function runCapability(capability) {
@@ -261,8 +424,19 @@ const server = createServer(async (request, response) => {
         return;
       }
 
-      const plan = createCtoPlan(command);
-      sendJson(response, 200, { ok: true, plan });
+      const workspace = await getWorkspace();
+      try {
+        const plan = await createCodexCtoPlan(command, workspace);
+        sendJson(response, 200, { ok: true, planner: "codex-cli", plan });
+      } catch (error) {
+        const plan = createLocalCtoPlan(command);
+        sendJson(response, 200, {
+          ok: true,
+          planner: "local-fallback",
+          fallbackReason: error.message,
+          plan,
+        });
+      }
       return;
     }
 

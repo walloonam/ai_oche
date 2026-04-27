@@ -8,11 +8,13 @@
   - CTO planning/distribution into subagent queues
   - subagents on the right
   - a Workspace/Codex capability panel connected to a local agent server
+  - CTO planning connected to the installed server-side `codex` CLI
 
 ## Key Files
 - `src/App.jsx`
 - `src/index.css`
 - `server/agent-server.mjs`
+- `server/cto-plan.schema.json`
 - `docs/codex-connection.md`
 - `assets/ai-characters/`
 - `assets/palettes/`
@@ -70,4 +72,6 @@
 - Keep the CTO as the main coordinator.
 - Do not allow arbitrary browser-supplied shell commands.
 - CTO planner now runs in `server/agent-server.mjs` as `POST /api/cto/plan`.
-- Next likely task: add a pluggable OpenAI/Codex planner adapter behind the same endpoint.
+- The planner tries `codex exec` first with `--sandbox read-only` and a strict output schema.
+- If Codex CLI is unavailable or returns invalid JSON, it falls back to the local rule-based planner.
+- Next likely task: add execution/run history after the planning step, still behind the local agent server.

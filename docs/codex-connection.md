@@ -6,10 +6,10 @@ This project currently connects the office UI to a local agent server. The local
 React UI :4173
   -> /api through Vite proxy
   -> Local Agent Server :4174
-  -> repo, git, npm, shell allowlist
+  -> installed Codex CLI, repo, git, npm, shell allowlist
 ```
 
-The current setup is not a direct OpenAI API integration yet. It is the local execution layer that a real Codex/OpenAI adapter should sit behind later.
+The CTO planner now uses the `codex` CLI installed on the server. It does not require an `OPENAI_API_KEY` in this project.
 
 ## Run It
 
@@ -42,6 +42,8 @@ http://localhost:4174/
 
 ```txt
 server/agent-server.mjs   Local agent server
+server/cto-plan.schema.json
+                          JSON shape expected from codex exec
 vite.config.js            Proxies /api to localhost:4174
 src/App.jsx               Calls /api/workspace and /api/capabilities/run
                           Calls /api/cto/plan for CTO planning
@@ -107,30 +109,51 @@ curl -X POST http://localhost:4174/api/cto/plan \
   -d '{"command":"로그인 화면 API 연결하고 테스트까지 진행해줘"}'
 ```
 
-Returns a CTO plan:
+Returns a CTO plan and the planner source:
 
 ```js
 {
-  id,
-  command,
-  summary,
-  priority,
-  estimatedSteps,
-  assignments: [
-    {
-      id,
-      roleKey,
-      roleShortName,
-      title,
-      reason,
-      dependencies,
-      status
-    }
-  ]
+  ok: true,
+  planner: "codex-cli", // or "local-fallback"
+  plan: {
+    id,
+    command,
+    summary,
+    priority,
+    estimatedSteps,
+    assignments: [
+      {
+        id,
+        roleKey,
+        roleShortName,
+        title,
+        reason,
+        dependencies,
+        status
+      }
+    ]
+  }
 }
 ```
 
-The current planner is still rule-based, but it now runs server-side in `server/agent-server.mjs`. This is the intended replacement point for an OpenAI/Codex-backed planner.
+The server calls:
+
+```bash
+codex exec - \
+  --cd /root/ai_oche \
+  --sandbox read-only \
+  --output-schema server/cto-plan.schema.json
+```
+
+If the installed Codex CLI is missing, logged out, times out, or returns invalid JSON, the endpoint falls back to the local rule-based planner so the UI still works.
+
+Optional environment variables:
+
+```txt
+CODEX_BIN          Override the codex executable path
+CODEX_TIMEOUT_MS   Override planner timeout, default 120000
+AGENT_PORT         Override local agent server port, default 4174
+```
 
 ## Safety Model
 
@@ -180,11 +203,12 @@ async function planWithCto({ command, workspace }) {
 }
 ```
 
-Keep API keys only on the server. Never expose an OpenAI API key in React, Vite env variables intended for the client, or browser local storage.
+Do not put API keys in React, Vite client env variables, or browser local storage. The current integration uses the server-installed Codex CLI instead of a browser-side or project-side OpenAI API key.
 
 ## Current Limitations
 
-- CTO planning is still rule-based, though it now runs server-side.
+- CTO planning calls `codex exec`, but it is non-streaming for now.
+- When Codex CLI fails, the UI uses the local fallback planner.
 - Capability buttons execute simple allowlisted commands only.
 - `Edit Files` is a placeholder and does not write files.
 - There is no persistent run history yet.
@@ -192,11 +216,12 @@ Keep API keys only on the server. Never expose an OpenAI API key in React, Vite 
 
 ## Suggested Next Step
 
-Replace the rule-based server planner with a pluggable adapter:
+Add execution and run history behind the same local server:
 
 ```txt
-createLocalCtoPlan()
-createOpenAiCtoPlan()
+POST /api/cto/execute
+GET  /api/runs/:id
+GET  /api/runs/:id/events
 ```
 
-Keep the UI contract for `POST /api/cto/plan` stable while changing the implementation behind it.
+Keep all actual filesystem and shell work on the server side, with narrow commands and visible results in the UI.

@@ -185,7 +185,10 @@ function PlanCard({ plan }) {
       <div className="plan-card__top">
         <div>
           <strong>{plan.summary}</strong>
-          <span>우선순위 {plan.priority === "high" ? "높음" : "보통"} · {plan.estimatedSteps}단계</span>
+          <span>
+            {plan.planner === "codex-cli" ? "Codex CLI" : "Local"} · 우선순위{" "}
+            {plan.priority === "high" ? "높음" : "보통"} · {plan.estimatedSteps}단계
+          </span>
         </div>
         <span>{plan.assignments.length}개 배정</span>
       </div>
@@ -342,7 +345,11 @@ export default function App() {
     if (!payload.ok) {
       throw new Error(payload.error ?? "Failed to create CTO plan.");
     }
-    return payload.plan;
+    return {
+      ...payload.plan,
+      planner: payload.planner,
+      fallbackReason: payload.fallbackReason,
+    };
   }
 
   function handleSubmit(event) {
@@ -395,7 +402,7 @@ export default function App() {
           {
             id: `cto-${Date.now()}`,
             from: "cto",
-            text: `계획을 만들었습니다. ${targets.map((roleKey) => getRole(roleKey).shortName).join(", ")}에게 ${plan.assignments.length}개 작업을 큐에 넣었습니다.`,
+            text: `${plan.planner === "codex-cli" ? "Codex CLI로" : "로컬 백업으로"} 계획을 만들었습니다. ${targets.map((roleKey) => getRole(roleKey).shortName).join(", ")}에게 ${plan.assignments.length}개 작업을 큐에 넣었습니다.`,
           },
         ]);
         setTaskQueues((current) => {
